@@ -4,7 +4,7 @@ Bundle-Name: bocnet-depmap
 Bundle-SymbolicName: com.bocnet.depmap; singleton:=true
 Bundle-Version: 1.0.0.pre
 Bundle-Activator: com.bocnet.depmap.Activator
-Bundle-Vendor: manbaum
+Bundle-Vendor: DNW Technology
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
