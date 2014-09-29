@@ -1,52 +1,14 @@
-/**
- * !(#) VisitorRegistry.java
- * Copyright (c) 2014 Bank of China Co. Ltd.
- * All rights reserved.
- *
- * Create by manbaum.
- * On Sep 29, 2014.
- */
 package com.bocnet.plugin.ast;
-
-import java.util.HashMap;
-import java.util.Map;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 
-/**
- * Class/Interface VisitorRegistry.
- * 
- * @author manbaum
- * @since Sep 29, 2014
- * 
- */
-public class VisitorRegistry {
+public interface VisitorRegistry {
 
-	private final Map<Class<? extends ASTNode>, AstVisitor<? extends ASTNode>> map = new HashMap<Class<? extends ASTNode>, AstVisitor<? extends ASTNode>>();
+	<T extends ASTNode> boolean add(Class<T> type, Visitor<T> visitor);
 
-	public VisitorRegistry() {
-	}
+	<T extends ASTNode> Visitor<T> remove(Class<T> type);
 
-	public <T extends ASTNode> boolean add(Class<T> clazz, AstVisitor<T> visitor) {
-		if (map.containsKey(clazz))
-			return false;
-		else {
-			map.put(clazz, visitor);
-			return true;
-		}
-	}
+	void clear();
 
-	@SuppressWarnings("unchecked")
-	public <T extends ASTNode> AstVisitor<T> remove(Class<T> clazz) {
-		return (AstVisitor<T>) map.remove(clazz);
-	}
-
-	public void clear() {
-		map.clear();
-	}
-
-	@SuppressWarnings("unchecked")
-	public <T extends ASTNode> AstVisitor<T> lookup(Class<T> nodeType) {
-		return (AstVisitor<T>) map.get(nodeType);
-	}
+	<T extends ASTNode> Visitor<T> lookup(Class<T> type);
 }
