@@ -1,0 +1,12 @@
+Manifest-Version: 1.0
+Bundle-ManifestVersion: 2
+Bundle-Name: bocnet-depmap
+Bundle-SymbolicName: com.bocnet.depmap; singleton:=true
+Bundle-Version: 1.0.0.pre
+Bundle-Activator: com.bocnet.depmap.Activator
+Bundle-Vendor: manbaum
+Require-Bundle: org.eclipse.ui,
+ org.eclipse.core.runtime,
+ org.eclipse.core.resources
+Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-ActivationPolicy: lazy
