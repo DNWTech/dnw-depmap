@@ -1,5 +1,5 @@
 /**
- * !(#) UnknownAstNodeException.java
+ * !(#) VisitorException.java
  * Copyright (c) 2014 Bank of China Co. Ltd.
  * All rights reserved.
  *
@@ -11,13 +11,13 @@ package com.bocnet.plugin.ast;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 /**
- * Class/Interface UnknownAstNodeException.
+ * Class/Interface VisitorException.
  * 
  * @author manbaum
  * @since Sep 29, 2014
  * 
  */
-public class UnknownAstNodeException extends RuntimeException {
+public class VisitorException extends RuntimeException {
 
 	private static final long serialVersionUID = 8461798111118292221L;
 	private final ASTNode node;
@@ -41,7 +41,7 @@ public class UnknownAstNodeException extends RuntimeException {
 	 * @since Sep 29, 2014
 	 * 
 	 */
-	public UnknownAstNodeException(ASTNode node) {
+	public VisitorException(ASTNode node) {
 		this.node = node;
 	}
 
@@ -54,7 +54,7 @@ public class UnknownAstNodeException extends RuntimeException {
 	 * @param message
 	 * @param cause
 	 */
-	public UnknownAstNodeException(ASTNode node, String message, Throwable cause) {
+	public VisitorException(ASTNode node, String message, Throwable cause) {
 		super(message, cause);
 		this.node = node;
 	}
@@ -67,7 +67,7 @@ public class UnknownAstNodeException extends RuntimeException {
 	 * 
 	 * @param message
 	 */
-	public UnknownAstNodeException(ASTNode node, String message) {
+	public VisitorException(ASTNode node, String message) {
 		super(message);
 		this.node = node;
 	}
@@ -80,7 +80,7 @@ public class UnknownAstNodeException extends RuntimeException {
 	 * 
 	 * @param cause
 	 */
-	public UnknownAstNodeException(ASTNode node, Throwable cause) {
+	public VisitorException(ASTNode node, Throwable cause) {
 		super(cause);
 		this.node = node;
 	}
