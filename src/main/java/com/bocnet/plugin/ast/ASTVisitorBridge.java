@@ -1,5 +1,5 @@
 /**
- * !(#) VisitorBridge.java
+ * !(#) ASTVisitorBridge.java
  * Copyright (c) 2014 Bank of China Co. Ltd.
  * All rights reserved.
  *
@@ -96,25 +96,25 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 import org.eclipse.jdt.core.dom.WildcardType;
 
 /**
- * Class/Interface VisitorBridge.
+ * Class/Interface ASTVisitorBridge.
  * 
  * @author manbaum
  * @since Sep 29, 2014
  * 
  */
-public final class VisitorBridge extends ASTVisitor {
+public final class ASTVisitorBridge extends ASTVisitor {
 
 	private final VisitorDelegator delegator;
 
 	/**
-	 * Constructor of VisitorBridge.
+	 * Constructor of ASTVisitorBridge.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * 
 	 * @param delegator
 	 */
-	public VisitorBridge(VisitorDelegator delegator) {
+	public ASTVisitorBridge(VisitorDelegator delegator) {
 		this.delegator = delegator;
 	}
 
