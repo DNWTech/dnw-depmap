@@ -11,7 +11,7 @@ public class DepMapNature implements IProjectNature {
 	/**
 	 * ID of this project nature
 	 */
-	public static final String NATURE_ID = "com.bocnet.depmap.depmap.nature";
+	public static final String NATURE_ID = "com.bocnet.depmap.nature";
 
 	private IProject project;
 
@@ -25,9 +25,8 @@ public class DepMapNature implements IProjectNature {
 		ICommand[] commands = desc.getBuildSpec();
 
 		for (int i = 0; i < commands.length; ++i) {
-			if (commands[i].getBuilderName().equals(DepMapBuilder.BUILDER_ID)) {
+			if (commands[i].getBuilderName().equals(DepMapBuilder.BUILDER_ID))
 				return;
-			}
 		}
 
 		ICommand[] newCommands = new ICommand[commands.length + 1];
@@ -54,7 +53,7 @@ public class DepMapNature implements IProjectNature {
 				System.arraycopy(commands, i + 1, newCommands, i,
 						commands.length - i - 1);
 				description.setBuildSpec(newCommands);
-				project.setDescription(description, null);			
+				project.setDescription(description, null);
 				return;
 			}
 		}
@@ -72,7 +71,9 @@ public class DepMapNature implements IProjectNature {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
+	 * @see
+	 * org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core
+	 * .resources.IProject)
 	 */
 	public void setProject(IProject project) {
 		this.project = project;
