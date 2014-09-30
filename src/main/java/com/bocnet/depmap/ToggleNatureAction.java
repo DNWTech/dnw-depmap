@@ -12,12 +12,24 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
+/**
+ * Class/Interface ToggleNatureAction.
+ * 
+ * @author manbaum
+ * @since Sep 30, 2014
+ * 
+ */
 public class ToggleNatureAction implements IObjectActionDelegate {
 
 	private ISelection selection;
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Overrider method run.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param action
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
@@ -40,23 +52,33 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 		}
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Overrider method selectionChanged.
 	 * 
-	 * @see
-	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
-	 * .IAction, org.eclipse.jface.viewers.ISelection)
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param action
+	 * @param selection
+	 * 
+	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
+	 *      org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
 
-	/*
-	 * (non-Javadoc)
+	/**
+	 * Overrider method setActivePart.
 	 * 
-	 * @see
-	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
-	 * action.IAction, org.eclipse.ui.IWorkbenchPart)
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param action
+	 * @param targetPart
+	 * 
+	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
+	 *      org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}

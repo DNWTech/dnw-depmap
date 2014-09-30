@@ -6,7 +6,6 @@
  * Create by manbaum.
  * On Sep 30, 2014.
  */
-
 package com.bocnet.depmap;
 
 import org.eclipse.core.resources.IProject;
