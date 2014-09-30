@@ -8,6 +8,7 @@
  */
 package com.bocnet.depmap.builder;
 
+import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
@@ -34,7 +35,10 @@ public class JavaFileVisitor implements IResourceVisitor {
 	 * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
 	 */
 	public boolean visit(IResource resource) throws CoreException {
-		// TODO Auto-generated method stub
+		IFile file = (IFile) resource.getAdapter(IFile.class);
+		if (file != null) {
+			// TODO: how to visit java file?
+		}
 		return false;
 	}
 }
