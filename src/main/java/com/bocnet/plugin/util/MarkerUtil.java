@@ -35,6 +35,16 @@ public class MarkerUtil {
 	}
 
 	public static IMarker createMarker(IFile file, String markerType,
+			int severity, String message, int lineNumber) throws CoreException {
+		IMarker marker = file.createMarker(markerType);
+		marker.setAttribute(IMarker.SEVERITY, severity);
+		marker.setAttribute(IMarker.MESSAGE, message);
+		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber < 1 ? 1
+				: lineNumber);
+		return marker;
+	}
+
+	public static IMarker createMarker(IFile file, String markerType,
 			int severity, String message, int lineNumber, int startPos,
 			int endPos) throws CoreException {
 		IMarker marker = file.createMarker(markerType);
