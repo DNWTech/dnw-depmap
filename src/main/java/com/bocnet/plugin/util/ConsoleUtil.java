@@ -26,7 +26,7 @@ public class ConsoleUtil {
 
 	public static MessageConsole createConsole(IConsoleManager consoleManager,
 			String name) {
-		MessageConsole console = new MessageConsole(name, null);
+		MessageConsole console = new MessageConsole(name, null, true);
 		consoleManager.addConsoles(new IConsole[] { console });
 		return console;
 	}
