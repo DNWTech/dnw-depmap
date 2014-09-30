@@ -10,31 +10,35 @@ package com.bocnet.depmap.builder;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
+import org.eclipse.core.runtime.CoreException;
+import org.eclipse.ui.console.MessageConsole;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.bocnet.depmap.Builder;
+import com.bocnet.plugin.util.ConsoleUtil;
+import com.bocnet.plugin.util.MarkerUtil;
 
-public class XMLErrorHandler extends DefaultHandler {
+public class XmlFileErrorHandler extends DefaultHandler {
 
-	/**
-	 * Field builder.
-	 * 
-	 * @author manbaum
-	 * @since Sep 29, 2014
-	 */
+	private final static MessageConsole console = ConsoleUtil
+			.getConsole("com.bocnet.depmap");
 
-	private final Builder builder;
-	private IFile file;
+	private final IFile file;
+	private final String markerType;
 
-	public XMLErrorHandler(Builder depMapBuilder, IFile file) {
-		builder = depMapBuilder;
+	public XmlFileErrorHandler(IFile file, String markerType) {
 		this.file = file;
+		this.markerType = markerType;
 	}
 
 	private void addMarker(SAXParseException e, int severity) {
-		builder.addMarker(file, e.getMessage(), e.getLineNumber(), severity);
+		try {
+			MarkerUtil.createMarker(file, markerType, severity, e.getMessage(),
+					e.getLineNumber());
+		} catch (CoreException ex) {
+			ConsoleUtil.print(console, ex);
+		}
 	}
 
 	@Override
