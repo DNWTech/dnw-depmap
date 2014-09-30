@@ -10,10 +10,10 @@ package com.bocnet.plugin.ast;
 
 /**
  * Class/Interface AstPath.
- *
+ * 
  * @author manbaum
  * @since Sep 29, 2014
- *
+ * 
  */
 public interface AstPath {
 

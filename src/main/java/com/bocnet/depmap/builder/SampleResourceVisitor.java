@@ -11,25 +11,27 @@ package com.bocnet.depmap.builder;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 
-class SampleResourceVisitor implements IResourceVisitor {
+import com.bocnet.depmap.Builder;
+
+public class SampleResourceVisitor implements IResourceVisitor {
 	/**
 	 * Field builder.
-	 *
+	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 */
-	
-	private final DepMapBuilder builder;
+
+	private final Builder builder;
 
 	/**
 	 * Constructor of SampleResourceVisitor.
-	 *
+	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 *
+	 * 
 	 * @param depMapBuilder
 	 */
-	SampleResourceVisitor(DepMapBuilder depMapBuilder) {
+	public SampleResourceVisitor(Builder depMapBuilder) {
 		builder = depMapBuilder;
 	}
 

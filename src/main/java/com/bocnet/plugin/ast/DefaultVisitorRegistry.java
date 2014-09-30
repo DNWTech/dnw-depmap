@@ -22,12 +22,13 @@ import org.eclipse.jdt.core.dom.ASTNode;
  */
 public final class DefaultVisitorRegistry implements VisitorRegistry {
 
-	private final Map<Class<? extends ASTNode>, Visitor<? extends ASTNode>> map = new HashMap<Class<? extends ASTNode>, Visitor<? extends ASTNode>>();
+	private final Map<Class<?>, Visitor<?>> map = new HashMap<Class<?>, Visitor<?>>();
 
 	public DefaultVisitorRegistry() {
 	}
 
-	public <T extends ASTNode> boolean add(Class<T> type, Visitor<T> visitor) {
+	public <T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type,
+			V visitor) {
 		if (map.containsKey(type))
 			return false;
 		else {
@@ -37,8 +38,8 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends ASTNode> Visitor<T> remove(Class<T> type) {
-		return (Visitor<T>) map.remove(type);
+	public <T extends ASTNode, V extends Visitor<T>> V remove(Class<T> type) {
+		return (V) map.remove(type);
 	}
 
 	public void clear() {
@@ -46,7 +47,7 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	}
 
 	@SuppressWarnings("unchecked")
-	public <T extends ASTNode> Visitor<T> lookup(Class<T> type) {
-		return (Visitor<T>) map.get(type);
+	public <T extends ASTNode, V extends Visitor<T>> V lookup(Class<T> type) {
+		return (V) map.get(type);
 	}
 }

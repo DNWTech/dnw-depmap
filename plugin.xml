@@ -35,7 +35,7 @@
             id="com.bocnet.depmap.contribution1">
          <action
                label="Add/Remove Sample Nature"
-               class="com.bocnet.depmap.builder.ToggleNatureAction"
+               class="com.bocnet.depmap.ToggleNatureAction"
                menubarPath="additions"
                enablesFor="+"
                id="com.bocnet.depmap.addRemoveNatureAction">

@@ -1,4 +1,4 @@
-package com.bocnet.depmap.builder;
+package com.bocnet.depmap;
 
 import java.util.Iterator;
 
@@ -43,8 +43,9 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
-	 *      org.eclipse.jface.viewers.ISelection)
+	 * @see
+	 * org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action
+	 * .IAction, org.eclipse.jface.viewers.ISelection)
 	 */
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
@@ -53,8 +54,9 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
-	 *      org.eclipse.ui.IWorkbenchPart)
+	 * @see
+	 * org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.
+	 * action.IAction, org.eclipse.ui.IWorkbenchPart)
 	 */
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
@@ -71,7 +73,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 			String[] natures = description.getNatureIds();
 
 			for (int i = 0; i < natures.length; ++i) {
-				if (DepMapNature.NATURE_ID.equals(natures[i])) {
+				if (Nature.NATURE_ID.equals(natures[i])) {
 					// Remove the nature
 					String[] newNatures = new String[natures.length - 1];
 					System.arraycopy(natures, 0, newNatures, 0, i);
@@ -86,7 +88,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 			// Add the nature
 			String[] newNatures = new String[natures.length + 1];
 			System.arraycopy(natures, 0, newNatures, 0, natures.length);
-			newNatures[natures.length] = DepMapNature.NATURE_ID;
+			newNatures[natures.length] = Nature.NATURE_ID;
 			description.setNatureIds(newNatures);
 			project.setDescription(description, null);
 		} catch (CoreException e) {

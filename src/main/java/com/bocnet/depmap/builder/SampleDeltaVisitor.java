@@ -13,33 +13,34 @@ import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IResourceDeltaVisitor;
 import org.eclipse.core.runtime.CoreException;
 
-class SampleDeltaVisitor implements IResourceDeltaVisitor {
+import com.bocnet.depmap.Builder;
+
+public class SampleDeltaVisitor implements IResourceDeltaVisitor {
 	/**
 	 * Field builder.
-	 *
+	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 */
-	
-	private final DepMapBuilder builder;
+
+	private final Builder builder;
 
 	/**
 	 * Constructor of SampleDeltaVisitor.
-	 *
+	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 *
+	 * 
 	 * @param depMapBuilder
 	 */
-	SampleDeltaVisitor(DepMapBuilder depMapBuilder) {
+	public SampleDeltaVisitor(Builder depMapBuilder) {
 		builder = depMapBuilder;
 	}
 
 	/*
 	 * (non-Javadoc)
 	 * 
-	 * @see
-	 * org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse
+	 * @see org.eclipse.core.resources.IResourceDeltaVisitor#visit(org.eclipse
 	 * .core.resources.IResourceDelta)
 	 */
 	public boolean visit(IResourceDelta delta) throws CoreException {

@@ -22,8 +22,9 @@ import com.bocnet.plugin.util.ConsoleUtil;
  * 
  */
 public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
-	
-	private static final MessageConsole console = ConsoleUtil.getConsole(MethodInvocationVisitor.class.getName());
+
+	private static final MessageConsole console = ConsoleUtil
+			.getConsole(MethodInvocationVisitor.class.getName());
 
 	public MethodInvocationVisitor() {
 	}

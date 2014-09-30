@@ -4,11 +4,12 @@ import org.eclipse.jdt.core.dom.ASTNode;
 
 public interface VisitorRegistry {
 
-	<T extends ASTNode> boolean add(Class<T> type, Visitor<T> visitor);
+	<T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type,
+			V visitor);
 
-	<T extends ASTNode> Visitor<T> remove(Class<T> type);
+	<T extends ASTNode, V extends Visitor<T>> V remove(Class<T> type);
 
 	void clear();
 
-	<T extends ASTNode> Visitor<T> lookup(Class<T> type);
+	<T extends ASTNode, V extends Visitor<T>> V lookup(Class<T> type);
 }

@@ -6,7 +6,7 @@
  * Create by manbaum.
  * On Sep 29, 2014.
  */
-package com.bocnet.depmap.builder;
+package com.bocnet.depmap;
 
 import java.util.Map;
 
@@ -24,7 +24,11 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.xml.sax.SAXException;
 
-public class DepMapBuilder extends IncrementalProjectBuilder {
+import com.bocnet.depmap.builder.SampleDeltaVisitor;
+import com.bocnet.depmap.builder.SampleResourceVisitor;
+import com.bocnet.depmap.builder.XMLErrorHandler;
+
+public class Builder extends IncrementalProjectBuilder {
 
 	public static final String BUILDER_ID = "com.bocnet.depmap.builder";
 
@@ -32,12 +36,6 @@ public class DepMapBuilder extends IncrementalProjectBuilder {
 
 	private SAXParserFactory parserFactory;
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see org.eclipse.core.internal.events.InternalBuilder#build(int,
-	 * java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
-	 */
 	@Override
 	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
 			throws CoreException {
@@ -54,7 +52,7 @@ public class DepMapBuilder extends IncrementalProjectBuilder {
 		return null;
 	}
 
-	void checkXML(IResource resource) {
+	public void checkXML(IResource resource) {
 		if (resource instanceof IFile && resource.getName().endsWith(".xml")) {
 			IFile file = (IFile) resource;
 			deleteMarkers(file);
@@ -66,7 +64,8 @@ public class DepMapBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	void addMarker(IFile file, String message, int lineNumber, int severity) {
+	public void addMarker(IFile file, String message, int lineNumber,
+			int severity) {
 		try {
 			IMarker marker = file.createMarker(MARKER_TYPE);
 			marker.setAttribute(IMarker.MESSAGE, message);
@@ -79,7 +78,7 @@ public class DepMapBuilder extends IncrementalProjectBuilder {
 		}
 	}
 
-	void deleteMarkers(IFile file) {
+	public void deleteMarkers(IFile file) {
 		try {
 			file.deleteMarkers(MARKER_TYPE, false, IResource.DEPTH_ZERO);
 		} catch (CoreException ce) {
