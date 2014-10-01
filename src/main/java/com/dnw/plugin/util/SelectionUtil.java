@@ -1,10 +1,15 @@
 /**
  * !(#) SelectionUtil.java
- * Copyright (c) 2013 DNW Technologies.
- * All rights reserved.
+ * Copyright (c) 2013 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * Create by manbaum.
- * On Feb 2, 2013.
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Feb 2, 2013.
  */
 package com.dnw.plugin.util;
 
@@ -20,10 +25,18 @@ import org.eclipse.jface.viewers.IStructuredSelection;
  * 
  * @author manbaum
  * @since Feb 2, 2013
- * 
  */
 public class SelectionUtil {
 
+	/**
+	 * Method findProject.
+	 * 
+	 * @author manbaum
+	 * @since Feb 2, 2013
+	 * 
+	 * @param selection
+	 * @return
+	 */
 	@SuppressWarnings("rawtypes")
 	public static IProject findProject(ISelection selection) {
 		if (selection instanceof IStructuredSelection) {

@@ -1,10 +1,15 @@
 /**
  * !(#) BuilderUtil.java
- * Copyright (c) 2013 DNW Technologies.
- * All rights reserved.
+ * Copyright (c) 2013 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * Create by manbaum.
- * On Feb 1, 2013.
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Feb 1, 2013.
  */
 package com.dnw.plugin.util;
 
@@ -18,10 +23,20 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author manbaum
  * @since Feb 1, 2013
- * 
  */
 public class BuilderUtil {
 
+	/**
+	 * Method addBuilder.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param project
+	 * @param builderId
+	 * @param checkExistance
+	 * @throws CoreException
+	 */
 	public static void addBuilder(IProject project, String builderId,
 			boolean checkExistance) throws CoreException {
 		IProjectDescription description = project.getDescription();
@@ -41,11 +56,31 @@ public class BuilderUtil {
 		project.setDescription(description, null);
 	}
 
+	/**
+	 * Method addBuilder.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param project
+	 * @param builderId
+	 * @throws CoreException
+	 */
 	public static void addBuilder(IProject project, String builderId)
 			throws CoreException {
 		addBuilder(project, builderId, true);
 	}
 
+	/**
+	 * Method removeBuilder.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param project
+	 * @param builderId
+	 * @throws CoreException
+	 */
 	public static void removeBuilder(IProject project, String builderId)
 			throws CoreException {
 		IProjectDescription description = project.getDescription();

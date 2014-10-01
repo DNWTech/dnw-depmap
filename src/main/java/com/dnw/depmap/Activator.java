@@ -1,3 +1,16 @@
+/**
+ * !(#) Activator.java
+ * Copyright (c) 2014 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Sep 29, 2014.
+ */
 package com.dnw.depmap;
 
 import org.eclipse.jface.resource.ImageDescriptor;
@@ -8,7 +21,7 @@ import org.osgi.framework.BundleContext;
  * The activator class controls the plug-in life cycle.
  * 
  * @author manbaum
- * @since Oct 1, 2014
+ * @since Sep 29, 2014
  */
 public class Activator extends AbstractUIPlugin {
 
@@ -22,7 +35,7 @@ public class Activator extends AbstractUIPlugin {
 	 * Constructor of Activator.
 	 * 
 	 * @author manbaum
-	 * @since Oct 1, 2014
+	 * @since Sep 29, 2014
 	 */
 	public Activator() {
 	}
@@ -31,7 +44,7 @@ public class Activator extends AbstractUIPlugin {
 	 * Overrider method start.
 	 * 
 	 * @author manbaum
-	 * @since Oct 1, 2014
+	 * @since Sep 29, 2014
 	 * 
 	 * @param context
 	 * @throws Exception
@@ -47,7 +60,7 @@ public class Activator extends AbstractUIPlugin {
 	 * Overrider method stop.
 	 * 
 	 * @author manbaum
-	 * @since Oct 1, 2014
+	 * @since Sep 29, 2014
 	 * 
 	 * @param context
 	 * @throws Exception
@@ -63,7 +76,7 @@ public class Activator extends AbstractUIPlugin {
 	 * Returns the shared instance.
 	 * 
 	 * @author manbaum
-	 * @since Oct 1, 2014
+	 * @since Sep 29, 2014
 	 * 
 	 * @return the shared instance.
 	 */
@@ -78,7 +91,7 @@ public class Activator extends AbstractUIPlugin {
 	 * "./icons/mysample.gif" or "/icons/mysample.gif".
 	 * 
 	 * @author manbaum
-	 * @since Oct 1, 2014
+	 * @since Sep 29, 2014
 	 * 
 	 * @param path
 	 *            the path.

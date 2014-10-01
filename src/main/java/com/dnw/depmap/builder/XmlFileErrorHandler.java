@@ -1,10 +1,15 @@
 /**
- * !(#) XMLErrorHandler.java
- * Copyright (c) 2014 DNW Technologies.
- * All rights reserved.
+ * !(#) XmlFileErrorHandler.java
+ * Copyright (c) 2014 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * Create by manbaum.
- * On Sep 29, 2014.
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Sep 30, 2014.
  */
 package com.dnw.depmap.builder;
 
@@ -19,6 +24,12 @@ import org.xml.sax.helpers.DefaultHandler;
 import com.dnw.plugin.util.ConsoleUtil;
 import com.dnw.plugin.util.MarkerUtil;
 
+/**
+ * Class/Interface XmlFileErrorHandler.
+ * 
+ * @author manbaum
+ * @since Sep 30, 2014
+ */
 public class XmlFileErrorHandler extends DefaultHandler {
 
 	private final static MessageConsole console = ConsoleUtil
@@ -27,11 +38,29 @@ public class XmlFileErrorHandler extends DefaultHandler {
 	private final IFile file;
 	private final String markerType;
 
+	/**
+	 * Constructor of XmlFileErrorHandler.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param file
+	 * @param markerType
+	 */
 	public XmlFileErrorHandler(IFile file, String markerType) {
 		this.file = file;
 		this.markerType = markerType;
 	}
 
+	/**
+	 * Method addMarker.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param e
+	 * @param severity
+	 */
 	private void addMarker(SAXParseException e, int severity) {
 		try {
 			MarkerUtil.createMarker(file, markerType, severity, e.getMessage(),
@@ -41,16 +70,49 @@ public class XmlFileErrorHandler extends DefaultHandler {
 		}
 	}
 
+	/**
+	 * Overrider method error.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param exception
+	 * @throws SAXException
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#error(org.xml.sax.SAXParseException)
+	 */
 	@Override
 	public void error(SAXParseException exception) throws SAXException {
 		addMarker(exception, IMarker.SEVERITY_ERROR);
 	}
 
+	/**
+	 * Overrider method fatalError.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param exception
+	 * @throws SAXException
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#fatalError(org.xml.sax.SAXParseException)
+	 */
 	@Override
 	public void fatalError(SAXParseException exception) throws SAXException {
 		addMarker(exception, IMarker.SEVERITY_ERROR);
 	}
 
+	/**
+	 * Overrider method warning.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param exception
+	 * @throws SAXException
+	 * 
+	 * @see org.xml.sax.helpers.DefaultHandler#warning(org.xml.sax.SAXParseException)
+	 */
 	@Override
 	public void warning(SAXParseException exception) throws SAXException {
 		addMarker(exception, IMarker.SEVERITY_WARNING);

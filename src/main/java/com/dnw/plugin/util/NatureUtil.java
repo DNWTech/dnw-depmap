@@ -1,10 +1,15 @@
 /**
  * !(#) NatureUtil.java
- * Copyright (c) 2013 DNW Technologies.
- * All rights reserved.
+ * Copyright (c) 2013 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * Create by manbaum.
- * On Feb 1, 2013.
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Feb 1, 2013.
  */
 package com.dnw.plugin.util;
 
@@ -22,6 +27,17 @@ import org.eclipse.core.runtime.IStatus;
  */
 public class NatureUtil {
 
+	/**
+	 * Method addNature.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param project
+	 * @param natureId
+	 * @param checkExistance
+	 * @throws CoreException
+	 */
 	public static void addNature(IProject project, String natureId,
 			boolean checkExistance) throws CoreException {
 		IProjectDescription description = project.getDescription();
@@ -44,11 +60,31 @@ public class NatureUtil {
 			throw new CoreException(status);
 	}
 
+	/**
+	 * Method addNature.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param project
+	 * @param natureId
+	 * @throws CoreException
+	 */
 	public static void addNature(IProject project, String natureId)
 			throws CoreException {
 		addNature(project, natureId, true);
 	}
 
+	/**
+	 * Method removeNature.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param project
+	 * @param natureId
+	 * @throws CoreException
+	 */
 	public static void removeNature(IProject project, String natureId)
 			throws CoreException {
 		IProjectDescription description = project.getDescription();
@@ -71,6 +107,16 @@ public class NatureUtil {
 		}
 	}
 
+	/**
+	 * Method toggleNature.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param project
+	 * @param natureId
+	 * @throws CoreException
+	 */
 	public static void toggleNature(IProject project, String natureId)
 			throws CoreException {
 		if (project.hasNature(natureId)) {

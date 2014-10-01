@@ -1,10 +1,15 @@
 /**
  * !(#) MarkerUtil.java
- * Copyright (c) 2013 DNW Technologies.
- * All rights reserved.
+ * Copyright (c) 2013 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
  *
- * Create by manbaum.
- * On Feb 1, 2013.
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Feb 1, 2013.
  */
 package com.dnw.plugin.util;
 
@@ -21,7 +26,6 @@ import org.eclipse.core.runtime.CoreException;
  * 
  * @author manbaum
  * @since Feb 1, 2013
- * 
  */
 public class MarkerUtil {
 
@@ -29,11 +33,35 @@ public class MarkerUtil {
 
 	public static final String NODE_LENGTH = "NODE_LENGTH";
 
+	/**
+	 * Method deleteMarkers.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param file
+	 * @param markerType
+	 * @throws CoreException
+	 */
 	public static void deleteMarkers(IFile file, String markerType)
 			throws CoreException {
 		file.deleteMarkers(markerType, false, IResource.DEPTH_ZERO);
 	}
 
+	/**
+	 * Method createMarker.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param file
+	 * @param markerType
+	 * @param severity
+	 * @param message
+	 * @param lineNumber
+	 * @return
+	 * @throws CoreException
+	 */
 	public static IMarker createMarker(IFile file, String markerType,
 			int severity, String message, int lineNumber) throws CoreException {
 		IMarker marker = file.createMarker(markerType);
@@ -44,6 +72,22 @@ public class MarkerUtil {
 		return marker;
 	}
 
+	/**
+	 * Method createMarker.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param file
+	 * @param markerType
+	 * @param severity
+	 * @param message
+	 * @param lineNumber
+	 * @param startPos
+	 * @param endPos
+	 * @return
+	 * @throws CoreException
+	 */
 	public static IMarker createMarker(IFile file, String markerType,
 			int severity, String message, int lineNumber, int startPos,
 			int endPos) throws CoreException {
@@ -57,10 +101,30 @@ public class MarkerUtil {
 		return marker;
 	}
 
+	/**
+	 * Method sort.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param markers
+	 */
 	public static void sort(IMarker[] markers) {
 		Arrays.sort(markers, 0, markers.length, new MarkerComparator());
 	}
 
+	/**
+	 * Method filter.
+	 * 
+	 * @author manbaum
+	 * @since Feb 1, 2013
+	 * 
+	 * @param markers
+	 * @param exclusive
+	 * @param markerType
+	 * @return
+	 * @throws CoreException
+	 */
 	public static IMarker[] filter(IMarker[] markers, IMarker exclusive,
 			String markerType) throws CoreException {
 		ArrayList<IMarker> list = new ArrayList<IMarker>();

@@ -1,3 +1,16 @@
+/**
+ * !(#) XmlFileVisitor.java
+ * Copyright (c) 2014 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Sep 30, 2014.
+ */
 package com.dnw.depmap.builder;
 
 import java.io.IOException;
@@ -15,6 +28,12 @@ import org.xml.sax.SAXException;
 import com.dnw.plugin.util.ConsoleUtil;
 import com.dnw.plugin.util.MarkerUtil;
 
+/**
+ * Class/Interface XmlFileVisitor.
+ * 
+ * @author manbaum
+ * @since Sep 30, 2014
+ */
 public class XmlFileVisitor implements IResourceVisitor {
 
 	public static final String MARKER_TYPE = "com.dnw.depmap.xmlProblem";
@@ -25,9 +44,24 @@ public class XmlFileVisitor implements IResourceVisitor {
 	public final SAXParserFactory parserFactory = SAXParserFactory
 			.newInstance();
 
+	/**
+	 * Constructor of XmlFileVisitor.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 */
 	public XmlFileVisitor() {
 	}
 
+	/**
+	 * Method doParse.
+	 * 
+	 * @author manbaum
+	 * @since Sep 30, 2014
+	 * 
+	 * @param file
+	 * @param reporter
+	 */
 	private void doParse(IFile file, XmlFileErrorHandler reporter) {
 		try {
 			parserFactory.newSAXParser().parse(file.getContents(), reporter);
@@ -56,7 +90,8 @@ public class XmlFileVisitor implements IResourceVisitor {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		if (file != null) {
 			MarkerUtil.deleteMarkers(file, MARKER_TYPE);
-			XmlFileErrorHandler reporter = new XmlFileErrorHandler(file, MARKER_TYPE);
+			XmlFileErrorHandler reporter = new XmlFileErrorHandler(file,
+					MARKER_TYPE);
 			doParse(file, reporter);
 		}
 		return false;

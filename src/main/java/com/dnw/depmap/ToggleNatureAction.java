@@ -1,3 +1,16 @@
+/**
+ * !(#) ToggleNatureAction.java
+ * Copyright (c) 2014 DNW Technologies and others.
+ * All rights reserved. This program and the accompanying materials
+ * are made available under the terms of the Eclipse Public License v1.0
+ * which accompanies this distribution, and is available at
+ * http://www.eclipse.org/legal/epl-v10.html
+ *
+ * Contributors:
+ *     DNW Technologies - initial API and implementation
+ *
+ * Create by manbaum since Sep 30, 2014.
+ */
 package com.dnw.depmap;
 
 import java.util.Iterator;
@@ -130,7 +143,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * Toggles sample nature on a project.
 	 * 
 	 * @author manbaum
-	 * @since Oct 1, 2014
+	 * @since Sep 30, 2014
 	 * 
 	 * @param project
 	 *            to have the nature added or removed.
