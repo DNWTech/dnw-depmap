@@ -33,7 +33,6 @@ import com.bocnet.depmap.builder.ResourceVisitorDelegator;
  * 
  * @author manbaum
  * @since Sep 30, 2014
- * 
  */
 public class Builder extends IncrementalProjectBuilder {
 
@@ -56,7 +55,7 @@ public class Builder extends IncrementalProjectBuilder {
 	 * @param config
 	 *            the configuration element used to trigger this execution. It
 	 *            can be queried by the executable extension for specific
-	 *            configuration properties
+	 *            configuration properties.
 	 * @param propertyName
 	 *            the name of an attribute of the configuration element used on
 	 *            the createExecutableExtension(String) call. This argument can
@@ -133,12 +132,12 @@ public class Builder extends IncrementalProjectBuilder {
 	 *            a table of builder-specific arguments keyed by argument name
 	 *            (key type: <code>String</code>, value type:
 	 *            <code>String</code>); <code>null</code> is equivalent to an
-	 *            empty map
+	 *            empty map.
 	 * @param monitor
 	 *            a progress monitor, or <code>null</code> if progress reporting
-	 *            and cancellation are not desired
+	 *            and cancellation are not desired.
 	 * @return the list of projects for which this builder would like deltas the
-	 *         next time it is run or <code>null</code> if none
+	 *         next time it is run or <code>null</code> if none.
 	 * @throws CoreException
 	 *             if this build fails.
 	 * 
@@ -162,12 +161,14 @@ public class Builder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Method fullBuild.
+	 * Called when full build has been required.
 	 * 
 	 * @author manbaum
 	 * @since Oct 1, 2014
 	 * 
 	 * @param monitor
+	 *            a progress monitor, or <code>null</code> if progress reporting
+	 *            and cancellation are not desired.
 	 * @throws CoreException
 	 */
 	protected void fullBuild(final IProgressMonitor monitor)
@@ -176,13 +177,16 @@ public class Builder extends IncrementalProjectBuilder {
 	}
 
 	/**
-	 * Method incrementalBuild.
+	 * Called when incremental build has been required.
 	 * 
 	 * @author manbaum
 	 * @since Oct 1, 2014
 	 * 
 	 * @param delta
+	 *            the resource delta for the project.
 	 * @param monitor
+	 *            a progress monitor, or <code>null</code> if progress reporting
+	 *            and cancellation are not desired.
 	 * @throws CoreException
 	 */
 	protected void incrementalBuild(IResourceDelta delta,
