@@ -3,7 +3,6 @@ package com.bocnet.depmap;
 import java.util.Iterator;
 
 import org.eclipse.core.resources.IProject;
-import org.eclipse.core.resources.IProjectDescription;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
 import org.eclipse.jface.action.IAction;
@@ -11,31 +10,50 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
+import org.eclipse.ui.console.MessageConsole;
+
+import com.bocnet.plugin.util.ConsoleUtil;
+import com.bocnet.plugin.util.NatureUtil;
 
 /**
- * Class/Interface ToggleNatureAction.
+ * An object action that is contributed into the 'Add/Remove DependencyMap
+ * Nature' popup menu.
  * 
  * @author manbaum
  * @since Sep 30, 2014
- * 
  */
 public class ToggleNatureAction implements IObjectActionDelegate {
+
+	private final static MessageConsole console = ConsoleUtil
+			.getConsole("com.bocnet.depmap");
 
 	private ISelection selection;
 
 	/**
-	 * Overrider method run.
+	 * <p>
+	 * Performs this action. This method is called by the proxy action when the
+	 * action has been triggered. Implement this method to do the actual work.
+	 * </p>
+	 * <p>
+	 * Note: If the action delegate also implements
+	 * <code>IActionDelegate2</code>, then this method is not invoked but
+	 * instead the <code>runWithEvent(IAction, Event)</code> method is called.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * 
 	 * @param action
+	 *            the action proxy that handles the presentation portion of the
+	 *            action.
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
-			for (Iterator it = ((IStructuredSelection) selection).iterator(); it
+			@SuppressWarnings("rawtypes")
+			Iterator it;
+			for (it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object element = it.next();
 				IProject project = null;
@@ -53,13 +71,27 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	}
 
 	/**
-	 * Overrider method selectionChanged.
+	 * <p>
+	 * Notifies this action delegate that the selection in the workbench has
+	 * changed. Implementers can use this opportunity to change the availability
+	 * of the action or to modify other presentation properties.
+	 * </p>
+	 * <p>
+	 * When the selection changes, the action enablement state is updated based
+	 * on the criteria specified in the plugin.xml file. Then the delegate is
+	 * notified of the selection change regardless of whether the enablement
+	 * criteria in the <code>plugin.xml</code> file is met.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * 
 	 * @param action
+	 *            the action proxy that handles presentation portion of the
+	 *            action.
 	 * @param selection
+	 *            the current selection, or <code>null</code> if there is no
+	 *            selection.
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.jface.viewers.ISelection)
@@ -69,13 +101,24 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	}
 
 	/**
-	 * Overrider method setActivePart.
+	 * <p>
+	 * Sets the active part for the delegate. The active part is commonly used
+	 * to get a working context for the action, such as the shell for any dialog
+	 * which is needed.
+	 * </p>
+	 * <p>
+	 * This method will be called every time the action appears in a popup menu.
+	 * The targetPart may change with each invocation.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * 
 	 * @param action
+	 *            the action proxy that handles presentation portion of the
+	 *            action; must not be <code>null</code>.
 	 * @param targetPart
+	 *            the new part target; must not be <code>null</code>.
 	 * 
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.ui.IWorkbenchPart)
@@ -84,37 +127,19 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	}
 
 	/**
-	 * Toggles sample nature on a project
+	 * Toggles sample nature on a project.
+	 * 
+	 * @author manbaum
+	 * @since Oct 1, 2014
 	 * 
 	 * @param project
-	 *            to have sample nature added or removed
+	 *            to have the nature added or removed.
 	 */
 	private void toggleNature(IProject project) {
 		try {
-			IProjectDescription description = project.getDescription();
-			String[] natures = description.getNatureIds();
-
-			for (int i = 0; i < natures.length; ++i) {
-				if (Nature.NATURE_ID.equals(natures[i])) {
-					// Remove the nature
-					String[] newNatures = new String[natures.length - 1];
-					System.arraycopy(natures, 0, newNatures, 0, i);
-					System.arraycopy(natures, i + 1, newNatures, i,
-							natures.length - i - 1);
-					description.setNatureIds(newNatures);
-					project.setDescription(description, null);
-					return;
-				}
-			}
-
-			// Add the nature
-			String[] newNatures = new String[natures.length + 1];
-			System.arraycopy(natures, 0, newNatures, 0, natures.length);
-			newNatures[natures.length] = Nature.NATURE_ID;
-			description.setNatureIds(newNatures);
-			project.setDescription(description, null);
-		} catch (CoreException e) {
+			NatureUtil.toggleNature(project, Nature.NATURE_ID);
+		} catch (CoreException ex) {
+			ConsoleUtil.print(console, ex);
 		}
 	}
-
 }
