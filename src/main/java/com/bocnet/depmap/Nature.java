@@ -27,7 +27,7 @@ import com.bocnet.plugin.util.BuilderUtil;
 public class Nature implements IProjectNature {
 
 	/**
-	 * ID of this project nature
+	 * ID of this project nature.
 	 */
 	public static final String NATURE_ID = "com.bocnet.depmap.nature";
 
@@ -83,7 +83,7 @@ public class Nature implements IProjectNature {
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * 
-	 * @return the project handle
+	 * @return the project handle.
 	 * 
 	 * @see org.eclipse.core.resources.IProjectNature#getProject()
 	 */
@@ -101,7 +101,7 @@ public class Nature implements IProjectNature {
 	 * @since Sep 30, 2014
 	 * 
 	 * @param project
-	 *            the project to which this nature applies
+	 *            the project to which this nature applies.
 	 * 
 	 * @see org.eclipse.core.resources.IProjectNature#setProject(org.eclipse.core.resources.IProject)
 	 */
