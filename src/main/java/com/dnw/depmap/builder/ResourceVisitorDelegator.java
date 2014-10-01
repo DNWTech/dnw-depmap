@@ -1,6 +1,6 @@
 /**
  * !(#) SampleResourceVisitor.java
- * Copyright (c) 2014 Bank of China Co. Ltd.
+ * Copyright (c) 2014 DNW Technologies.
  * All rights reserved.
  *
  * Create by manbaum.

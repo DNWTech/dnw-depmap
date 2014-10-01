@@ -1,6 +1,6 @@
 /**
  * !(#) SelectionUtil.java
- * Copyright (c) 2013 Bank of China Co. Ltd.
+ * Copyright (c) 2013 DNW Technologies.
  * All rights reserved.
  *
  * Create by manbaum.
