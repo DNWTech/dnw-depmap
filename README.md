@@ -1,4 +1,4 @@
-bocnet-depmap
+dnw-depmap
 =============
 
 Dependency Map Plug-in

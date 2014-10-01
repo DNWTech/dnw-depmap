@@ -9,7 +9,7 @@
       <builder
             hasNature="true">
          <run
-               class="com.bocnet.depmap.builder.DepMapBuilder">
+               class="com.dnw.depmap.builder.DepMapBuilder">
          </run>
       </builder>
    </extension>
@@ -19,11 +19,11 @@
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="com.bocnet.depmap.builder.DepMapNature">
+               class="com.dnw.depmap.builder.DepMapNature">
          </run>
       </runtime>
       <builder
-            id="com.bocnet.depmap.depmap.builder">
+            id="depmap.builder">
       </builder>
    </extension>
    <extension
@@ -32,19 +32,30 @@
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
-            id="com.bocnet.depmap.contribution1">
+            id="depmap.toggleNature">
          <action
-               label="Add/Remove Sample Nature"
-               class="com.bocnet.depmap.ToggleNatureAction"
+               label="Add/Remove DependencyMap Nature"
+               class="com.dnw.depmap.ToggleNatureAction"
                menubarPath="additions"
                enablesFor="+"
-               id="com.bocnet.depmap.addRemoveNatureAction">
+               id="depmap.toggleNatureAction">
          </action>
       </objectContribution>
    </extension>
    <extension
-         id="xmlProblem"
+         id="depmap.xmlProblem"
          name="XML Problem"
+         point="org.eclipse.core.resources.markers">
+      <super
+            type="org.eclipse.core.resources.problemmarker">
+      </super>
+      <persistent
+            value="true">
+      </persistent>
+   </extension>
+   <extension
+         id="depmap.javaProblem"
+         name="Java Problem"
          point="org.eclipse.core.resources.markers">
       <super
             type="org.eclipse.core.resources.problemmarker">

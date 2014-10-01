@@ -1,10 +1,10 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: bocnet-depmap
-Bundle-SymbolicName: com.bocnet.depmap; singleton:=true
+Bundle-Name: dnw-depmap
+Bundle-SymbolicName: com.dnw.depmap;singleton:=true
 Bundle-Version: 1.0.0.pre
-Bundle-Activator: com.bocnet.depmap.Activator
-Bundle-Vendor: DNW Technology
+Bundle-Activator: com.dnw.depmap.Activator
+Bundle-Vendor: DNW Technologies
 Require-Bundle: org.eclipse.ui,
  org.eclipse.core.runtime,
  org.eclipse.core.resources,
