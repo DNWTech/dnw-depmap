@@ -23,7 +23,18 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 
 /**
- * Class/Interface ResourceVisitorDelegator.
+ * <p>
+ * This class implemented can visit resource trees of a Java project.
+ * </p>
+ * <p>
+ * Usage:
+ * </p>
+ * 
+ * <pre>
+ * ResourceVisitorDelegator visitor = new ResourceVisitorDelegator();
+ * IResource root = ...;
+ * root.accept(visitor);
+ * </pre>
  * 
  * @author manbaum
  * @since Sep 29, 2014
@@ -33,7 +44,7 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	private final Map<String, IResourceVisitor> map = new HashMap<String, IResourceVisitor>();
 
 	/**
-	 * Constructor of SampleResourceVisitor.
+	 * Constructor of ResourceVisitorDelegator.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
@@ -42,26 +53,33 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 */
 	public ResourceVisitorDelegator() {
 		map.put(".java", new JavaFileVisitor());
+		map.put(".xml", new XmlFileVisitor());
 	}
 
 	/**
-	 * Overrider method visit.
+	 * Visits the given resource.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * 
 	 * @param resource
-	 * @return
+	 *            the resource to visit.
+	 * @return <code>true</code> if the resource's members should be visited;
+	 *         <code>false</code> if they should be skipped.
 	 * @throws CoreException
+	 *             if the visit fails for some reason.
 	 * 
 	 * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
 	 */
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		if (file != null) {
-			IResourceVisitor visitor = map.get(file.getFileExtension());
-			if (visitor != null) {
-				visitor.visit(file);
+			String ext = file.getFileExtension();
+			if (ext != null) {
+				IResourceVisitor visitor = map.get(ext.toLowerCase());
+				if (visitor != null) {
+					visitor.visit(file);
+				}
 			}
 		} else if (resource instanceof IContainer) {
 			// return true to continue visiting children.
