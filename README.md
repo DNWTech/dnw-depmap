@@ -1,11 +1,11 @@
-dnw-depmap
+DNW-depmap
 =============
 
-Dependency Map Plug-in
+DNW-depmap is a Eclipse plug-in to help create Java code dependency map. Our goal is to help developer easily identify the areas of influence when they change code.
 
-Code Style
-----------
-Import [codetemplates.xml](https://github.com/manbaum/dnw-depmap/blob/develop/codetemplates.xml) into your Eclipse IDE (3.7 indigo), to follow the project code style.
+Code Template & Code Style
+--------------------------
+Import [codetemplates.xml](https://github.com/manbaum/dnw-depmap/blob/develop/codetemplates.xml) into your Eclipse IDE (3.7 indigo), to follow the project. We use Eclipse default code style to format code.
 
 Lisence
 -------
