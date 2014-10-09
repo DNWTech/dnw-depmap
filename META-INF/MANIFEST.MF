@@ -1,6 +1,6 @@
 Manifest-Version: 1.0
 Bundle-ManifestVersion: 2
-Bundle-Name: dnw-depmap
+Bundle-Name: DNW Dependency Map Generator
 Bundle-SymbolicName: com.dnw.depmap;singleton:=true
 Bundle-Version: 1.0.0.pre
 Bundle-Activator: com.dnw.depmap.Activator
@@ -10,7 +10,5 @@ Require-Bundle: org.eclipse.ui,
  org.eclipse.core.resources,
  org.eclipse.ui.console,
  org.eclipse.jdt.core
-Bundle-RequiredExecutionEnvironment: J2SE-1.5
+Bundle-RequiredExecutionEnvironment: JavaSE-1.6
 Bundle-ActivationPolicy: lazy
-Bundle-ClassPath: lib/mongo-java-driver-2.12.3.jar,
- .

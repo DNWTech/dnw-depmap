@@ -3,27 +3,27 @@
 <plugin>
 
    <extension
-         id="depmap.builder"
+         id="com.dnw.depmap.builder"
          name="Dependency Map Builder"
          point="org.eclipse.core.resources.builders">
       <builder
             hasNature="true">
          <run
-               class="com.dnw.depmap.builder.DepMapBuilder">
+               class="com.dnw.depmap.Builder">
          </run>
       </builder>
    </extension>
    <extension
-         id="depmap.nature"
+         id="com.dnw.depmap.nature"
          name="Dependency Map Nature"
          point="org.eclipse.core.resources.natures">
       <runtime>
          <run
-               class="com.dnw.depmap.builder.DepMapNature">
+               class="com.dnw.depmap.Nature">
          </run>
       </runtime>
       <builder
-            id="depmap.builder">
+            id="com.dnw.depmap.builder">
       </builder>
    </extension>
    <extension
@@ -32,33 +32,22 @@
             adaptable="true"
             objectClass="org.eclipse.core.resources.IProject"
             nameFilter="*"
-            id="depmap.toggleNature">
+            id="com.dnw.depmap.togglenature">
          <action
-               label="Add/Remove DependencyMap Nature"
+               label="Add/Remove Dependency Map Nature"
                class="com.dnw.depmap.ToggleNatureAction"
                menubarPath="additions"
                enablesFor="+"
-               id="depmap.toggleNatureAction">
+               id="com.dnw.depmap.togglenatureaction">
          </action>
       </objectContribution>
    </extension>
    <extension
-         id="depmap.xmlProblem"
-         name="XML Problem"
+         id="com.dnw.depmap.problem"
+         name="Denpendency Map Problem"
          point="org.eclipse.core.resources.markers">
       <super
-            type="org.eclipse.core.resources.problemmarker">
-      </super>
-      <persistent
-            value="true">
-      </persistent>
-   </extension>
-   <extension
-         id="depmap.javaProblem"
-         name="Java Problem"
-         point="org.eclipse.core.resources.markers">
-      <super
-            type="org.eclipse.core.resources.problemmarker">
+            type="com.dnw.depmap.problemmarker">
       </super>
       <persistent
             value="true">
