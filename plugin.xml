@@ -41,6 +41,18 @@
                id="com.dnw.depmap.togglenatureaction">
          </action>
       </objectContribution>
+      <objectContribution
+            adaptable="true"
+            id="com.dnw.depmap.analysisdependency"
+            nameFilter="*"
+            objectClass="org.eclipse.jdt.core.IJavaElement">
+         <action
+               class="com.dnw.depmap.AnalysisDependencyAction"
+               id="com.dnw.depmap.analysisdependency"
+               label="Analysis Dependency"
+               menubarPath="additions">
+         </action>
+      </objectContribution>
    </extension>
    <extension
          id="com.dnw.depmap.problem"

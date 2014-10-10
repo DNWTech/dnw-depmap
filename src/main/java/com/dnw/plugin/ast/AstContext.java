@@ -34,9 +34,11 @@ public final class AstContext {
 		this.file = file;
 		this.monitor = monitor;
 
-		parser = ASTParser.newParser(AST.JLS4);
-		unit = JavaCore.createCompilationUnitFrom(file);
+		parser = ASTParser.newParser(AST.JLS3);
 		parser.setKind(ASTParser.K_COMPILATION_UNIT);
+		parser.setResolveBindings(true);
+		parser.setBindingsRecovery(true);
+		unit = JavaCore.createCompilationUnitFrom(file);
 		parser.setSource(unit);
 		root = (CompilationUnit) parser.createAST(monitor);
 	}

@@ -62,9 +62,9 @@ public class JavaFileVisitor implements IResourceVisitor {
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		if (file != null) {
-			AstContext cookie = new AstContext(file, null);
+			AstContext context = new AstContext(file, null);
 			ASTVisitor visitor = new AstVisitorBridge(delegator);
-			cookie.getRoot().accept(visitor);
+			context.getRoot().accept(visitor);
 			return true;
 		}
 		return false;

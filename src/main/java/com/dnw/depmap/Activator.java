@@ -20,6 +20,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.osgi.framework.BundleContext;
 
+import com.dnw.depmap.neo.Writer;
 import com.dnw.plugin.util.ConsoleUtil;
 
 /**
@@ -32,13 +33,14 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.dnw.depmap";
-	private static String DBPATH = "/Users/manbaum/workspace/indigoSandbox/dnw-depmap/target/db";
+	private static String DBPATH = "/Users/manbaum/workspace/neo4j-community-2.1.5/data/graph.db";
 
 	public static final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
 
 	// The shared instance
 	private static Activator plugin;
 	private static GraphDatabaseService gdb;
+	private static Writer writer;
 
 	/**
 	 * Constructor of Activator.
@@ -71,6 +73,7 @@ public class Activator extends AbstractUIPlugin {
 				.setConfig(GraphDatabaseSettings.string_block_size, "60")
 				.setConfig(GraphDatabaseSettings.array_block_size, "300")
 				.newGraphDatabase();
+		writer = new Writer(gdb);
 	}
 
 	/**
@@ -86,6 +89,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		writer = null;
 		gdb.shutdown();
 		plugin = null;
 		super.stop(context);
@@ -113,6 +117,10 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	public static GraphDatabaseService getDatabase() {
 		return gdb;
+	}
+
+	public static Writer w() {
+		return writer;
 	}
 
 	/**

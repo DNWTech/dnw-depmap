@@ -50,5 +50,6 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 	@Override
 	public void visit(MethodInvocation node) {
 		Activator.console.println("Visit MethodInvocation: " + node.toString());
+		Activator.w().meetMethodInvocation(node);
 	}
 }
