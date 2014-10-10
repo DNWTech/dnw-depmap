@@ -16,13 +16,13 @@ package com.dnw.depmap;
 import java.util.Map;
 
 import org.eclipse.core.resources.IProject;
+import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceDelta;
 import org.eclipse.core.resources.IncrementalProjectBuilder;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import com.dnw.depmap.builder.DeltaVisitorDelegator;
 import com.dnw.depmap.builder.ResourceVisitorDelegator;
 
 /**
@@ -43,9 +43,6 @@ public class Builder extends IncrementalProjectBuilder {
 
 	public static final String BUILDER_ID = "com.dnw.depmap.builder";
 
-	private final ResourceVisitorDelegator dispatcher;
-	private final DeltaVisitorDelegator deltaVisitor;
-
 	/**
 	 * Constructor of Builder.
 	 * 
@@ -54,8 +51,6 @@ public class Builder extends IncrementalProjectBuilder {
 	 * 
 	 */
 	public Builder() {
-		dispatcher = new ResourceVisitorDelegator();
-		deltaVisitor = new DeltaVisitorDelegator(dispatcher);
 	}
 
 	/**
@@ -157,10 +152,14 @@ public class Builder extends IncrementalProjectBuilder {
 	 *      java.util.Map, org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
-	protected IProject[] build(int kind, Map args, IProgressMonitor monitor)
+	protected IProject[] build(int kind,
+			@SuppressWarnings("rawtypes") Map args, IProgressMonitor monitor)
 			throws CoreException {
 		if (kind == FULL_BUILD) {
 			fullBuild(monitor);
+		} else if (kind == INCREMENTAL_BUILD) {
+			IResourceDelta delta = getDelta(getProject());
+			incrementalBuild(delta, monitor);
 		} else {
 			IResourceDelta delta = getDelta(getProject());
 			if (delta == null) {
@@ -185,7 +184,8 @@ public class Builder extends IncrementalProjectBuilder {
 	 */
 	protected void fullBuild(final IProgressMonitor monitor)
 			throws CoreException {
-		getProject().accept(new ResourceVisitorDelegator());
+		ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(monitor);
+		getProject().accept(visitor);
 	}
 
 	/**
@@ -203,6 +203,20 @@ public class Builder extends IncrementalProjectBuilder {
 	 */
 	protected void incrementalBuild(IResourceDelta delta,
 			IProgressMonitor monitor) throws CoreException {
-		delta.accept(deltaVisitor);
+		ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(monitor);
+		IResource resource = delta.getResource();
+		switch (delta.getKind()) {
+		case IResourceDelta.ADDED:
+			// handle added resource
+			visitor.visit(resource);
+			break;
+		case IResourceDelta.REMOVED:
+			// handle removed resource
+			break;
+		case IResourceDelta.CHANGED:
+			// handle changed resource
+			visitor.visit(resource);
+			break;
+		}
 	}
 }
