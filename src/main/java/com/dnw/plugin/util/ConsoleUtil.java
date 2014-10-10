@@ -28,6 +28,20 @@ import org.eclipse.ui.console.MessageConsole;
  */
 public class ConsoleUtil {
 
+	private final MessageConsole console;
+
+	/**
+	 * Constructor of ConsoleUtil.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * 
+	 * @param console
+	 */
+	public ConsoleUtil(MessageConsole console) {
+		this.console = console;
+	}
+
 	/**
 	 * Method createConsole.
 	 * 
@@ -38,11 +52,11 @@ public class ConsoleUtil {
 	 * @param name
 	 * @return
 	 */
-	public static MessageConsole createConsole(IConsoleManager consoleManager,
+	public static ConsoleUtil createConsole(IConsoleManager consoleManager,
 			String name) {
 		MessageConsole console = new MessageConsole(name, null, true);
 		consoleManager.addConsoles(new IConsole[] { console });
-		return console;
+		return new ConsoleUtil(console);
 	}
 
 	/**
@@ -55,11 +69,11 @@ public class ConsoleUtil {
 	 * @param name
 	 * @return
 	 */
-	public static MessageConsole findConsole(IConsoleManager consoleManager,
+	public static ConsoleUtil findConsole(IConsoleManager consoleManager,
 			String name) {
 		for (IConsole c : consoleManager.getConsoles()) {
 			if (c.getName().equals(name))
-				return (MessageConsole) c;
+				return new ConsoleUtil((MessageConsole) c);
 		}
 		return null;
 	}
@@ -73,7 +87,7 @@ public class ConsoleUtil {
 	 * @param name
 	 * @return
 	 */
-	public static MessageConsole createConsole(String name) {
+	public static ConsoleUtil createConsole(String name) {
 		return createConsole(ConsolePlugin.getDefault().getConsoleManager(),
 				name);
 	}
@@ -87,7 +101,7 @@ public class ConsoleUtil {
 	 * @param name
 	 * @return
 	 */
-	public static MessageConsole findConsole(String name) {
+	public static ConsoleUtil findConsole(String name) {
 		return findConsole(ConsolePlugin.getDefault().getConsoleManager(), name);
 	}
 
@@ -100,15 +114,27 @@ public class ConsoleUtil {
 	 * @param name
 	 * @return
 	 */
-	public static MessageConsole getConsole(String name) {
+	public static ConsoleUtil getConsole(String name) {
 		IConsoleManager consoleManager = ConsolePlugin.getDefault()
 				.getConsoleManager();
-		MessageConsole c = findConsole(consoleManager, name);
+		ConsoleUtil c = findConsole(consoleManager, name);
 		if (c == null) {
 			c = createConsole(consoleManager, name);
 		}
-		consoleManager.showConsoleView(c);
+		consoleManager.showConsoleView(c.getInternalConsole());
 		return c;
+	}
+
+	/**
+	 * Method getInternalConsole.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * 
+	 * @return
+	 */
+	public MessageConsole getInternalConsole() {
+		return console;
 	}
 
 	/**
@@ -120,7 +146,7 @@ public class ConsoleUtil {
 	 * @param e
 	 * @return
 	 */
-	public static String messageOfThrowable(Throwable e) {
+	public String messageOfThrowable(Throwable e) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(e.getClass().getName());
 		sb.append(": ");
@@ -146,7 +172,7 @@ public class ConsoleUtil {
 	 * @param console
 	 * @param message
 	 */
-	public static void print(MessageConsole console, String message) {
+	public void print(String message) {
 		if (console != null) {
 			console.newMessageStream().print(message);
 		}
@@ -161,7 +187,7 @@ public class ConsoleUtil {
 	 * @param console
 	 * @param message
 	 */
-	public static void println(MessageConsole console, String message) {
+	public void println(String message) {
 		if (console != null) {
 			console.newMessageStream().println(message);
 		}
@@ -176,7 +202,7 @@ public class ConsoleUtil {
 	 * @param console
 	 * @param e
 	 */
-	public static void print(MessageConsole console, Throwable e) {
+	public void print(Throwable e) {
 		if (console != null) {
 			console.newMessageStream().print(messageOfThrowable(e));
 		}
@@ -191,7 +217,7 @@ public class ConsoleUtil {
 	 * @param console
 	 * @param e
 	 */
-	public static void println(MessageConsole console, Throwable e) {
+	public void println(Throwable e) {
 		if (console != null) {
 			console.newMessageStream().println(messageOfThrowable(e));
 		}
@@ -207,8 +233,7 @@ public class ConsoleUtil {
 	 * @param pattern
 	 * @param arguments
 	 */
-	public static void format(MessageConsole console, String pattern,
-			Object... arguments) {
+	public void format(String pattern, Object... arguments) {
 		if (console != null) {
 			console.newMessageStream().print(
 					MessageFormat.format(pattern, arguments));
@@ -225,8 +250,7 @@ public class ConsoleUtil {
 	 * @param pattern
 	 * @param arguments
 	 */
-	public static void formatln(MessageConsole console, String pattern,
-			Object... arguments) {
+	public void formatln(String pattern, Object... arguments) {
 		if (console != null) {
 			console.newMessageStream().println(
 					MessageFormat.format(pattern, arguments));

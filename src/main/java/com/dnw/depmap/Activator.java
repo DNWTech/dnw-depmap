@@ -14,7 +14,6 @@
 package com.dnw.depmap;
 
 import org.eclipse.jface.resource.ImageDescriptor;
-import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -35,8 +34,7 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "com.dnw.depmap";
 	private static String DBPATH = "/Users/manbaum/workspace/indigoSandbox/dnw-depmap/target/db";
 
-	public static final MessageConsole console = ConsoleUtil
-			.getConsole(PLUGIN_ID);
+	public static final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
 
 	// The shared instance
 	private static Activator plugin;
