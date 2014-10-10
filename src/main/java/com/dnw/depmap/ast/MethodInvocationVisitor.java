@@ -14,10 +14,9 @@
 package com.dnw.depmap.ast;
 
 import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.ui.console.MessageConsole;
 
+import com.dnw.depmap.Activator;
 import com.dnw.plugin.ast.Visitor;
-import com.dnw.plugin.util.ConsoleUtil;
 
 /**
  * Class/Interface MethodInvocationVisitor.
@@ -26,9 +25,6 @@ import com.dnw.plugin.util.ConsoleUtil;
  * @since Sep 29, 2014
  */
 public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
-
-	private static final MessageConsole console = ConsoleUtil
-			.getConsole(MethodInvocationVisitor.class.getName());
 
 	/**
 	 * Constructor of MethodInvocationVisitor.
@@ -51,7 +47,8 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(org.eclipse.jdt.core.dom.ASTNode,
 	 *      boolean)
 	 */
+	@Override
 	public void visit(MethodInvocation node) {
-		ConsoleUtil.println(console, node.toString());
+		Activator.console.println("Visit MethodInvocation: " + node.toString());
 	}
 }

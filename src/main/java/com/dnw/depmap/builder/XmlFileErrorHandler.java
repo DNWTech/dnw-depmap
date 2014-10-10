@@ -16,12 +16,11 @@ package com.dnw.depmap.builder;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.console.MessageConsole;
 import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 import org.xml.sax.helpers.DefaultHandler;
 
-import com.dnw.plugin.util.ConsoleUtil;
+import com.dnw.depmap.Activator;
 import com.dnw.plugin.util.MarkerUtil;
 
 /**
@@ -31,9 +30,6 @@ import com.dnw.plugin.util.MarkerUtil;
  * @since Sep 30, 2014
  */
 public class XmlFileErrorHandler extends DefaultHandler {
-
-	private final static MessageConsole console = ConsoleUtil
-			.getConsole("com.dnw.depmap");
 
 	private final IFile file;
 	private final String markerType;
@@ -66,7 +62,7 @@ public class XmlFileErrorHandler extends DefaultHandler {
 			MarkerUtil.createMarker(file, markerType, severity, e.getMessage(),
 					e.getLineNumber());
 		} catch (CoreException ex) {
-			ConsoleUtil.print(console, ex);
+			Activator.console.println(ex);
 		}
 	}
 

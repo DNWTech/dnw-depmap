@@ -22,10 +22,9 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
-import org.eclipse.ui.console.MessageConsole;
 import org.xml.sax.SAXException;
 
-import com.dnw.plugin.util.ConsoleUtil;
+import com.dnw.depmap.Activator;
 import com.dnw.plugin.util.MarkerUtil;
 
 /**
@@ -37,9 +36,6 @@ import com.dnw.plugin.util.MarkerUtil;
 public class XmlFileVisitor implements IResourceVisitor {
 
 	public static final String MARKER_TYPE = "com.dnw.depmap.xmlProblem";
-
-	private final static MessageConsole console = ConsoleUtil
-			.getConsole("com.dnw.depmap");
 
 	public final SAXParserFactory parserFactory = SAXParserFactory
 			.newInstance();
@@ -66,13 +62,13 @@ public class XmlFileVisitor implements IResourceVisitor {
 		try {
 			parserFactory.newSAXParser().parse(file.getContents(), reporter);
 		} catch (SAXException e) {
-			ConsoleUtil.println(console, e);
+			Activator.console.println(e);
 		} catch (IOException e) {
-			ConsoleUtil.println(console, e);
+			Activator.console.println(e);
 		} catch (ParserConfigurationException e) {
-			ConsoleUtil.println(console, e);
+			Activator.console.println(e);
 		} catch (CoreException e) {
-			ConsoleUtil.println(console, e);
+			Activator.console.println(e);
 		}
 	}
 
@@ -86,6 +82,7 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 * 
 	 * @see com.dnw.plugin.util.BuilderVisitor#visit(org.eclipse.core.resources.IFile)
 	 */
+	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		if (file != null) {

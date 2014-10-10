@@ -23,9 +23,7 @@ import org.eclipse.jface.viewers.ISelection;
 import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
-import org.eclipse.ui.console.MessageConsole;
 
-import com.dnw.plugin.util.ConsoleUtil;
 import com.dnw.plugin.util.NatureUtil;
 
 /**
@@ -36,9 +34,6 @@ import com.dnw.plugin.util.NatureUtil;
  * @since Sep 30, 2014
  */
 public class ToggleNatureAction implements IObjectActionDelegate {
-
-	private final static MessageConsole console = ConsoleUtil
-			.getConsole("com.dnw.depmap");
 
 	private ISelection selection;
 
@@ -62,6 +57,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
+	@Override
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
 			@SuppressWarnings("rawtypes")
@@ -109,6 +105,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
+	@Override
 	public void selectionChanged(IAction action, ISelection selection) {
 		this.selection = selection;
 	}
@@ -136,6 +133,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.ui.IWorkbenchPart)
 	 */
+	@Override
 	public void setActivePart(IAction action, IWorkbenchPart targetPart) {
 	}
 
@@ -152,7 +150,7 @@ public class ToggleNatureAction implements IObjectActionDelegate {
 		try {
 			NatureUtil.toggleNature(project, Nature.NATURE_ID);
 		} catch (CoreException ex) {
-			ConsoleUtil.print(console, ex);
+			Activator.console.print(ex);
 		}
 	}
 }
