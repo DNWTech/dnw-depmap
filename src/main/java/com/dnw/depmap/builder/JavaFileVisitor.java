@@ -17,6 +17,17 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+
+import com.dnw.depmap.ast.MethodInvocationVisitor;
+import com.dnw.plugin.ast.AstContext;
+import com.dnw.plugin.ast.AstVisitorBridge;
+import com.dnw.plugin.ast.DefaultVisitorDelegator;
+import com.dnw.plugin.ast.DefaultVisitorRegistry;
+import com.dnw.plugin.ast.NodeTypeSet;
+import com.dnw.plugin.ast.VisitorDelegator;
+import com.dnw.plugin.ast.VisitorRegistry;
 
 /**
  * Class/Interface JavaFileVisitor.
@@ -26,6 +37,16 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class JavaFileVisitor implements IResourceVisitor {
 
+	public static final NodeTypeSet stopSet = new NodeTypeSet();
+	public static final VisitorRegistry registry = new DefaultVisitorRegistry();
+	public static final VisitorDelegator delegator = new DefaultVisitorDelegator(
+			stopSet, registry);
+
+	static {
+		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
+	}
+
+	@Override
 	/**
 	 * Overrider method visit.
 	 * 
@@ -41,7 +62,10 @@ public class JavaFileVisitor implements IResourceVisitor {
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		if (file != null) {
-			// TODO: how to visit java file?
+			AstContext cookie = new AstContext(file, null);
+			ASTVisitor visitor = new AstVisitorBridge(delegator);
+			cookie.getRoot().accept(visitor);
+			return true;
 		}
 		return false;
 	}

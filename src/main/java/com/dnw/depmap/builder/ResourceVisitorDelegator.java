@@ -16,11 +16,13 @@ package com.dnw.depmap.builder;
 import java.util.HashMap;
 import java.util.Map;
 
-import org.eclipse.core.resources.IContainer;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
+
+import com.dnw.depmap.Activator;
 
 /**
  * <p>
@@ -41,7 +43,14 @@ import org.eclipse.core.runtime.CoreException;
  */
 public class ResourceVisitorDelegator implements IResourceVisitor {
 
-	private final Map<String, IResourceVisitor> map = new HashMap<String, IResourceVisitor>();
+	private static final Map<String, IResourceVisitor> map = new HashMap<String, IResourceVisitor>();
+
+	private final IProgressMonitor monitor;
+
+	static {
+		map.put("java", new JavaFileVisitor());
+		map.put("xml", new XmlFileVisitor());
+	}
 
 	/**
 	 * Constructor of ResourceVisitorDelegator.
@@ -51,9 +60,8 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 * 
 	 * @param depMapBuilder
 	 */
-	public ResourceVisitorDelegator() {
-		map.put(".java", new JavaFileVisitor());
-		map.put(".xml", new XmlFileVisitor());
+	public ResourceVisitorDelegator(IProgressMonitor monitor) {
+		this.monitor = monitor;
 	}
 
 	/**
@@ -71,6 +79,7 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 * 
 	 * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
 	 */
+	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		if (file != null) {
@@ -78,13 +87,15 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 			if (ext != null) {
 				IResourceVisitor visitor = map.get(ext.toLowerCase());
 				if (visitor != null) {
+					Activator.console.println("Visit file: " + file.getName());
 					visitor.visit(file);
+				} else {
+					Activator.console.println("No visitor for: "
+							+ file.getName());
 				}
 			}
-		} else if (resource instanceof IContainer) {
-			// return true to continue visiting children.
-			return true;
+			return false;
 		}
-		return false;
+		return true;
 	}
 }

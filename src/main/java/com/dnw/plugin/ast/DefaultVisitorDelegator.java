@@ -15,6 +15,8 @@ package com.dnw.plugin.ast;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 
+import com.dnw.depmap.Activator;
+
 /**
  * Class/Interface DefaultVisitorDelegator.
  * 
@@ -51,6 +53,7 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * 
 	 * @see com.dnw.plugin.ast.VisitorDelegator#preVisit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
+	@Override
 	public boolean preVisit(ASTNode node) {
 		return !stopSet.contains(node.getNodeType());
 	}
@@ -65,6 +68,7 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * 
 	 * @see com.dnw.plugin.ast.VisitorDelegator#postVisit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
+	@Override
 	public void postVisit(ASTNode node) {
 	}
 
@@ -81,9 +85,17 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(java.lang.Class,
 	 *      org.eclipse.jdt.core.dom.ASTNode)
 	 */
+	@Override
 	public <T extends ASTNode> boolean visit(Class<T> type, T node) {
+		String text = node.toString();
+		int p = text.indexOf('\n');
+		String firstLine = p >= 0 ? text.substring(0, p) : text;
+		Activator.console.println("Visit node: [" + type.getSimpleName() + "] "
+				+ firstLine);
 		Visitor<T> visitor = registry.lookup(type);
-		visitor.visit(node);
+		if (visitor != null) {
+			visitor.visit(node);
+		}
 		return true;
 	}
 
@@ -99,6 +111,7 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @see com.dnw.plugin.ast.VisitorDelegator#endVisit(java.lang.Class,
 	 *      org.eclipse.jdt.core.dom.ASTNode)
 	 */
+	@Override
 	public <T extends ASTNode> void endVisit(Class<T> type, T node) {
 	}
 }
