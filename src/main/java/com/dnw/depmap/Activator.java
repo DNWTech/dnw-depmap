@@ -14,11 +14,14 @@
 package com.dnw.depmap;
 
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.ui.console.MessageConsole;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.osgi.framework.BundleContext;
+
+import com.dnw.plugin.util.ConsoleUtil;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -31,6 +34,9 @@ public class Activator extends AbstractUIPlugin {
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.dnw.depmap";
 	private static String DBPATH = "/Users/manbaum/workspace/indigoSandbox/dnw-depmap/target/db";
+
+	public static final MessageConsole console = ConsoleUtil
+			.getConsole(PLUGIN_ID);
 
 	// The shared instance
 	private static Activator plugin;
