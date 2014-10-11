@@ -58,7 +58,7 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * 
-	 * @param depMapBuilder
+	 * @param monitor
 	 */
 	public ResourceVisitorDelegator(IProgressMonitor monitor) {
 		this.monitor = monitor;

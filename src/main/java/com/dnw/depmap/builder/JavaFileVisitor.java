@@ -17,11 +17,19 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.jdt.core.ICompilationUnit;
+import org.eclipse.jdt.core.JavaCore;
+import org.eclipse.jdt.core.dom.AST;
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
+import com.dnw.depmap.ast.MethodDeclarationVisitor;
 import com.dnw.depmap.ast.MethodInvocationVisitor;
-import com.dnw.plugin.ast.AstContext;
+import com.dnw.depmap.ast.TypeDeclarationVisitor;
 import com.dnw.plugin.ast.AstVisitorBridge;
 import com.dnw.plugin.ast.DefaultVisitorDelegator;
 import com.dnw.plugin.ast.DefaultVisitorRegistry;
@@ -43,6 +51,8 @@ public class JavaFileVisitor implements IResourceVisitor {
 			stopSet, registry);
 
 	static {
+		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
+		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());
 		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
 	}
 
@@ -62,9 +72,15 @@ public class JavaFileVisitor implements IResourceVisitor {
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile) resource.getAdapter(IFile.class);
 		if (file != null) {
-			AstContext context = new AstContext(file, null);
 			ASTVisitor visitor = new AstVisitorBridge(delegator);
-			context.getRoot().accept(visitor);
+			ASTParser parser = ASTParser.newParser(AST.JLS3);
+			parser.setKind(ASTParser.K_COMPILATION_UNIT);
+			parser.setResolveBindings(true);
+			parser.setBindingsRecovery(true);
+			ICompilationUnit unit = JavaCore.createCompilationUnitFrom(file);
+			parser.setSource(unit);
+			ASTNode root = parser.createAST(null);
+			root.accept(visitor);
 			return true;
 		}
 		return false;

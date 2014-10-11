@@ -13,6 +13,13 @@
  */
 package com.dnw.depmap.ast;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import org.eclipse.jdt.core.dom.ASTNode;
+import org.eclipse.jdt.core.dom.Expression;
+import org.eclipse.jdt.core.dom.IMethodBinding;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 
 import com.dnw.depmap.Activator;
@@ -50,6 +57,33 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 	@Override
 	public void visit(MethodInvocation node) {
 		Activator.console.println("Visit MethodInvocation: " + node.toString());
-		Activator.w().meetMethodInvocation(node);
+		Teller.tellMethodInvocation(node);
+		ASTNode p = node.getParent();
+		while (p != null) {
+			if (p instanceof MethodDeclaration) {
+				break;
+			} else {
+				p = p.getParent();
+			}
+		}
+		if (p == null)
+			return;
+		MethodDeclaration decl = (MethodDeclaration) p;
+		Teller.tellMethodDeclaration(decl);
+		IMethodBinding from = decl.resolveBinding();
+		Activator.w().createMethod(from);
+
+		IMethodBinding to = node.resolveMethodBinding();
+		if (to == null)
+			return;
+		Activator.w().createMethod(to);
+
+		@SuppressWarnings("unchecked")
+		List<Expression> exprs = node.arguments();
+		List<String> args = new ArrayList<String>(exprs.size());
+		for (Expression e : exprs) {
+			args.add(e.toString());
+		}
+		Activator.w().createInvocation(from, to, args);
 	}
 }

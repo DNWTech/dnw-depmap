@@ -13,28 +13,15 @@
  */
 package com.dnw.depmap.neo;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.eclipse.core.resources.IFile;
-import org.eclipse.core.resources.IResource;
-import org.eclipse.jdt.core.JavaModelException;
-import org.eclipse.jdt.core.dom.ASTNode;
-import org.eclipse.jdt.core.dom.CompilationUnit;
-import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.Modifier;
 import org.neo4j.cypher.javacompat.ExecutionEngine;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
-
-import com.dnw.depmap.Activator;
 
 /**
  * Class/Interface Writer.
@@ -45,32 +32,6 @@ import com.dnw.depmap.Activator;
  */
 public class Writer {
 
-	public final static class Pair {
-		public final String key;
-		public final Object value;
-
-		public Pair(String key, Object value) {
-			this.key = key;
-			this.value = value;
-		}
-	}
-
-	public static Pair p(String key, Object value) {
-		return new Pair(key, value);
-	}
-
-	public static Map<String, Object> m(Pair... pairs) {
-		HashMap<String, Object> result = new HashMap<String, Object>();
-		for (Pair p : pairs) {
-			result.put(p.key, p.value);
-		}
-		return result;
-	}
-
-	public static List<Object> a(Object... values) {
-		return Arrays.asList(values);
-	}
-
 	private final GraphDatabaseService gdb;
 	private final ExecutionEngine engine;
 
@@ -79,159 +40,62 @@ public class Writer {
 		engine = new ExecutionEngine(gdb);
 	}
 
-	public void createClass(ITypeBinding type) {
-		if (type == null)
-			return;
+	public void execute(String statement, Map<String, Object> params) {
 		Transaction tx = gdb.beginTx();
 		try {
-			Map<String, Object> p = m(p("typename", type.getQualifiedName()));
-			engine.execute("merge (t:Type {name:{typename}})", p);
+			engine.execute(statement, params);
 			tx.success();
 		} finally {
 			tx.close();
 		}
 	}
 
+	public static final String CREATETYPE = "merge (t:Type {name:{typename}}) on create set t.displayname={displayname}, t.createtime=timestamp())";
+	public static final String CREATEMETHOD = "match (t:Type {name:{typename}})  merge (t)-[:Declare]->(m:Method {name:{methodname}})";
+	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
+
+	public String makeTypeName(ITypeBinding t) {
+		return t.getQualifiedName();
+	}
+
+	public String makeMethodName(IMethodBinding m) {
+		return null;
+	}
+
+	public String makeMethodDisplayName(IMethodBinding m) {
+		StringBuffer sb = new StringBuffer();
+		int f = m.getModifiers();
+		if (Modifier.isStatic(f)) {
+			sb.append('S');
+		}
+		sb.append((m.getModifiers() & Modifier.PUBLIC) != 0 ? '+' : '-');
+		return sb.toString();
+	}
+
+	public void createType(ITypeBinding type) {
+		if (type != null) {
+			M p = M.m().e("typename", type.getQualifiedName())
+					.e("displayname", type.getName());
+			execute(CREATETYPE, p.map());
+		}
+	}
+
 	public void createMethod(IMethodBinding method) {
-		if (method == null)
-			return;
-		ITypeBinding type = method.getDeclaringClass();
-		createClass(type);
-		Transaction tx = gdb.beginTx();
-		try {
-			Map<String, Object> p = m(p("typename", type.getQualifiedName()),
-					p("methodname", method.toString()));
-			engine.execute(
-					"match (t:Type {name:{typename}})  merge (t)-[:Declare]->(m:Method {name:{methodname}})",
-					p);
-			tx.success();
-		} finally {
-			tx.close();
+		if (method != null) {
+			ITypeBinding type = method.getDeclaringClass();
+			createType(type);
+			M p = M.m().e("typename", type.getQualifiedName())
+					.e("methodname", method.toString());
+			execute(CREATEMETHOD, p.map());
 		}
 	}
 
 	public void createInvocation(IMethodBinding from, IMethodBinding to,
 			List<String> args) {
-		if (from == null || to == null)
-			return;
-		Transaction tx = gdb.beginTx();
-		try {
-			Map<String, Object> p = m(p("namef", from.toString()),
-					p("namet", to.toString()), p("args", args));
-			engine.execute(
-					"match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)",
-					p);
-			tx.success();
-		} finally {
-			tx.close();
+		if (from == null || to == null) {
+			M p = M.m().e("namef", from.toString()).e("namet", to.toString())
+					.e("args", args);
+			execute(CREATEINVOKE, p.map());
 		}
-	}
-
-	public String fileInfo(ASTNode node) {
-		CompilationUnit unit = (CompilationUnit) node.getRoot();
-		IResource resource;
-		try {
-			resource = unit.getJavaElement().getCorrespondingResource();
-		} catch (JavaModelException e) {
-			Activator.console.println(e);
-			return "";
-		}
-		IFile file = (IFile) resource.getAdapter(IFile.class);
-		if (file == null)
-			return "";
-		String filename = file.getFullPath().toString();
-		String linenum = String.valueOf(unit.getLineNumber(node
-				.getStartPosition()));
-		return filename + ":" + linenum;
-	}
-
-	public void tellTypeDeclaration(TypeDeclaration node) {
-		ITypeBinding type = node.resolveBinding();
-		StringBuffer sb = new StringBuffer();
-		sb.append("*** ");
-		sb.append(node.getName());
-		sb.append(" has been binding to ");
-		sb.append(type != null ? type.getQualifiedName() : "nothing");
-		sb.append(" (");
-		sb.append(fileInfo(node));
-		sb.append(")");
-		Activator.console.println(sb.toString());
-	}
-
-	public void tellMethodDeclaration(MethodDeclaration node) {
-		IMethodBinding method = node.resolveBinding();
-		StringBuffer sb = new StringBuffer();
-		sb.append("*** ");
-		sb.append(node.getName());
-		sb.append(" has been binding to ");
-		sb.append(method != null ? method.getName() + "()" : "nothing");
-		sb.append(" (");
-		sb.append(fileInfo(node));
-		sb.append(")");
-		Activator.console.println(sb.toString());
-	}
-
-	public void tellMethodInvocation(MethodInvocation node) {
-		IMethodBinding method = node.resolveMethodBinding();
-		StringBuffer sb = new StringBuffer();
-		sb.append("*** ");
-		sb.append(node.getName());
-		sb.append(" has been binding to ");
-		sb.append(method != null ? method.getName() + "()" : "nothing");
-		sb.append(" (");
-		sb.append(fileInfo(node));
-		sb.append(")");
-		Activator.console.println(sb.toString());
-	}
-
-	public void meetTypeDeclaration(TypeDeclaration node) {
-		tellTypeDeclaration(node);
-		ITypeBinding type = node.resolveBinding();
-		createClass(type);
-	}
-
-	/**
-	 * Method MethodDeclaration.
-	 * 
-	 * @author manbaum
-	 * @since Oct 10, 2014
-	 * 
-	 * @param node
-	 */
-	public void meetMethodDeclaration(MethodDeclaration node) {
-		tellMethodDeclaration(node);
-		IMethodBinding method = node.resolveBinding();
-		createMethod(method);
-	}
-
-	public void meetMethodInvocation(MethodInvocation node) {
-		tellMethodInvocation(node);
-		ASTNode p = node.getParent();
-		while (p != null) {
-			if (p instanceof MethodDeclaration) {
-				break;
-			} else {
-				p = p.getParent();
-			}
-		}
-		if (p == null)
-			return;
-		MethodDeclaration decl = (MethodDeclaration) p;
-		tellMethodDeclaration(decl);
-		IMethodBinding from = decl.resolveBinding();
-		createMethod(from);
-
-		IMethodBinding to = node.resolveMethodBinding();
-		if (to == null)
-			return;
-		createMethod(to);
-
-		@SuppressWarnings("unchecked")
-		List<Expression> exprs = node.arguments();
-		List<String> args = new ArrayList<String>(exprs.size());
-		for (Expression e : exprs) {
-			args.add(e.toString());
-		}
-		createInvocation(from, to, args);
 	}
 }

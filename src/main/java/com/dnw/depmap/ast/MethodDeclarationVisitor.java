@@ -13,6 +13,7 @@
  */
 package com.dnw.depmap.ast;
 
+import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 
 import com.dnw.depmap.Activator;
@@ -41,6 +42,8 @@ public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 	public void visit(MethodDeclaration node) {
 		Activator.console
 				.println("Visit MethodDeclaration: " + node.toString());
-		Activator.w().meetMethodDeclaration(node);
+		Teller.tellMethodDeclaration(node);
+		IMethodBinding method = node.resolveBinding();
+		Activator.w().createMethod(method);
 	}
 }

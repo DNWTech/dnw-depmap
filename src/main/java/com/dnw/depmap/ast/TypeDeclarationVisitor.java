@@ -13,6 +13,7 @@
  */
 package com.dnw.depmap.ast;
 
+import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.dnw.depmap.Activator;
@@ -40,6 +41,8 @@ public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
 	@Override
 	public void visit(TypeDeclaration node) {
 		Activator.console.println("Visit TypeDeclaration: " + node.getName());
-		Activator.w().meetTypeDeclaration(node);
+		Teller.tellTypeDeclaration(node);
+		ITypeBinding type = node.resolveBinding();
+		Activator.w().createType(type);
 	}
 }
