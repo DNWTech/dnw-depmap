@@ -15,8 +15,6 @@ package com.dnw.plugin.ast;
 
 import org.eclipse.jdt.core.dom.ASTNode;
 
-import com.dnw.depmap.Activator;
-
 /**
  * Class/Interface DefaultVisitorDelegator.
  * 
@@ -87,11 +85,12 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 */
 	@Override
 	public <T extends ASTNode> boolean visit(Class<T> type, T node) {
-		String text = node.toString();
-		int p = text.indexOf('\n');
-		String firstLine = p >= 0 ? text.substring(0, p) : text;
-		Activator.console.println("Visit node: [" + type.getSimpleName() + "] "
-				+ firstLine);
+		// String text = node.toString();
+		// int p = text.indexOf('\n');
+		// String firstLine = p >= 0 ? text.substring(0, p) : text;
+		// Activator.console.println("Visit node: [" + type.getSimpleName() +
+		// "] "
+		// + firstLine);
 		Visitor<T> visitor = registry.lookup(type);
 		if (visitor != null) {
 			visitor.visit(node);

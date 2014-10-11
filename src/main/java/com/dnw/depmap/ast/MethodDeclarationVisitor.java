@@ -15,6 +15,7 @@ package com.dnw.depmap.ast;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import com.dnw.depmap.Activator;
 import com.dnw.plugin.ast.Visitor;
@@ -40,10 +41,23 @@ public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 	 */
 	@Override
 	public void visit(MethodDeclaration node) {
-		Activator.console
-				.println("Visit MethodDeclaration: " + node.toString());
-		Teller.tellMethodDeclaration(node);
+		Activator.console.println(" -- Visit MethodDeclaration: " + make(node));
 		IMethodBinding method = node.resolveBinding();
+		Teller.tellMethodDeclaration(node, method);
 		Activator.w().createMethod(method);
+	}
+
+	private String make(MethodDeclaration node) {
+		StringBuffer sb = new StringBuffer();
+		sb.append(node.getReturnType2());
+		sb.append(' ');
+		sb.append(node.getName());
+		sb.append('(');
+		for (Object v : node.parameters()) {
+			SingleVariableDeclaration d = (SingleVariableDeclaration) v;
+			sb.append(d.getType());
+		}
+		sb.append(')');
+		return sb.toString();
 	}
 }

@@ -20,6 +20,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.osgi.framework.BundleContext;
 
+import com.dnw.depmap.neo.BlackOrWhite;
 import com.dnw.depmap.neo.Writer;
 import com.dnw.plugin.util.ConsoleUtil;
 
@@ -41,6 +42,13 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 	private static GraphDatabaseService gdb;
 	private static Writer writer;
+
+	static {
+		BlackOrWhite.WHITE.add("com\\.dnw\\..*");
+		BlackOrWhite.WHITE.add("org\\.eclipse\\.jdt\\.core\\.dom\\..*");
+		BlackOrWhite.WHITE.add("java\\.lang\\.Object");
+		BlackOrWhite.BLACK.add(".*");
+	}
 
 	/**
 	 * Constructor of Activator.

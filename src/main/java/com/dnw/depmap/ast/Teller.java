@@ -53,12 +53,12 @@ public class Teller {
 		return filename + ":" + linenum;
 	}
 
-	public static void tellTypeDeclaration(TypeDeclaration node) {
-		ITypeBinding type = node.resolveBinding();
+	public static void tellTypeDeclaration(TypeDeclaration node,
+			ITypeBinding type) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("*** ");
+		sb.append("  . ");
 		sb.append(node.getName());
-		sb.append(" has been binding to ");
+		sb.append(" bound to: ");
 		sb.append(type != null ? type.getQualifiedName() : "nothing");
 		sb.append(" (");
 		sb.append(fileInfo(node));
@@ -66,12 +66,12 @@ public class Teller {
 		Activator.console.println(sb.toString());
 	}
 
-	public static void tellMethodDeclaration(MethodDeclaration node) {
-		IMethodBinding method = node.resolveBinding();
+	public static void tellMethodDeclaration(MethodDeclaration node,
+			IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("*** ");
+		sb.append("  . ");
 		sb.append(node.getName());
-		sb.append(" has been binding to ");
+		sb.append(" bound to: ");
 		sb.append(method != null ? method.getName() + "()" : "nothing");
 		sb.append(" (");
 		sb.append(fileInfo(node));
@@ -79,12 +79,12 @@ public class Teller {
 		Activator.console.println(sb.toString());
 	}
 
-	public static void tellMethodInvocation(MethodInvocation node) {
-		IMethodBinding method = node.resolveMethodBinding();
+	public static void tellMethodInvocation(MethodInvocation node,
+			IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
-		sb.append("*** ");
+		sb.append("  . ");
 		sb.append(node.getName());
-		sb.append(" has been binding to ");
+		sb.append(" bound to: ");
 		sb.append(method != null ? method.getName() + "()" : "nothing");
 		sb.append(" (");
 		sb.append(fileInfo(node));

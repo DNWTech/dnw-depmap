@@ -40,9 +40,10 @@ public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
 	 */
 	@Override
 	public void visit(TypeDeclaration node) {
-		Activator.console.println("Visit TypeDeclaration: " + node.getName());
-		Teller.tellTypeDeclaration(node);
+		Activator.console.println(" -- Visit TypeDeclaration: "
+				+ node.getName());
 		ITypeBinding type = node.resolveBinding();
+		Teller.tellTypeDeclaration(node, type);
 		Activator.w().createType(type);
 	}
 }

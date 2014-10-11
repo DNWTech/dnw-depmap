@@ -18,7 +18,6 @@ import java.util.Iterator;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IAdaptable;
-import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaModelException;
 import org.eclipse.jface.action.IAction;
 import org.eclipse.jface.viewers.ISelection;
@@ -57,15 +56,15 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 			for (it = ((IStructuredSelection) selection).iterator(); it
 					.hasNext();) {
 				Object element = it.next();
-				ICompilationUnit unit = null;
-				if (element instanceof ICompilationUnit) {
-					unit = (ICompilationUnit) element;
+				IResource resource = null;
+				if (element instanceof IResource) {
+					resource = (IResource) element;
 				} else if (element instanceof IAdaptable) {
-					unit = (ICompilationUnit) ((IAdaptable) element)
-							.getAdapter(ICompilationUnit.class);
+					resource = (IResource) ((IAdaptable) element)
+							.getAdapter(IResource.class);
 				}
-				if (unit != null) {
-					analysisDependency(unit);
+				if (resource != null) {
+					analysisDependency(resource);
 				}
 			}
 		}
@@ -79,11 +78,9 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 	 * 
 	 * @param unit
 	 */
-	private void analysisDependency(ICompilationUnit unit) {
+	private void analysisDependency(IResource resource) {
 		ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(null);
-		IResource resource;
 		try {
-			resource = unit.getCorrespondingResource();
 			resource.accept(visitor);
 		} catch (JavaModelException e) {
 			Activator.console.println(e);

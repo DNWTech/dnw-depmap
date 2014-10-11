@@ -21,6 +21,7 @@ import org.eclipse.jdt.core.dom.Expression;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import com.dnw.depmap.Activator;
 import com.dnw.plugin.ast.Visitor;
@@ -56,8 +57,8 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 	 */
 	@Override
 	public void visit(MethodInvocation node) {
-		Activator.console.println("Visit MethodInvocation: " + node.toString());
-		Teller.tellMethodInvocation(node);
+		Activator.console.println(" -- Visit MethodInvocation: "
+				+ node.toString());
 		ASTNode p = node.getParent();
 		while (p != null) {
 			if (p instanceof MethodDeclaration) {
@@ -66,24 +67,41 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 				p = p.getParent();
 			}
 		}
+		MethodDeclaration decl = (MethodDeclaration) p;
+		Activator.console.println("  . Method is called from: " + make(decl));
 		if (p == null)
 			return;
-		MethodDeclaration decl = (MethodDeclaration) p;
-		Teller.tellMethodDeclaration(decl);
+
 		IMethodBinding from = decl.resolveBinding();
-		Activator.w().createMethod(from);
-
+		Teller.tellMethodDeclaration(decl, from);
 		IMethodBinding to = node.resolveMethodBinding();
-		if (to == null)
-			return;
-		Activator.w().createMethod(to);
+		Teller.tellMethodInvocation(node, to);
+		Activator.w().createInvocation(from, to, args(node.arguments()));
+	}
 
-		@SuppressWarnings("unchecked")
-		List<Expression> exprs = node.arguments();
-		List<String> args = new ArrayList<String>(exprs.size());
-		for (Expression e : exprs) {
-			args.add(e.toString());
+	private List<Object> args(List<?> list) {
+		int n = list.size();
+		List<Object> r = new ArrayList<Object>(n);
+		for (int i = 0; i < n; i++) {
+			Expression e = (Expression) list.get(i);
+			r.add(e.toString());
 		}
-		Activator.w().createInvocation(from, to, args);
+		return r;
+	}
+
+	private String make(MethodDeclaration node) {
+		StringBuffer sb = new StringBuffer();
+		if (node != null) {
+			sb.append(node.getReturnType2());
+			sb.append(' ');
+			sb.append(node.getName());
+			sb.append('(');
+			for (Object v : node.parameters()) {
+				SingleVariableDeclaration d = (SingleVariableDeclaration) v;
+				sb.append(d.getType());
+			}
+			sb.append(')');
+		}
+		return sb.toString();
 	}
 }

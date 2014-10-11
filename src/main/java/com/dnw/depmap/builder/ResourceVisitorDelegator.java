@@ -87,10 +87,11 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 			if (ext != null) {
 				IResourceVisitor visitor = map.get(ext.toLowerCase());
 				if (visitor != null) {
-					Activator.console.println("Visit file: " + file.getName());
+					Activator.console.println("=== Visit file: "
+							+ file.getName());
 					visitor.visit(file);
 				} else {
-					Activator.console.println("No visitor for: "
+					Activator.console.println("=== No visitor for: "
 							+ file.getName());
 				}
 			}
