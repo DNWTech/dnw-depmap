@@ -20,7 +20,6 @@ import org.eclipse.jdt.core.dom.ASTNode;
  * 
  * @author manbaum
  * @since Sep 29, 2014
- * 
  * @param <T>
  */
 public interface Visitor<T extends ASTNode> {
@@ -30,7 +29,6 @@ public interface Visitor<T extends ASTNode> {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param node
 	 */
 	void visit(T node);

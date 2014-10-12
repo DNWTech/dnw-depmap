@@ -28,20 +28,17 @@ public interface VisitorRegistry {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param type
 	 * @param visitor
 	 * @return
 	 */
-	<T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type,
-			V visitor);
+	<T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type, V visitor);
 
 	/**
 	 * Method remove.
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param type
 	 * @return
 	 */
@@ -60,7 +57,6 @@ public interface VisitorRegistry {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param type
 	 * @return
 	 */

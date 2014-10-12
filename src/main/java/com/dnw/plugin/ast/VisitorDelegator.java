@@ -28,7 +28,6 @@ public interface VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param node
 	 * @return
 	 */
@@ -39,7 +38,6 @@ public interface VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param node
 	 */
 	void postVisit(ASTNode node);
@@ -49,7 +47,6 @@ public interface VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param type
 	 * @param node
 	 * @return
@@ -61,7 +58,6 @@ public interface VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param type
 	 * @param node
 	 */

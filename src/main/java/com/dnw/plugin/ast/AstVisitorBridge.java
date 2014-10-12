@@ -115,7 +115,6 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param delegator
 	 */
 	public AstVisitorBridge(VisitorDelegator delegator) {
@@ -123,18 +122,13 @@ public final class AstVisitorBridge extends ASTVisitor {
 	}
 
 	/**
-	 * Visits the given AST node prior to the type-specific visit (before
-	 * <code>visit</code>).
+	 * Visits the given AST node prior to the type-specific visit (before <code>visit</code>).
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if this node should be visited, i.e.
-	 *         <code>visit(node)<code> should be called; and
-	 *         <code>false</code> if this node should be skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if this node should be visited, i.e. <code>visit(node)<code> should
+	 *         be called; and <code>false</code> if this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#preVisit2(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
@@ -143,15 +137,11 @@ public final class AstVisitorBridge extends ASTVisitor {
 	}
 
 	/**
-	 * Visits the given AST node following the type-specific visit (after
-	 * <code>endVisit</code>).
+	 * Visits the given AST node following the type-specific visit (after <code>endVisit</code>).
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#postVisit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
@@ -164,14 +154,10 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param type
-	 *            the type of the given AST node.
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
+	 * @param type the type of the given AST node.
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 */
 	private <T extends ASTNode> boolean visit(Class<T> type, T node) {
 		return delegator.visit(type, node);
@@ -182,11 +168,8 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param type
-	 *            the type of the given AST node.
-	 * @param node
-	 *            the node to visit.
+	 * @param type the type of the given AST node.
+	 * @param node the node to visit.
 	 */
 	private <T extends ASTNode> void endVisit(Class<T> type, T node) {
 		delegator.endVisit(type, node);
@@ -197,13 +180,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.AnnotationTypeDeclaration)
 	 */
 	@Override
@@ -216,13 +195,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration)
 	 */
 	@Override
@@ -235,13 +210,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.AnonymousClassDeclaration)
 	 */
 	@Override
@@ -254,13 +225,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ArrayAccess)
 	 */
 	@Override
@@ -273,13 +240,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ArrayCreation)
 	 */
 	@Override
@@ -292,13 +255,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ArrayInitializer)
 	 */
 	@Override
@@ -311,13 +270,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ArrayType)
 	 */
 	@Override
@@ -330,13 +285,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.AssertStatement)
 	 */
 	@Override
@@ -349,13 +300,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.Assignment)
 	 */
 	@Override
@@ -368,13 +315,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.Block)
 	 */
 	@Override
@@ -387,13 +330,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.BlockComment)
 	 */
 	@Override
@@ -406,13 +345,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.BooleanLiteral)
 	 */
 	@Override
@@ -425,13 +360,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.BreakStatement)
 	 */
 	@Override
@@ -444,13 +375,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.CastExpression)
 	 */
 	@Override
@@ -463,13 +390,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.CatchClause)
 	 */
 	@Override
@@ -482,13 +405,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.CharacterLiteral)
 	 */
 	@Override
@@ -501,13 +420,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ClassInstanceCreation)
 	 */
 	@Override
@@ -520,13 +435,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.CompilationUnit)
 	 */
 	@Override
@@ -539,13 +450,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ConditionalExpression)
 	 */
 	@Override
@@ -558,13 +465,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ConstructorInvocation)
 	 */
 	@Override
@@ -577,13 +480,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ContinueStatement)
 	 */
 	@Override
@@ -596,13 +495,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.DoStatement)
 	 */
 	@Override
@@ -615,13 +510,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.EmptyStatement)
 	 */
 	@Override
@@ -634,13 +525,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.EnhancedForStatement)
 	 */
 	@Override
@@ -653,13 +540,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.EnumConstantDeclaration)
 	 */
 	@Override
@@ -672,13 +555,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.EnumDeclaration)
 	 */
 	@Override
@@ -691,13 +570,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ExpressionStatement)
 	 */
 	@Override
@@ -710,13 +585,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.FieldAccess)
 	 */
 	@Override
@@ -729,13 +600,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.FieldDeclaration)
 	 */
 	@Override
@@ -748,13 +615,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ForStatement)
 	 */
 	@Override
@@ -767,13 +630,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.IfStatement)
 	 */
 	@Override
@@ -786,13 +645,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ImportDeclaration)
 	 */
 	@Override
@@ -805,13 +660,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.InfixExpression)
 	 */
 	@Override
@@ -824,13 +675,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.InstanceofExpression)
 	 */
 	@Override
@@ -843,13 +690,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.Initializer)
 	 */
 	@Override
@@ -862,13 +705,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.Javadoc)
 	 */
 	@Override
@@ -881,13 +720,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.LabeledStatement)
 	 */
 	@Override
@@ -900,13 +735,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.LineComment)
 	 */
 	@Override
@@ -919,13 +750,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MarkerAnnotation)
 	 */
 	@Override
@@ -938,13 +765,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MemberRef)
 	 */
 	@Override
@@ -957,13 +780,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MemberValuePair)
 	 */
 	@Override
@@ -976,13 +795,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MethodRef)
 	 */
 	@Override
@@ -995,13 +810,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MethodRefParameter)
 	 */
 	@Override
@@ -1014,13 +825,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MethodDeclaration)
 	 */
 	@Override
@@ -1033,13 +840,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.MethodInvocation)
 	 */
 	@Override
@@ -1052,13 +855,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.Modifier)
 	 */
 	@Override
@@ -1071,13 +870,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.NormalAnnotation)
 	 */
 	@Override
@@ -1090,13 +885,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.NullLiteral)
 	 */
 	@Override
@@ -1109,13 +900,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.NumberLiteral)
 	 */
 	@Override
@@ -1128,13 +915,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.PackageDeclaration)
 	 */
 	@Override
@@ -1147,13 +930,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ParameterizedType)
 	 */
 	@Override
@@ -1166,13 +945,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ParenthesizedExpression)
 	 */
 	@Override
@@ -1185,13 +960,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.PostfixExpression)
 	 */
 	@Override
@@ -1204,13 +975,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.PrefixExpression)
 	 */
 	@Override
@@ -1223,13 +990,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.PrimitiveType)
 	 */
 	@Override
@@ -1242,13 +1005,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.QualifiedName)
 	 */
 	@Override
@@ -1261,13 +1020,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.QualifiedType)
 	 */
 	@Override
@@ -1280,13 +1035,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ReturnStatement)
 	 */
 	@Override
@@ -1299,13 +1050,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SimpleName)
 	 */
 	@Override
@@ -1318,13 +1065,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SimpleType)
 	 */
 	@Override
@@ -1337,13 +1080,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SingleMemberAnnotation)
 	 */
 	@Override
@@ -1356,13 +1095,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SingleVariableDeclaration)
 	 */
 	@Override
@@ -1375,13 +1110,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.StringLiteral)
 	 */
 	@Override
@@ -1394,13 +1125,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SuperConstructorInvocation)
 	 */
 	@Override
@@ -1413,13 +1140,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SuperFieldAccess)
 	 */
 	@Override
@@ -1432,13 +1155,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SuperMethodInvocation)
 	 */
 	@Override
@@ -1451,13 +1170,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SwitchCase)
 	 */
 	@Override
@@ -1470,13 +1185,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SwitchStatement)
 	 */
 	@Override
@@ -1489,13 +1200,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.SynchronizedStatement)
 	 */
 	@Override
@@ -1508,13 +1215,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TagElement)
 	 */
 	@Override
@@ -1527,13 +1230,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TextElement)
 	 */
 	@Override
@@ -1546,13 +1245,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ThisExpression)
 	 */
 	@Override
@@ -1565,13 +1260,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.ThrowStatement)
 	 */
 	@Override
@@ -1584,13 +1275,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TryStatement)
 	 */
 	@Override
@@ -1603,13 +1290,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TypeDeclaration)
 	 */
 	@Override
@@ -1622,13 +1305,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TypeDeclarationStatement)
 	 */
 	@Override
@@ -1641,13 +1320,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TypeLiteral)
 	 */
 	@Override
@@ -1660,13 +1335,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.TypeParameter)
 	 */
 	@Override
@@ -1679,13 +1350,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.UnionType)
 	 */
 	@Override
@@ -1698,13 +1365,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.VariableDeclarationExpression)
 	 */
 	@Override
@@ -1717,13 +1380,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.VariableDeclarationStatement)
 	 */
 	@Override
@@ -1736,13 +1395,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.VariableDeclarationFragment)
 	 */
 	@Override
@@ -1755,13 +1410,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.WhileStatement)
 	 */
 	@Override
@@ -1774,13 +1425,9 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * @return <code>true</code> if the children of this node should be visited,
-	 *         and <code>false</code> if the children of this node should be
-	 *         skipped.
-	 * 
+	 * @param node the node to visit.
+	 * @return <code>true</code> if the children of this node should be visited, and
+	 *         <code>false</code> if the children of this node should be skipped.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#visit(org.eclipse.jdt.core.dom.WildcardType)
 	 */
 	@Override
@@ -1793,10 +1440,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.AnnotationTypeDeclaration)
 	 */
 	@Override
@@ -1809,10 +1453,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.AnnotationTypeMemberDeclaration)
 	 */
 	@Override
@@ -1825,10 +1466,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.AnonymousClassDeclaration)
 	 */
 	@Override
@@ -1841,10 +1479,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ArrayAccess)
 	 */
 	@Override
@@ -1857,10 +1492,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ArrayCreation)
 	 */
 	@Override
@@ -1873,10 +1505,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ArrayInitializer)
 	 */
 	@Override
@@ -1889,10 +1518,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ArrayType)
 	 */
 	@Override
@@ -1905,10 +1531,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.AssertStatement)
 	 */
 	@Override
@@ -1921,10 +1544,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.Assignment)
 	 */
 	@Override
@@ -1937,10 +1557,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.Block)
 	 */
 	@Override
@@ -1953,10 +1570,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.BlockComment)
 	 */
 	@Override
@@ -1969,10 +1583,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.BooleanLiteral)
 	 */
 	@Override
@@ -1985,10 +1596,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.BreakStatement)
 	 */
 	@Override
@@ -2001,10 +1609,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.CastExpression)
 	 */
 	@Override
@@ -2017,10 +1622,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.CatchClause)
 	 */
 	@Override
@@ -2033,10 +1635,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.CharacterLiteral)
 	 */
 	@Override
@@ -2049,10 +1648,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ClassInstanceCreation)
 	 */
 	@Override
@@ -2065,10 +1661,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.CompilationUnit)
 	 */
 	@Override
@@ -2081,10 +1674,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ConditionalExpression)
 	 */
 	@Override
@@ -2097,10 +1687,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ConstructorInvocation)
 	 */
 	@Override
@@ -2113,10 +1700,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ContinueStatement)
 	 */
 	@Override
@@ -2129,10 +1713,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.DoStatement)
 	 */
 	@Override
@@ -2145,10 +1726,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.EmptyStatement)
 	 */
 	@Override
@@ -2161,10 +1739,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.EnhancedForStatement)
 	 */
 	@Override
@@ -2177,10 +1752,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.EnumConstantDeclaration)
 	 */
 	@Override
@@ -2193,10 +1765,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.EnumDeclaration)
 	 */
 	@Override
@@ -2209,10 +1778,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ExpressionStatement)
 	 */
 	@Override
@@ -2225,10 +1791,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.FieldAccess)
 	 */
 	@Override
@@ -2241,10 +1804,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.FieldDeclaration)
 	 */
 	@Override
@@ -2257,10 +1817,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ForStatement)
 	 */
 	@Override
@@ -2273,10 +1830,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.IfStatement)
 	 */
 	@Override
@@ -2289,10 +1843,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ImportDeclaration)
 	 */
 	@Override
@@ -2305,10 +1856,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.InfixExpression)
 	 */
 	@Override
@@ -2321,10 +1869,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.InstanceofExpression)
 	 */
 	@Override
@@ -2337,10 +1882,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.Initializer)
 	 */
 	@Override
@@ -2353,10 +1895,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.Javadoc)
 	 */
 	@Override
@@ -2369,10 +1908,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.LabeledStatement)
 	 */
 	@Override
@@ -2385,10 +1921,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.LineComment)
 	 */
 	@Override
@@ -2401,10 +1934,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.MarkerAnnotation)
 	 */
 	@Override
@@ -2417,10 +1947,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.MemberRef)
 	 */
 	@Override
@@ -2433,10 +1960,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.MemberValuePair)
 	 */
 	@Override
@@ -2449,10 +1973,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.MethodRef)
 	 */
 	@Override
@@ -2465,10 +1986,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.MethodRefParameter)
 	 */
 	@Override
@@ -2481,10 +1999,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.MethodDeclaration)
 	 */
 	@Override
@@ -2497,10 +2012,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.MethodInvocation)
 	 */
 	@Override
@@ -2513,10 +2025,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.Modifier)
 	 */
 	@Override
@@ -2529,10 +2038,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.NormalAnnotation)
 	 */
 	@Override
@@ -2545,10 +2051,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.NullLiteral)
 	 */
 	@Override
@@ -2561,10 +2064,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.NumberLiteral)
 	 */
 	@Override
@@ -2577,10 +2077,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.PackageDeclaration)
 	 */
 	@Override
@@ -2593,10 +2090,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ParameterizedType)
 	 */
 	@Override
@@ -2609,10 +2103,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ParenthesizedExpression)
 	 */
 	@Override
@@ -2625,10 +2116,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.PostfixExpression)
 	 */
 	@Override
@@ -2641,10 +2129,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.PrefixExpression)
 	 */
 	@Override
@@ -2657,10 +2142,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.PrimitiveType)
 	 */
 	@Override
@@ -2673,10 +2155,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.QualifiedName)
 	 */
 	@Override
@@ -2689,10 +2168,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.QualifiedType)
 	 */
 	@Override
@@ -2705,10 +2181,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ReturnStatement)
 	 */
 	@Override
@@ -2721,10 +2194,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SimpleName)
 	 */
 	@Override
@@ -2737,10 +2207,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SimpleType)
 	 */
 	@Override
@@ -2753,10 +2220,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SingleMemberAnnotation)
 	 */
 	@Override
@@ -2769,10 +2233,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SingleVariableDeclaration)
 	 */
 	@Override
@@ -2785,10 +2246,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.StringLiteral)
 	 */
 	@Override
@@ -2801,10 +2259,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SuperConstructorInvocation)
 	 */
 	@Override
@@ -2817,10 +2272,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SuperFieldAccess)
 	 */
 	@Override
@@ -2833,10 +2285,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SuperMethodInvocation)
 	 */
 	@Override
@@ -2849,10 +2298,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SwitchCase)
 	 */
 	@Override
@@ -2865,10 +2311,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SwitchStatement)
 	 */
 	@Override
@@ -2881,10 +2324,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.SynchronizedStatement)
 	 */
 	@Override
@@ -2897,10 +2337,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.TagElement)
 	 */
 	@Override
@@ -2913,10 +2350,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.TextElement)
 	 */
 	@Override
@@ -2929,10 +2363,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ThisExpression)
 	 */
 	@Override
@@ -2945,10 +2376,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.ThrowStatement)
 	 */
 	@Override
@@ -2961,10 +2389,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.TryStatement)
 	 */
 	@Override
@@ -2977,10 +2402,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.TypeDeclaration)
 	 */
 	@Override
@@ -2993,10 +2415,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.TypeDeclarationStatement)
 	 */
 	@Override
@@ -3009,10 +2428,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.TypeLiteral)
 	 */
 	@Override
@@ -3025,10 +2441,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.TypeParameter)
 	 */
 	@Override
@@ -3041,10 +2454,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.UnionType)
 	 */
 	@Override
@@ -3057,10 +2467,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.VariableDeclarationExpression)
 	 */
 	@Override
@@ -3073,10 +2480,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.VariableDeclarationStatement)
 	 */
 	@Override
@@ -3089,10 +2493,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.VariableDeclarationFragment)
 	 */
 	@Override
@@ -3105,10 +2506,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.WhileStatement)
 	 */
 	@Override
@@ -3121,10 +2519,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param node
-	 *            the node to visit.
-	 * 
+	 * @param node the node to visit.
 	 * @see org.eclipse.jdt.core.dom.ASTVisitor#endVisit(org.eclipse.jdt.core.dom.WildcardType)
 	 */
 	@Override

@@ -31,7 +31,6 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param stopSet
 	 * @param registry
 	 */
@@ -45,10 +44,8 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param node
 	 * @return
-	 * 
 	 * @see com.dnw.plugin.ast.VisitorDelegator#preVisit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
@@ -61,9 +58,7 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param node
-	 * 
 	 * @see com.dnw.plugin.ast.VisitorDelegator#postVisit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
@@ -75,11 +70,9 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param type
 	 * @param node
 	 * @return
-	 * 
 	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(java.lang.Class,
 	 *      org.eclipse.jdt.core.dom.ASTNode)
 	 */
@@ -103,10 +96,8 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param type
 	 * @param node
-	 * 
 	 * @see com.dnw.plugin.ast.VisitorDelegator#endVisit(java.lang.Class,
 	 *      org.eclipse.jdt.core.dom.ASTNode)
 	 */

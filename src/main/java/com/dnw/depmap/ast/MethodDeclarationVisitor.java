@@ -25,7 +25,6 @@ import com.dnw.plugin.ast.Visitor;
  * 
  * @author manbaum
  * @since Oct 10, 2014
- * 
  */
 public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 
@@ -34,9 +33,7 @@ public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @param node
-	 * 
 	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
@@ -54,7 +51,7 @@ public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 		sb.append(node.getName());
 		sb.append('(');
 		for (Object v : node.parameters()) {
-			SingleVariableDeclaration d = (SingleVariableDeclaration) v;
+			SingleVariableDeclaration d = (SingleVariableDeclaration)v;
 			sb.append(d.getType());
 		}
 		sb.append(')');

@@ -35,7 +35,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @param console
 	 */
 	public ConsoleUtil(MessageConsole console) {
@@ -47,13 +46,11 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param consoleManager
 	 * @param name
 	 * @return
 	 */
-	public static ConsoleUtil createConsole(IConsoleManager consoleManager,
-			String name) {
+	public static ConsoleUtil createConsole(IConsoleManager consoleManager, String name) {
 		MessageConsole console = new MessageConsole(name, null, true);
 		consoleManager.addConsoles(new IConsole[] { console });
 		return new ConsoleUtil(console);
@@ -64,16 +61,14 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param consoleManager
 	 * @param name
 	 * @return
 	 */
-	public static ConsoleUtil findConsole(IConsoleManager consoleManager,
-			String name) {
+	public static ConsoleUtil findConsole(IConsoleManager consoleManager, String name) {
 		for (IConsole c : consoleManager.getConsoles()) {
 			if (c.getName().equals(name))
-				return new ConsoleUtil((MessageConsole) c);
+				return new ConsoleUtil((MessageConsole)c);
 		}
 		return null;
 	}
@@ -83,13 +78,11 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param name
 	 * @return
 	 */
 	public static ConsoleUtil createConsole(String name) {
-		return createConsole(ConsolePlugin.getDefault().getConsoleManager(),
-				name);
+		return createConsole(ConsolePlugin.getDefault().getConsoleManager(), name);
 	}
 
 	/**
@@ -97,7 +90,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param name
 	 * @return
 	 */
@@ -110,13 +102,11 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param name
 	 * @return
 	 */
 	public static ConsoleUtil getConsole(String name) {
-		IConsoleManager consoleManager = ConsolePlugin.getDefault()
-				.getConsoleManager();
+		IConsoleManager consoleManager = ConsolePlugin.getDefault().getConsoleManager();
 		ConsoleUtil c = findConsole(consoleManager, name);
 		if (c == null) {
 			c = createConsole(consoleManager, name);
@@ -130,7 +120,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @return
 	 */
 	public MessageConsole getInternalConsole() {
@@ -142,7 +131,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param e
 	 * @return
 	 */
@@ -168,7 +156,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param console
 	 * @param message
 	 */
@@ -183,7 +170,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param console
 	 * @param message
 	 */
@@ -198,7 +184,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param console
 	 * @param e
 	 */
@@ -213,7 +198,6 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param console
 	 * @param e
 	 */
@@ -228,15 +212,13 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param console
 	 * @param pattern
 	 * @param arguments
 	 */
 	public void format(String pattern, Object... arguments) {
 		if (console != null) {
-			console.newMessageStream().print(
-					MessageFormat.format(pattern, arguments));
+			console.newMessageStream().print(MessageFormat.format(pattern, arguments));
 		}
 	}
 
@@ -245,15 +227,13 @@ public class ConsoleUtil {
 	 * 
 	 * @author manbaum
 	 * @since Jan 31, 2013
-	 * 
 	 * @param console
 	 * @param pattern
 	 * @param arguments
 	 */
 	public void formatln(String pattern, Object... arguments) {
 		if (console != null) {
-			console.newMessageStream().println(
-					MessageFormat.format(pattern, arguments));
+			console.newMessageStream().println(MessageFormat.format(pattern, arguments));
 		}
 	}
 }

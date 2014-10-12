@@ -13,12 +13,13 @@
  */
 package com.dnw.depmap.neo;
 
+import com.dnw.depmap.json.M;
+
 /**
  * Class/Interface RestfulApiAccessor.
  * 
  * @author manbaum
  * @since Oct 12, 2014
- * 
  */
 public class RestfulNeoAccessor implements NeoAccessor {
 
@@ -27,7 +28,6 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * 
 	 */
 	public RestfulNeoAccessor() {
 
@@ -38,12 +38,9 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * 
 	 * @param statement
 	 * @param params
-	 * 
-	 * @see com.dnw.depmap.neo.NeoAccessor#execute(java.lang.String,
-	 *      com.dnw.depmap.neo.M)
+	 * @see com.dnw.depmap.neo.NeoAccessor#execute(java.lang.String, com.dnw.depmap.json.V)
 	 */
 	@Override
 	public void execute(String statement, M params) {

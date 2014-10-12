@@ -14,8 +14,8 @@
 package com.dnw.plugin.ast;
 
 /**
- * A node type set holds a set of AST node type value. Currently, we use bitmap
- * as the internal storage approach.
+ * A node type set holds a set of AST node type value. Currently, we use bitmap as the internal
+ * storage approach.
  * 
  * @author manbaum
  * @since Sep 29, 2014
@@ -30,12 +30,9 @@ public class NodeTypeSet {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param type
-	 *            an integer value identifying the type of a concrete AST node.
+	 * @param type an integer value identifying the type of a concrete AST node.
 	 * @return the original AST node type value.
-	 * @throws IllegalArgumentException
-	 *             if the given AST node type value is invalid.
+	 * @throws IllegalArgumentException if the given AST node type value is invalid.
 	 */
 	protected int check(int type) {
 		if (type < 0 || type > 127)
@@ -48,9 +45,7 @@ public class NodeTypeSet {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param n
-	 *            an AST node type value.
+	 * @param n an AST node type value.
 	 * @return the mask of AST node type value.
 	 */
 	private long mask(int n) {
@@ -62,9 +57,7 @@ public class NodeTypeSet {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param type
-	 *            an integer value identifying the type of a concrete AST node.
+	 * @param type an integer value identifying the type of a concrete AST node.
 	 */
 	public void add(int type) {
 		int n = check(type);
@@ -80,9 +73,7 @@ public class NodeTypeSet {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param type
-	 *            an integer value identifying the type of a concrete AST node.
+	 * @param type an integer value identifying the type of a concrete AST node.
 	 */
 	public void remove(int type) {
 		int n = check(type);
@@ -108,11 +99,9 @@ public class NodeTypeSet {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param type
-	 *            an integer value identifying the type of a concrete AST node.
-	 * @return <code>true</code> if this set contains the given type, or
-	 *         <code>false</code> if it doesn't.
+	 * @param type an integer value identifying the type of a concrete AST node.
+	 * @return <code>true</code> if this set contains the given type, or <code>false</code> if it
+	 *         doesn't.
 	 */
 	public boolean contains(int type) {
 		int n = check(type);

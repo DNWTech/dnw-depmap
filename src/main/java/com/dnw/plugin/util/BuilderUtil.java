@@ -31,14 +31,13 @@ public class BuilderUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param project
 	 * @param builderId
 	 * @param checkExistance
 	 * @throws CoreException
 	 */
-	public static void addBuilder(IProject project, String builderId,
-			boolean checkExistance) throws CoreException {
+	public static void addBuilder(IProject project, String builderId, boolean checkExistance)
+			throws CoreException {
 		IProjectDescription description = project.getDescription();
 		ICommand[] commands = description.getBuildSpec();
 		if (checkExistance) {
@@ -61,13 +60,11 @@ public class BuilderUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param project
 	 * @param builderId
 	 * @throws CoreException
 	 */
-	public static void addBuilder(IProject project, String builderId)
-			throws CoreException {
+	public static void addBuilder(IProject project, String builderId) throws CoreException {
 		addBuilder(project, builderId, true);
 	}
 
@@ -76,21 +73,18 @@ public class BuilderUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param project
 	 * @param builderId
 	 * @throws CoreException
 	 */
-	public static void removeBuilder(IProject project, String builderId)
-			throws CoreException {
+	public static void removeBuilder(IProject project, String builderId) throws CoreException {
 		IProjectDescription description = project.getDescription();
 		ICommand[] commands = description.getBuildSpec();
 		for (int i = 0; i < commands.length; ++i) {
 			if (commands[i].getBuilderName().equals(builderId)) {
 				ICommand[] newCommands = new ICommand[commands.length - 1];
 				System.arraycopy(commands, 0, newCommands, 0, i);
-				System.arraycopy(commands, i + 1, newCommands, i,
-						commands.length - i - 1);
+				System.arraycopy(commands, i + 1, newCommands, i, commands.length - i - 1);
 				description.setBuildSpec(newCommands);
 				project.setDescription(description, null);
 				return;

@@ -19,12 +19,15 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.Modifier;
 
+import com.dnw.depmap.json.Converter;
+import com.dnw.depmap.json.K;
+import com.dnw.depmap.json.M;
+
 /**
  * Class/Interface NeoWriter.
  * 
  * @author manbaum
  * @since Oct 10, 2014
- * 
  */
 public class NeoWriter {
 
@@ -40,6 +43,20 @@ public class NeoWriter {
 	public static final String CREATEEXTENDS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Extends]->(b)";
 	public static final String CREATEMETHOD = "match (t:Type {name:{type}})  merge (t)-[:Declare]->(m:Method {name:{name}}) on create set m.displayname={dname}";
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
+
+	private final static class ITypeBindingK implements K<ITypeBinding> {
+
+		@Override
+		public Object convert(ITypeBinding value) {
+			return nameOf(value);
+		}
+
+		public final static ITypeBindingK K = new ITypeBindingK();
+	}
+
+	static {
+		Converter.add(ITypeBinding.class, ITypeBindingK.K);
+	}
 
 	private static String nameOf(ITypeBinding type) {
 		return type.getQualifiedName();
@@ -76,51 +93,40 @@ public class NeoWriter {
 		return sb.toString();
 	}
 
-	private final static class ITypeBindingK extends M.K {
-		@Override
-		public Object make(Object value) {
-			return nameOf(((ITypeBinding) value));
-		}
-
-		public final static ITypeBindingK K = new ITypeBindingK();
-	}
-
 	public void createTypeNoCheck(ITypeBinding type) {
-		M p = M.m().e("name", nameOf(type)).e("dname", displayNameOf(type));
+		M p = M.m().a("name", nameOf(type)).a("dname", displayNameOf(type));
 		if (type.isInterface()) {
-			p.e(ITypeBindingK.K, "parent", type.getInterfaces());
+			p.a("parent", type.getInterfaces());
 			accessor.execute(CREATEINTERFACE, p);
 		} else {
-			p.e(ITypeBindingK.K, "impls", type.getInterfaces());
-			p.e(ITypeBindingK.K, "parent", type.getSuperclass());
+			p.a("impls", type.getInterfaces());
+			p.a("parent", type.getSuperclass());
 			accessor.execute(CREATECLASS, p);
 		}
 	}
 
 	public void createImplementsNoCheck(ITypeBinding type, ITypeBinding base) {
-		M p = M.m().e("name", nameOf(type)).e("nameb", nameOf(base));
+		M p = M.m().a("name", nameOf(type)).a("nameb", nameOf(base));
 		accessor.execute(CREATEIMPLEMENTS, p);
 	}
 
 	public void createExtendsNoCheck(ITypeBinding type, ITypeBinding base) {
-		M p = M.m().e("name", nameOf(type)).e("nameb", nameOf(base));
+		M p = M.m().a("name", nameOf(type)).a("nameb", nameOf(base));
 		accessor.execute(CREATEEXTENDS, p);
 	}
 
 	public void createMethodNoCheck(IMethodBinding method) {
 		ITypeBinding type = method.getDeclaringClass();
 		// createTypeNoCheck(type);
-		M p = M.m().e("type", nameOf(type)).e("name", nameOf(method))
-				.e("dname", displayNameOf(method));
+		M p = M.m().a("type", nameOf(type)).a("name", nameOf(method))
+				.a("dname", displayNameOf(method));
 		accessor.execute(CREATEMETHOD, p);
 	}
 
-	public void createInvocationNoCheck(IMethodBinding from, IMethodBinding to,
-			List<?> args) {
+	public void createInvocationNoCheck(IMethodBinding from, IMethodBinding to, List<?> args) {
 		// createMethodNoCheck(from);
 		createMethodNoCheck(to);
-		M p = M.m().e("namef", nameOf(from)).e("namet", nameOf(to))
-				.e("args", args);
+		M p = M.m().a("namef", nameOf(from)).a("namet", nameOf(to)).a("args", args);
 		accessor.execute(CREATEINVOKE, p);
 	}
 
@@ -156,8 +162,7 @@ public class NeoWriter {
 		}
 	}
 
-	public void createInvocation(IMethodBinding from, IMethodBinding to,
-			List<?> args) {
+	public void createInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
 		if (from != null && to != null) {
 			String typeNameF = nameOf(from.getDeclaringClass());
 			boolean allowF = BlackOrWhite.allowed(typeNameF);

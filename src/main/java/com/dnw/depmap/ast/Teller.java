@@ -31,12 +31,11 @@ import com.dnw.depmap.Activator;
  * 
  * @author manbaum
  * @since Oct 11, 2014
- * 
  */
 public class Teller {
 
 	public static String fileInfo(ASTNode node) {
-		CompilationUnit unit = (CompilationUnit) node.getRoot();
+		CompilationUnit unit = (CompilationUnit)node.getRoot();
 		IResource resource;
 		try {
 			resource = unit.getJavaElement().getCorrespondingResource();
@@ -44,17 +43,15 @@ public class Teller {
 			Activator.console.println(e);
 			return "";
 		}
-		IFile file = (IFile) resource.getAdapter(IFile.class);
+		IFile file = (IFile)resource.getAdapter(IFile.class);
 		if (file == null)
 			return "";
 		String filename = file.getFullPath().toString();
-		String linenum = String.valueOf(unit.getLineNumber(node
-				.getStartPosition()));
+		String linenum = String.valueOf(unit.getLineNumber(node.getStartPosition()));
 		return filename + ":" + linenum;
 	}
 
-	public static void tellTypeDeclaration(TypeDeclaration node,
-			ITypeBinding type) {
+	public static void tellTypeDeclaration(TypeDeclaration node, ITypeBinding type) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  . ");
 		sb.append(node.getName());
@@ -66,8 +63,7 @@ public class Teller {
 		Activator.console.println(sb.toString());
 	}
 
-	public static void tellMethodDeclaration(MethodDeclaration node,
-			IMethodBinding method) {
+	public static void tellMethodDeclaration(MethodDeclaration node, IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  . ");
 		sb.append(node.getName());
@@ -79,8 +75,7 @@ public class Teller {
 		Activator.console.println(sb.toString());
 	}
 
-	public static void tellMethodInvocation(MethodInvocation node,
-			IMethodBinding method) {
+	public static void tellMethodInvocation(MethodInvocation node, IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  . ");
 		sb.append(node.getName());

@@ -35,7 +35,6 @@ import org.neo4j.tooling.GlobalGraphOperations;
  * 
  * @author manbaum
  * @since Oct 8, 2014
- * 
  */
 public final class TestNeo4j {
 
@@ -51,13 +50,10 @@ public final class TestNeo4j {
 	private ExecutionEngine engine;
 
 	public TestNeo4j() {
-		gdb = new GraphDatabaseFactory()
-				.newEmbeddedDatabaseBuilder(checkPath(path2))
-				.setConfig(GraphDatabaseSettings.nodestore_mapped_memory_size,
-						"10M")
+		gdb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(checkPath(path2))
+				.setConfig(GraphDatabaseSettings.nodestore_mapped_memory_size, "10M")
 				.setConfig(GraphDatabaseSettings.string_block_size, "60")
-				.setConfig(GraphDatabaseSettings.array_block_size, "300")
-				.newGraphDatabase();
+				.setConfig(GraphDatabaseSettings.array_block_size, "300").newGraphDatabase();
 		engine = new ExecutionEngine(gdb);
 		registerShutdownHook(this);
 	}
@@ -77,6 +73,7 @@ public final class TestNeo4j {
 	}
 
 	public final static class Pair {
+
 		public final String key;
 		public final Object value;
 
@@ -125,8 +122,7 @@ public final class TestNeo4j {
 		try {
 			Node first = createMessageNode(gdb, "Hello, ");
 			Node second = createMessageNode(gdb, "World!");
-			Relationship rel = createMessageRelationship(first, second,
-					"brave Neo4j ");
+			Relationship rel = createMessageRelationship(first, second, "brave Neo4j ");
 			tx.success();
 		} finally {
 			tx.close();
@@ -166,8 +162,7 @@ public final class TestNeo4j {
 		return node;
 	}
 
-	public Relationship createMessageRelationship(Node from, Node to,
-			String message) {
+	public Relationship createMessageRelationship(Node from, Node to, String message) {
 		Relationship rel = from.createRelationshipTo(to, RelTypes.KNOWS);
 		rel.setProperty("message", message);
 		return rel;
@@ -178,11 +173,11 @@ public final class TestNeo4j {
 	 * 
 	 * @author manbaum
 	 * @since Oct 8, 2014
-	 * 
 	 * @param gdb
 	 */
 	private void registerShutdownHook(final TestNeo4j t) {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+
 			@Override
 			public void run() {
 				t.gdb.shutdown();

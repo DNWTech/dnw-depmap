@@ -38,13 +38,11 @@ public class MarkerUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param file
 	 * @param markerType
 	 * @throws CoreException
 	 */
-	public static void deleteMarkers(IFile file, String markerType)
-			throws CoreException {
+	public static void deleteMarkers(IFile file, String markerType) throws CoreException {
 		file.deleteMarkers(markerType, false, IResource.DEPTH_ZERO);
 	}
 
@@ -53,7 +51,6 @@ public class MarkerUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param file
 	 * @param markerType
 	 * @param severity
@@ -62,13 +59,12 @@ public class MarkerUtil {
 	 * @return
 	 * @throws CoreException
 	 */
-	public static IMarker createMarker(IFile file, String markerType,
-			int severity, String message, int lineNumber) throws CoreException {
+	public static IMarker createMarker(IFile file, String markerType, int severity, String message,
+			int lineNumber) throws CoreException {
 		IMarker marker = file.createMarker(markerType);
 		marker.setAttribute(IMarker.SEVERITY, severity);
 		marker.setAttribute(IMarker.MESSAGE, message);
-		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber < 1 ? 1
-				: lineNumber);
+		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber < 1 ? 1 : lineNumber);
 		return marker;
 	}
 
@@ -77,7 +73,6 @@ public class MarkerUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param file
 	 * @param markerType
 	 * @param severity
@@ -88,14 +83,12 @@ public class MarkerUtil {
 	 * @return
 	 * @throws CoreException
 	 */
-	public static IMarker createMarker(IFile file, String markerType,
-			int severity, String message, int lineNumber, int startPos,
-			int endPos) throws CoreException {
+	public static IMarker createMarker(IFile file, String markerType, int severity, String message,
+			int lineNumber, int startPos, int endPos) throws CoreException {
 		IMarker marker = file.createMarker(markerType);
 		marker.setAttribute(IMarker.SEVERITY, severity);
 		marker.setAttribute(IMarker.MESSAGE, message);
-		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber < 1 ? 1
-				: lineNumber);
+		marker.setAttribute(IMarker.LINE_NUMBER, lineNumber < 1 ? 1 : lineNumber);
 		marker.setAttribute(IMarker.CHAR_START, startPos);
 		marker.setAttribute(IMarker.CHAR_END, endPos);
 		return marker;
@@ -106,7 +99,6 @@ public class MarkerUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param markers
 	 */
 	public static void sort(IMarker[] markers) {
@@ -118,15 +110,14 @@ public class MarkerUtil {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param markers
 	 * @param exclusive
 	 * @param markerType
 	 * @return
 	 * @throws CoreException
 	 */
-	public static IMarker[] filter(IMarker[] markers, IMarker exclusive,
-			String markerType) throws CoreException {
+	public static IMarker[] filter(IMarker[] markers, IMarker exclusive, String markerType)
+			throws CoreException {
 		ArrayList<IMarker> list = new ArrayList<IMarker>();
 		for (IMarker m : markers) {
 			if (m != exclusive && m.getType().equals(markerType)) {

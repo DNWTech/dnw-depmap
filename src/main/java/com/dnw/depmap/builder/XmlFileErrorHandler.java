@@ -39,7 +39,6 @@ public class XmlFileErrorHandler extends DefaultHandler {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param file
 	 * @param markerType
 	 */
@@ -53,14 +52,12 @@ public class XmlFileErrorHandler extends DefaultHandler {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param e
 	 * @param severity
 	 */
 	private void addMarker(SAXParseException e, int severity) {
 		try {
-			MarkerUtil.createMarker(file, markerType, severity, e.getMessage(),
-					e.getLineNumber());
+			MarkerUtil.createMarker(file, markerType, severity, e.getMessage(), e.getLineNumber());
 		} catch (CoreException ex) {
 			Activator.console.println(ex);
 		}
@@ -71,10 +68,8 @@ public class XmlFileErrorHandler extends DefaultHandler {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param exception
 	 * @throws SAXException
-	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#error(org.xml.sax.SAXParseException)
 	 */
 	@Override
@@ -87,10 +82,8 @@ public class XmlFileErrorHandler extends DefaultHandler {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param exception
 	 * @throws SAXException
-	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#fatalError(org.xml.sax.SAXParseException)
 	 */
 	@Override
@@ -103,10 +96,8 @@ public class XmlFileErrorHandler extends DefaultHandler {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param exception
 	 * @throws SAXException
-	 * 
 	 * @see org.xml.sax.helpers.DefaultHandler#warning(org.xml.sax.SAXParseException)
 	 */
 	@Override

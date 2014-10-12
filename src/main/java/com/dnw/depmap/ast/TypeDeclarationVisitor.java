@@ -24,7 +24,6 @@ import com.dnw.plugin.ast.Visitor;
  * 
  * @author manbaum
  * @since Oct 10, 2014
- * 
  */
 public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
 
@@ -33,15 +32,12 @@ public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @param node
-	 * 
 	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
 	public void visit(TypeDeclaration node) {
-		Activator.console.println(" -- Visit TypeDeclaration: "
-				+ node.getName());
+		Activator.console.println(" -- Visit TypeDeclaration: " + node.getName());
 		ITypeBinding type = node.resolveBinding();
 		Teller.tellTypeDeclaration(node, type);
 		Activator.w().createType(type);

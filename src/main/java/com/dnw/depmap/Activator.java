@@ -64,10 +64,8 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param context
 	 * @throws Exception
-	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -84,10 +82,8 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param context
 	 * @throws Exception
-	 * 
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -102,7 +98,6 @@ public class Activator extends AbstractUIPlugin {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @return the shared instance.
 	 */
 	public static Activator getDefault() {
@@ -114,16 +109,13 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Returns an image descriptor for the image file at the given plug-in
-	 * relative path. The path must not have a leading "." or path separator.
-	 * Clients should use a path like "icons/mysample.gif" rather than
-	 * "./icons/mysample.gif" or "/icons/mysample.gif".
+	 * Returns an image descriptor for the image file at the given plug-in relative path. The path
+	 * must not have a leading "." or path separator. Clients should use a path like
+	 * "icons/mysample.gif" rather than "./icons/mysample.gif" or "/icons/mysample.gif".
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param path
-	 *            the path.
+	 * @param path the path.
 	 * @return the image descriptor.
 	 */
 	public static ImageDescriptor getImageDescriptor(String path) {

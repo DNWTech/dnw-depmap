@@ -31,7 +31,6 @@ public class VisitorException extends RuntimeException {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @return value of the field node.
 	 */
 	public ASTNode getNode() {
@@ -43,7 +42,6 @@ public class VisitorException extends RuntimeException {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 */
 	public VisitorException(ASTNode node) {
 		this.node = node;
@@ -54,7 +52,6 @@ public class VisitorException extends RuntimeException {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param message
 	 * @param cause
 	 */
@@ -68,7 +65,6 @@ public class VisitorException extends RuntimeException {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param message
 	 */
 	public VisitorException(ASTNode node, String message) {
@@ -81,7 +77,6 @@ public class VisitorException extends RuntimeException {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param cause
 	 */
 	public VisitorException(ASTNode node, Throwable cause) {

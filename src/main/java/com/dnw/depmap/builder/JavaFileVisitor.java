@@ -47,8 +47,7 @@ public class JavaFileVisitor implements IResourceVisitor {
 
 	public static final NodeTypeSet stopSet = new NodeTypeSet();
 	public static final VisitorRegistry registry = new DefaultVisitorRegistry();
-	public static final VisitorDelegator delegator = new DefaultVisitorDelegator(
-			stopSet, registry);
+	public static final VisitorDelegator delegator = new DefaultVisitorDelegator(stopSet, registry);
 
 	static {
 		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
@@ -70,7 +69,7 @@ public class JavaFileVisitor implements IResourceVisitor {
 	 * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
 	 */
 	public boolean visit(IResource resource) throws CoreException {
-		IFile file = (IFile) resource.getAdapter(IFile.class);
+		IFile file = (IFile)resource.getAdapter(IFile.class);
 		if (file != null) {
 			ASTVisitor visitor = new AstVisitorBridge(delegator);
 			ASTParser parser = ASTParser.newParser(AST.JLS3);

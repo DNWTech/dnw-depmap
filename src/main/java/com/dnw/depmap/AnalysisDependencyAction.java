@@ -32,7 +32,6 @@ import com.dnw.depmap.builder.ResourceVisitorDelegator;
  * 
  * @author manbaum
  * @since Oct 10, 2014
- * 
  */
 public class AnalysisDependencyAction implements IObjectActionDelegate {
 
@@ -43,25 +42,20 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @param action
-	 * 
 	 * @see org.eclipse.ui.IActionDelegate#run(org.eclipse.jface.action.IAction)
 	 */
 	@Override
 	public void run(IAction action) {
 		if (selection instanceof IStructuredSelection) {
-			@SuppressWarnings("rawtypes")
-			Iterator it;
-			for (it = ((IStructuredSelection) selection).iterator(); it
-					.hasNext();) {
+			@SuppressWarnings("rawtypes") Iterator it;
+			for (it = ((IStructuredSelection)selection).iterator(); it.hasNext();) {
 				Object element = it.next();
 				IResource resource = null;
 				if (element instanceof IResource) {
-					resource = (IResource) element;
+					resource = (IResource)element;
 				} else if (element instanceof IAdaptable) {
-					resource = (IResource) ((IAdaptable) element)
-							.getAdapter(IResource.class);
+					resource = (IResource)((IAdaptable)element).getAdapter(IResource.class);
 				}
 				if (resource != null) {
 					analysisDependency(resource);
@@ -75,7 +69,6 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @param unit
 	 */
 	private void analysisDependency(IResource resource) {
@@ -94,10 +87,8 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @param action
 	 * @param selection
-	 * 
 	 * @see org.eclipse.ui.IActionDelegate#selectionChanged(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.jface.viewers.ISelection)
 	 */
@@ -111,10 +102,8 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * 
 	 * @param action
 	 * @param targetPart
-	 * 
 	 * @see org.eclipse.ui.IObjectActionDelegate#setActivePart(org.eclipse.jface.action.IAction,
 	 *      org.eclipse.ui.IWorkbenchPart)
 	 */

@@ -33,7 +33,6 @@ public class NodeTypeSetTest {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @throws Exception
 	 */
 	@Before
@@ -45,7 +44,6 @@ public class NodeTypeSetTest {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @throws Exception
 	 */
 	@After
@@ -102,7 +100,6 @@ public class NodeTypeSetTest {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 */
 	@Test
 	public void testAdd_negetive() {
@@ -110,8 +107,7 @@ public class NodeTypeSetTest {
 			set.add(-3);
 		} catch (Exception ex) {
 			if (ex instanceof IllegalArgumentException) {
-				Assert.assertTrue(ex.getMessage().startsWith(
-						"invalid.ASTNode.type: "));
+				Assert.assertTrue(ex.getMessage().startsWith("invalid.ASTNode.type: "));
 				return;
 			}
 		}
@@ -130,8 +126,7 @@ public class NodeTypeSetTest {
 			set.add(128);
 		} catch (Exception ex) {
 			if (ex instanceof IllegalArgumentException) {
-				Assert.assertTrue(ex.getMessage().startsWith(
-						"invalid.ASTNode.type: "));
+				Assert.assertTrue(ex.getMessage().startsWith("invalid.ASTNode.type: "));
 				return;
 			}
 		}
@@ -150,8 +145,7 @@ public class NodeTypeSetTest {
 			set.remove(-3);
 		} catch (Exception ex) {
 			if (ex instanceof IllegalArgumentException) {
-				Assert.assertTrue(ex.getMessage().startsWith(
-						"invalid.ASTNode.type: "));
+				Assert.assertTrue(ex.getMessage().startsWith("invalid.ASTNode.type: "));
 				return;
 			}
 		}
@@ -170,8 +164,7 @@ public class NodeTypeSetTest {
 			set.remove(128);
 		} catch (Exception ex) {
 			if (ex instanceof IllegalArgumentException) {
-				Assert.assertTrue(ex.getMessage().startsWith(
-						"invalid.ASTNode.type: "));
+				Assert.assertTrue(ex.getMessage().startsWith("invalid.ASTNode.type: "));
 				return;
 			}
 		}

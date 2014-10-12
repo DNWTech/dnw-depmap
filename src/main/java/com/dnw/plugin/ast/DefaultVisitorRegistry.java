@@ -42,16 +42,12 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param type
 	 * @param visitor
 	 * @return
-	 * 
-	 * @see com.dnw.plugin.ast.VisitorRegistry#add(java.lang.Class,
-	 *      com.dnw.plugin.ast.Visitor)
+	 * @see com.dnw.plugin.ast.VisitorRegistry#add(java.lang.Class, com.dnw.plugin.ast.Visitor)
 	 */
-	public <T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type,
-			V visitor) {
+	public <T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type, V visitor) {
 		if (map.containsKey(type))
 			return false;
 		else {
@@ -65,15 +61,13 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param type
 	 * @return
-	 * 
 	 * @see com.dnw.plugin.ast.VisitorRegistry#remove(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends ASTNode, V extends Visitor<T>> V remove(Class<T> type) {
-		return (V) map.remove(type);
+		return (V)map.remove(type);
 	}
 
 	/**
@@ -81,8 +75,6 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * 
 	 * @see com.dnw.plugin.ast.VisitorRegistry#clear()
 	 */
 	public void clear() {
@@ -94,14 +86,12 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param type
 	 * @return
-	 * 
 	 * @see com.dnw.plugin.ast.VisitorRegistry#lookup(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
 	public <T extends ASTNode, V extends Visitor<T>> V lookup(Class<T> type) {
-		return (V) map.get(type);
+		return (V)map.get(type);
 	}
 }

@@ -13,6 +13,8 @@
  */
 package com.dnw.depmap.neo;
 
+import com.dnw.depmap.json.M;
+
 public interface NeoAccessor {
 
 	void execute(String statement, M params);

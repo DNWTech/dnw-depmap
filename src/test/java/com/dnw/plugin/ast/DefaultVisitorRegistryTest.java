@@ -36,7 +36,6 @@ public class DefaultVisitorRegistryTest {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @throws Exception
 	 */
 	@Before
@@ -48,7 +47,6 @@ public class DefaultVisitorRegistryTest {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @throws Exception
 	 */
 	@After
@@ -60,7 +58,6 @@ public class DefaultVisitorRegistryTest {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 */
 	@Test
 	public void testAddRemove() {

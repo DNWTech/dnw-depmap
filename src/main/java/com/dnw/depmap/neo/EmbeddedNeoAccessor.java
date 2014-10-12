@@ -20,13 +20,13 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 
 import com.dnw.depmap.Activator;
+import com.dnw.depmap.json.M;
 
 /**
  * Class/Interface EmbeddedDatabaseAccessor.
  * 
  * @author manbaum
  * @since Oct 12, 2014
- * 
  */
 public class EmbeddedNeoAccessor implements NeoAccessor {
 
@@ -39,7 +39,6 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * 
 	 * @param dbpath
 	 */
 	public EmbeddedNeoAccessor(String dbpath) {
@@ -51,12 +50,9 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * 
 	 * @param statement
 	 * @param params
-	 * 
-	 * @see com.dnw.depmap.neo.NeoAccessor#execute(java.lang.String,
-	 *      com.dnw.depmap.neo.M)
+	 * @see com.dnw.depmap.neo.NeoAccessor#execute(java.lang.String, com.dnw.depmap.json.V)
 	 */
 	@Override
 	public void execute(String statement, M params) {
@@ -79,21 +75,15 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * 
-	 * 
 	 * @see com.dnw.depmap.neo.NeoAccessor#startup()
 	 */
 	@Override
 	public void startup() {
 		if (gdb == null) {
-			gdb = new GraphDatabaseFactory()
-					.newEmbeddedDatabaseBuilder(dbpath)
-					.setConfig(
-							GraphDatabaseSettings.nodestore_mapped_memory_size,
-							"10M")
+			gdb = new GraphDatabaseFactory().newEmbeddedDatabaseBuilder(dbpath)
+					.setConfig(GraphDatabaseSettings.nodestore_mapped_memory_size, "10M")
 					.setConfig(GraphDatabaseSettings.string_block_size, "60")
-					.setConfig(GraphDatabaseSettings.array_block_size, "300")
-					.newGraphDatabase();
+					.setConfig(GraphDatabaseSettings.array_block_size, "300").newGraphDatabase();
 			engine = new ExecutionEngine(gdb);
 		}
 	}
@@ -103,8 +93,6 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * 
-	 * 
 	 * @see com.dnw.depmap.neo.NeoAccessor#shutdown()
 	 */
 	@Override
@@ -122,13 +110,12 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * 
-	 * 
 	 * @see com.dnw.depmap.neo.NeoAccessor#configAutoShutdown()
 	 */
 	@Override
 	public void configAutoShutdown() {
 		Runtime.getRuntime().addShutdownHook(new Thread() {
+
 			@Override
 			public void run() {
 				shutdown();

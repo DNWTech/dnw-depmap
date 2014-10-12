@@ -30,11 +30,9 @@ public class MarkerComparator implements Comparator<IMarker> {
 	 * 
 	 * @author manbaum
 	 * @since Feb 1, 2013
-	 * 
 	 * @param m1
 	 * @param m2
 	 * @return
-	 * 
 	 * @see java.util.Comparator#compare(java.lang.Object, java.lang.Object)
 	 */
 	public int compare(IMarker m1, IMarker m2) {

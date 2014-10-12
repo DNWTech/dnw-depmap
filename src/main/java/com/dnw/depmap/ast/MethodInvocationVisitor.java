@@ -48,17 +48,13 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param node
 	 * @return
-	 * 
-	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(org.eclipse.jdt.core.dom.ASTNode,
-	 *      boolean)
+	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(org.eclipse.jdt.core.dom.ASTNode, boolean)
 	 */
 	@Override
 	public void visit(MethodInvocation node) {
-		Activator.console.println(" -- Visit MethodInvocation: "
-				+ node.toString());
+		Activator.console.println(" -- Visit MethodInvocation: " + node.toString());
 		ASTNode p = node.getParent();
 		while (p != null) {
 			if (p instanceof MethodDeclaration) {
@@ -67,7 +63,7 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 				p = p.getParent();
 			}
 		}
-		MethodDeclaration decl = (MethodDeclaration) p;
+		MethodDeclaration decl = (MethodDeclaration)p;
 		Activator.console.println("  . Method is called from: " + make(decl));
 		if (p == null)
 			return;
@@ -83,7 +79,7 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 		int n = list.size();
 		List<Object> r = new ArrayList<Object>(n);
 		for (int i = 0; i < n; i++) {
-			Expression e = (Expression) list.get(i);
+			Expression e = (Expression)list.get(i);
 			r.add(e.toString());
 		}
 		return r;
@@ -97,7 +93,7 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 			sb.append(node.getName());
 			sb.append('(');
 			for (Object v : node.parameters()) {
-				SingleVariableDeclaration d = (SingleVariableDeclaration) v;
+				SingleVariableDeclaration d = (SingleVariableDeclaration)v;
 				sb.append(d.getType());
 			}
 			sb.append(')');

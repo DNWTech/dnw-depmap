@@ -33,10 +33,8 @@ import com.dnw.depmap.Activator;
  * </p>
  * 
  * <pre>
- * ResourceVisitorDelegator visitor = new ResourceVisitorDelegator();
- * IResource root = ...;
- * root.accept(visitor);
- * </pre>
+ * ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(); IResource root = ...;
+ * root.accept(visitor); </pre>
  * 
  * @author manbaum
  * @since Sep 29, 2014
@@ -57,7 +55,6 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
 	 * @param monitor
 	 */
 	public ResourceVisitorDelegator(IProgressMonitor monitor) {
@@ -69,30 +66,24 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * 
-	 * @param resource
-	 *            the resource to visit.
-	 * @return <code>true</code> if the resource's members should be visited;
-	 *         <code>false</code> if they should be skipped.
-	 * @throws CoreException
-	 *             if the visit fails for some reason.
-	 * 
+	 * @param resource the resource to visit.
+	 * @return <code>true</code> if the resource's members should be visited; <code>false</code> if
+	 *         they should be skipped.
+	 * @throws CoreException if the visit fails for some reason.
 	 * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
 	 */
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
-		IFile file = (IFile) resource.getAdapter(IFile.class);
+		IFile file = (IFile)resource.getAdapter(IFile.class);
 		if (file != null) {
 			String ext = file.getFileExtension();
 			if (ext != null) {
 				IResourceVisitor visitor = map.get(ext.toLowerCase());
 				if (visitor != null) {
-					Activator.console.println("=== Visit file: "
-							+ file.getName());
+					Activator.console.println("=== Visit file: " + file.getName());
 					visitor.visit(file);
 				} else {
-					Activator.console.println("=== No visitor for: "
-							+ file.getName());
+					Activator.console.println("=== No visitor for: " + file.getName());
 				}
 			}
 			return false;

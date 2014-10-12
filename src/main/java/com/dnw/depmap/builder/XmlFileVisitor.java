@@ -37,8 +37,7 @@ public class XmlFileVisitor implements IResourceVisitor {
 
 	public static final String MARKER_TYPE = "com.dnw.depmap.xmlProblem";
 
-	public final SAXParserFactory parserFactory = SAXParserFactory
-			.newInstance();
+	public final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 
 	/**
 	 * Constructor of XmlFileVisitor.
@@ -54,7 +53,6 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param file
 	 * @param reporter
 	 */
@@ -77,18 +75,15 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param file
-	 * 
 	 * @see com.dnw.plugin.util.BuilderVisitor#visit(org.eclipse.core.resources.IFile)
 	 */
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
-		IFile file = (IFile) resource.getAdapter(IFile.class);
+		IFile file = (IFile)resource.getAdapter(IFile.class);
 		if (file != null) {
 			MarkerUtil.deleteMarkers(file, MARKER_TYPE);
-			XmlFileErrorHandler reporter = new XmlFileErrorHandler(file,
-					MARKER_TYPE);
+			XmlFileErrorHandler reporter = new XmlFileErrorHandler(file, MARKER_TYPE);
 			doParse(file, reporter);
 		}
 		return false;

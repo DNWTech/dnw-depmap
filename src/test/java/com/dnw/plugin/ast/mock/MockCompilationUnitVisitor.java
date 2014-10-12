@@ -30,9 +30,7 @@ public class MockCompilationUnitVisitor implements Visitor<CompilationUnit> {
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
-	 * 
 	 * @param node
-	 * 
 	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	public void visit(CompilationUnit node) {
