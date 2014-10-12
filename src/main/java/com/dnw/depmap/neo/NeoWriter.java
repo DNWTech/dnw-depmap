@@ -1,5 +1,5 @@
 /**
- * !(#) Writer.java
+ * !(#) NeoWriter.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -18,43 +18,24 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.Modifier;
-import org.neo4j.cypher.javacompat.ExecutionEngine;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.Transaction;
-
-import com.dnw.depmap.Activator;
 
 /**
- * Class/Interface Writer.
+ * Class/Interface NeoWriter.
  * 
  * @author manbaum
  * @since Oct 10, 2014
  * 
  */
-public class Writer {
+public class NeoWriter {
 
-	private final GraphDatabaseService gdb;
-	private final ExecutionEngine engine;
+	private final NeoAccessor accessor;
 
-	public Writer(GraphDatabaseService gdb) {
-		this.gdb = gdb;
-		engine = new ExecutionEngine(gdb);
+	public NeoWriter(NeoAccessor accessor) {
+		this.accessor = accessor;
 	}
 
-	public void execute(String statement, M params) {
-		Transaction tx = gdb.beginTx();
-		try {
-			Activator.console.println(" -> executing: " + statement);
-			Activator.console.println(" ->     " + params.json());
-			engine.execute(statement, params.map());
-			tx.success();
-		} finally {
-			tx.close();
-		}
-	}
-
-	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) on create set t.displayname={dname}, t.implements={impls}, t.extends={parent}";
-	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) on create set t.displayname={dname}, t.extends={parent}";
+	public static final String CREATECLASS = "merge (t:Class {name:{name}}) on create set t.displayname={dname}, t.implements={impls}, t.extends={parent}";
+	public static final String CREATEINTERFACE = "merge (t:Interface {name:{name}}) on create set t.displayname={dname}, t.extends={parent}";
 	public static final String CREATEIMPLEMENTS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Implements]->(b)";
 	public static final String CREATEEXTENDS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Extends]->(b)";
 	public static final String CREATEMETHOD = "match (t:Type {name:{type}})  merge (t)-[:Declare]->(m:Method {name:{name}}) on create set m.displayname={dname}";
@@ -95,7 +76,6 @@ public class Writer {
 		return sb.toString();
 	}
 
-	@SuppressWarnings("unused")
 	private final static class ITypeBindingK extends M.K {
 		@Override
 		public Object make(Object value) {
@@ -103,6 +83,45 @@ public class Writer {
 		}
 
 		public final static ITypeBindingK K = new ITypeBindingK();
+	}
+
+	public void createTypeNoCheck(ITypeBinding type) {
+		M p = M.m().e("name", nameOf(type)).e("dname", displayNameOf(type));
+		if (type.isInterface()) {
+			p.e(ITypeBindingK.K, "parent", type.getInterfaces());
+			accessor.execute(CREATEINTERFACE, p);
+		} else {
+			p.e(ITypeBindingK.K, "impls", type.getInterfaces());
+			p.e(ITypeBindingK.K, "parent", type.getSuperclass());
+			accessor.execute(CREATECLASS, p);
+		}
+	}
+
+	public void createImplementsNoCheck(ITypeBinding type, ITypeBinding base) {
+		M p = M.m().e("name", nameOf(type)).e("nameb", nameOf(base));
+		accessor.execute(CREATEIMPLEMENTS, p);
+	}
+
+	public void createExtendsNoCheck(ITypeBinding type, ITypeBinding base) {
+		M p = M.m().e("name", nameOf(type)).e("nameb", nameOf(base));
+		accessor.execute(CREATEEXTENDS, p);
+	}
+
+	public void createMethodNoCheck(IMethodBinding method) {
+		ITypeBinding type = method.getDeclaringClass();
+		// createTypeNoCheck(type);
+		M p = M.m().e("type", nameOf(type)).e("name", nameOf(method))
+				.e("dname", displayNameOf(method));
+		accessor.execute(CREATEMETHOD, p);
+	}
+
+	public void createInvocationNoCheck(IMethodBinding from, IMethodBinding to,
+			List<?> args) {
+		// createMethodNoCheck(from);
+		createMethodNoCheck(to);
+		M p = M.m().e("namef", nameOf(from)).e("namet", nameOf(to))
+				.e("args", args);
+		accessor.execute(CREATEINVOKE, p);
 	}
 
 	public void createType(ITypeBinding type) {
@@ -129,42 +148,12 @@ public class Writer {
 		}
 	}
 
-	public void createTypeNoCheck(ITypeBinding type) {
-		M p = M.m().e("name", nameOf(type)).e("dname", displayNameOf(type));
-		if (type.isInterface()) {
-			p.e(ITypeBindingK.K, "parent", type.getInterfaces());
-			execute(CREATEINTERFACE, p);
-		} else {
-			p.e(ITypeBindingK.K, "impls", type.getInterfaces());
-			p.e(ITypeBindingK.K, "parent", type.getSuperclass());
-			execute(CREATECLASS, p);
-		}
-	}
-
-	public void createImplementsNoCheck(ITypeBinding type, ITypeBinding base) {
-		M p = M.m().e("name", nameOf(type)).e("nameb", nameOf(base));
-		execute(CREATEIMPLEMENTS, p);
-	}
-
-	public void createExtendsNoCheck(ITypeBinding type, ITypeBinding base) {
-		M p = M.m().e("name", nameOf(type)).e("nameb", nameOf(base));
-		execute(CREATEEXTENDS, p);
-	}
-
 	public void createMethod(IMethodBinding method) {
 		ITypeBinding type = method.getDeclaringClass();
 		String typeName = nameOf(type);
 		if (method != null && BlackOrWhite.allowed(typeName)) {
 			createMethodNoCheck(method);
 		}
-	}
-
-	public void createMethodNoCheck(IMethodBinding method) {
-		ITypeBinding type = method.getDeclaringClass();
-		// createTypeNoCheck(type);
-		M p = M.m().e("type", nameOf(type)).e("name", nameOf(method))
-				.e("dname", displayNameOf(method));
-		execute(CREATEMETHOD, p);
 	}
 
 	public void createInvocation(IMethodBinding from, IMethodBinding to,
@@ -177,14 +166,5 @@ public class Writer {
 			if (allowF && allowT)
 				createInvocationNoCheck(from, to, args);
 		}
-	}
-
-	public void createInvocationNoCheck(IMethodBinding from, IMethodBinding to,
-			List<?> args) {
-		// createMethodNoCheck(from);
-		createMethodNoCheck(to);
-		M p = M.m().e("namef", nameOf(from)).e("namet", nameOf(to))
-				.e("args", args);
-		execute(CREATEINVOKE, p);
 	}
 }

@@ -15,13 +15,12 @@ package com.dnw.depmap;
 
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
-import org.neo4j.graphdb.GraphDatabaseService;
-import org.neo4j.graphdb.factory.GraphDatabaseFactory;
-import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 import org.osgi.framework.BundleContext;
 
 import com.dnw.depmap.neo.BlackOrWhite;
-import com.dnw.depmap.neo.Writer;
+import com.dnw.depmap.neo.EmbeddedNeoAccessor;
+import com.dnw.depmap.neo.NeoAccessor;
+import com.dnw.depmap.neo.NeoWriter;
 import com.dnw.plugin.util.ConsoleUtil;
 
 /**
@@ -40,8 +39,9 @@ public class Activator extends AbstractUIPlugin {
 
 	// The shared instance
 	private static Activator plugin;
-	private static GraphDatabaseService gdb;
-	private static Writer writer;
+
+	private NeoAccessor accessor;
+	private NeoWriter writer;
 
 	static {
 		BlackOrWhite.WHITE.add("com\\.dnw\\..*");
@@ -74,14 +74,9 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		gdb = new GraphDatabaseFactory()
-				.newEmbeddedDatabaseBuilder(DBPATH)
-				.setConfig(GraphDatabaseSettings.nodestore_mapped_memory_size,
-						"10M")
-				.setConfig(GraphDatabaseSettings.string_block_size, "60")
-				.setConfig(GraphDatabaseSettings.array_block_size, "300")
-				.newGraphDatabase();
-		writer = new Writer(gdb);
+		accessor = new EmbeddedNeoAccessor(DBPATH);
+		writer = new NeoWriter(accessor);
+		accessor.startup();
 	}
 
 	/**
@@ -97,8 +92,7 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
-		writer = null;
-		gdb.shutdown();
+		accessor.shutdown();
 		plugin = null;
 		super.stop(context);
 	}
@@ -115,20 +109,8 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
-	/**
-	 * Returns Neo4j database service.
-	 * 
-	 * @author manbaum
-	 * @since Oct 10, 2014
-	 * 
-	 * @return Neo4j database service.
-	 */
-	public static GraphDatabaseService getDatabase() {
-		return gdb;
-	}
-
-	public static Writer w() {
-		return writer;
+	public static NeoWriter w() {
+		return plugin.writer;
 	}
 
 	/**
