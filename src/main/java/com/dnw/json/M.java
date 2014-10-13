@@ -41,7 +41,7 @@ import java.util.Map;
  *   M m = M.m()
  *          .a(&quot;query&quot;, &quot;merge (:Object {name:{name}}) on create set refs={refs}&quot;)
  *          .a(&quot;params&quot;, M.m().a(&quot;name&quot;, &quot;new-object&quot;).a(&quot;refs&quot;, 2, 3, 5));
- *   System.out.println(m.vm(&quot;params&quot;).va(&quot;refs&quot;)[1]); // output: 3
+ *   System.out.println(m.vm(&quot;params&quot;).vl(&quot;refs&quot;).v(1)); // output: 3
  * </pre>
  * </p>
  * 
