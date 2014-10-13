@@ -94,7 +94,7 @@ public final class M {
 	 */
 	public final String json() {
 		StringBuffer sb = new StringBuffer();
-		Json.emit(sb, this);
+		J.emit(sb, this);
 		return sb.toString();
 	}
 
@@ -119,7 +119,7 @@ public final class M {
 	 * @return the object itself.
 	 */
 	public final M a(String key, Object value) {
-		map.put(key, Json.convert(value));
+		map.put(key, J.convert(value));
 		return this;
 	}
 
@@ -136,12 +136,12 @@ public final class M {
 		if (keys.length > 0) {
 			for (Object k : keys) {
 				String key = String.valueOf(k);
-				map.put(key, Json.convert(src.get(k)));
+				map.put(key, J.convert(src.get(k)));
 			}
 		} else {
 			for (Map.Entry<?, ?> e : src.entrySet()) {
 				String key = String.valueOf(e.getKey());
-				map.put(key, Json.convert(e.getValue()));
+				map.put(key, J.convert(e.getValue()));
 			}
 		}
 		return this;

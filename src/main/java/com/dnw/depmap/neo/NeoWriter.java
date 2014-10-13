@@ -19,7 +19,7 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.Modifier;
 
-import com.dnw.json.Json;
+import com.dnw.json.J;
 import com.dnw.json.K;
 import com.dnw.json.M;
 
@@ -53,7 +53,7 @@ public class NeoWriter {
 	}
 
 	static {
-		Json.register(ITypeBinding.class, new ITypeBindingConverter());
+		J.register(ITypeBinding.class, new ITypeBindingConverter());
 	}
 
 	private static String nameOf(ITypeBinding type) {

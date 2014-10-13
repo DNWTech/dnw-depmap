@@ -42,7 +42,7 @@ import java.util.Map;
  * <pre>
  *   L l = L.l()
  *          .a(M.m().a(&quot;query&quot;, &quot;merge (:Object {name:{name}}) on create set refs={refs}&quot;))
- *          .a(L.l().a("some text", L.l().aa(2, 3, 5)));
+ *          .a(L.l().a("some text", L.l().a(2, 3, 5)));
  *   System.out.println(l.vl(1).vl(1).v(1)); // output: 3
  * </pre>
  * </p>
@@ -96,7 +96,7 @@ public final class L {
 	 */
 	public final String json() {
 		StringBuffer sb = new StringBuffer();
-		Json.emit(sb, this);
+		J.emit(sb, this);
 		return sb.toString();
 	}
 
@@ -132,111 +132,116 @@ public final class L {
 	 */
 	public final L a(Object... values) {
 		for (Object value : values)
-			list.add(Json.convert(value));
+			list.add(J.convert(value));
 		return this;
 	}
 
 	/**
-	 * Add all values contained in the source array (the type of elements is unknown) to array.
+	 * Selective copy a set of values contained in the source (an array or an iterable object) to
+	 * the array.
 	 * 
 	 * @author manbaum
 	 * @since Oct 13, 2014
-	 * @param src the source array.
+	 * @param src the source array or an iterable object.
+	 * @param indexes the selected indexes to copy, if missing, all values will be copied.
 	 * @return the array itself.
-	 * @throws IllegalArgumentException if the source is not an array.
+	 * @throws IllegalArgumentException if the source is neither an array nor an iterable object.
 	 */
-	public final L aa(Object src) {
+	public final L sc(Object src, int... indexes) {
 		if (src != null) {
-			if (!src.getClass().isArray())
-				throw new IllegalArgumentException("not.an.array");
-			int length = Array.getLength(src);
-			for (int i = 0; i < length; i++) {
-				list.add(Json.convert(Array.get(src, i)));
-			}
+			if (src.getClass().isArray()) {
+				if (indexes.length > 0) {
+					for (int i : indexes) {
+						list.add(J.convert(Array.get(src, i)));
+					}
+				} else {
+					int length = Array.getLength(src);
+					for (int i = 0; i < length; i++) {
+						list.add(J.convert(Array.get(src, i)));
+					}
+				}
+			} else if (src instanceof L) {
+				return sc((L)src, indexes);
+			} else if (src instanceof Iterable) {
+				return sc((List<?>)src, indexes);
+			} else
+				throw new IllegalArgumentException("neither.an.array.nor.an.iterable object");
 		}
 		return this;
 	}
 
 	/**
-	 * Add all values contained in the source array to the array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 12, 2014
-	 * @param src the source array.
-	 * @return the array itself.
-	 */
-	public final <T> L aa(T[] src) {
-		if (src != null) {
-			for (T value : src)
-				list.add(Json.convert(value));
-		}
-		return this;
-	}
-
-	/**
-	 * Add all values contained in the source <code>java.lang.Iterable</code> to the array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 12, 2014
-	 * @param src the source iterable collection.
-	 * @return the array itself.
-	 */
-	public final L aa(Iterable<?> src) {
-		for (Object v : src) {
-			list.add(Json.convert(v));
-		}
-		return this;
-	}
-
-	/**
-	 * Add all values contained in the source array to the array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 12, 2014
-	 * @param src the source array.
-	 * @return the array itself.
-	 */
-	public final L aa(L src) {
-		list.addAll(src.list);
-		return this;
-	}
-
-	/**
-	 * Copy a range of values contained in the source array (the type of elements is unknown) to the
+	 * Selective copy a set of values contained in the source <code>java.lang.Iterable</code> to the
 	 * array.
 	 * 
 	 * @author manbaum
 	 * @since Oct 13, 2014
-	 * @param src the source array.
-	 * @param start the start index to copy.
-	 * @param len the number of elements to copy.
+	 * @param src the source iterable object.
+	 * @param indexes the selected indexes to copy, if missing, all values will be copied.
 	 * @return the array itself.
-	 * @throws IllegalArgumentException if the source is not an array.
+	 * @throws IllegalArgumentException if the indexes is given but the source is not a list.
 	 */
-	public final L cp(Object src, int start, int len) {
-		if (src != null) {
-			if (!src.getClass().isArray())
-				throw new IllegalArgumentException("not.an.array");
-			for (int i = start; i < len; i++) {
-				list.add(Json.convert(Array.get(src, i)));
+	public final L sc(Iterable<?> src, int... indexes) {
+		if (indexes.length > 0) {
+			if (src instanceof List) {
+				List<?> l = (List<?>)src;
+				for (int i : indexes) {
+					list.add(J.convert(l.get(i)));
+				}
+			} else {
+				throw new IllegalArgumentException("not.a.list");
+			}
+		} else {
+			for (Object v : src) {
+				list.add(J.convert(v));
 			}
 		}
 		return this;
 	}
 
 	/**
-	 * Copy a range of values contained in the source array to the array.
+	 * Selective copy a set of values contained in the source array to the array.
 	 * 
 	 * @author manbaum
-	 * @since Oct 12, 2014
+	 * @since Oct 13, 2014
 	 * @param src the source array.
+	 * @param indexes the selected indexes to copy, if missing, all values will be copied.
+	 * @return the array itself.
+	 */
+	public final L sc(L src, int... indexes) {
+		if (indexes.length > 0) {
+			for (int i : indexes) {
+				list.add(src.list.get(i));
+			}
+		} else {
+			list.addAll(src.list);
+		}
+		return this;
+	}
+
+	/**
+	 * Copy a range of values contained in the source (an array or a list) to the array.
+	 * 
+	 * @author manbaum
+	 * @since Oct 13, 2014
+	 * @param src the source array or list.
 	 * @param start the start index to copy.
 	 * @param len the number of elements to copy.
 	 * @return the array itself.
+	 * @throws IllegalArgumentException if the source is neither an array nor a list.
 	 */
-	public final <T> L cp(T[] src, int start, int len) {
-		for (int i = start; i < len; i++) {
-			list.add(Json.convert(src[i]));
+	public final L rc(Object src, int start, int len) {
+		if (src != null) {
+			if (src.getClass().isArray()) {
+				for (int i = start; i < len; i++) {
+					list.add(J.convert(Array.get(src, i)));
+				}
+			} else if (src instanceof L) {
+				return rc((L)src, start, len);
+			} else if (src instanceof List) {
+				return rc((List<?>)src, start, len);
+			} else
+				throw new IllegalArgumentException("neither.an.array.nor.a.list");
 		}
 		return this;
 	}
@@ -251,9 +256,9 @@ public final class L {
 	 * @param len the number of elements to copy.
 	 * @return the array itself.
 	 */
-	public final L cp(List<?> src, int start, int len) {
+	public final L rc(List<?> src, int start, int len) {
 		for (int i = start; i < len; i++) {
-			list.add(Json.convert(src.get(i)));
+			list.add(J.convert(src.get(i)));
 		}
 		return this;
 	}
@@ -268,79 +273,8 @@ public final class L {
 	 * @param len the number of elements to copy.
 	 * @return the array itself.
 	 */
-	public final L cp(L src, int start, int len) {
+	public final L rc(L src, int start, int len) {
 		for (int i = start; i < len; i++) {
-			list.add(src.list.get(i));
-		}
-		return this;
-	}
-
-	/**
-	 * Select a set of values contained in the source array (the type of elements is unknown) and
-	 * copy to the array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 13, 2014
-	 * @param src the source array.
-	 * @param indexes the selected indexes to copy.
-	 * @return the array itself.
-	 * @throws IllegalArgumentException if the source is not an array.
-	 */
-	public final L sel(Object src, int... indexes) {
-		if (src != null) {
-			if (!src.getClass().isArray())
-				throw new IllegalArgumentException("not.an.array");
-			for (int i : indexes) {
-				list.add(Json.convert(Array.get(src, i)));
-			}
-		}
-		return this;
-	}
-
-	/**
-	 * Select a set of values contained in the source array and copy to the array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 13, 2014
-	 * @param src the source array.
-	 * @param indexes the selected indexes to copy.
-	 * @return the array itself.
-	 */
-	public final <T> L sel(T[] src, int... indexes) {
-		for (int i : indexes) {
-			list.add(Json.convert(src[i]));
-		}
-		return this;
-	}
-
-	/**
-	 * Select a set of values contained in the source <code>java.util.List</code> and copy to the
-	 * array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 13, 2014
-	 * @param src the source list.
-	 * @param indexes the selected indexes to copy.
-	 * @return the array itself.
-	 */
-	public final L sel(List<?> src, int... indexes) {
-		for (int i : indexes) {
-			list.add(Json.convert(src.get(i)));
-		}
-		return this;
-	}
-
-	/**
-	 * Select a set of values contained in the source array and copy to the array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 13, 2014
-	 * @param src the source array.
-	 * @param indexes the selected indexes to copy.
-	 * @return the array itself.
-	 */
-	public final L sel(L src, int... indexes) {
-		for (int i : indexes) {
 			list.add(src.list.get(i));
 		}
 		return this;

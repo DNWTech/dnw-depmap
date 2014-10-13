@@ -25,7 +25,7 @@ import java.util.regex.Pattern;
  * @author manbaum
  * @since Oct 11, 2014
  */
-public final class Json {
+public final class J {
 
 	private final static Map<Class<?>, K<?>> map = new HashMap<Class<?>, K<?>>();
 
@@ -121,9 +121,9 @@ public final class Json {
 		} else if (value instanceof L) {
 			return ((L)value).list;
 		} else if (value instanceof Iterable) {
-			return L.l().aa((Iterable<?>)value).list;
+			return L.l().sc((Iterable<?>)value).list;
 		} else if (value.getClass().isArray()) {
-			return L.l().aa(value).list;
+			return L.l().sc(value).list;
 		} else {
 			return tryConvert(value.getClass(), value);
 		}
@@ -141,7 +141,7 @@ public final class Json {
 	 * @throws IllegalArgumentException if it's not a valid name.
 	 */
 	public final static void emitName(final StringBuffer sb, final String name) {
-		Matcher m = Json.NAMEPATTERN.matcher(name);
+		Matcher m = NAMEPATTERN.matcher(name);
 		if (!m.matches())
 			throw new IllegalArgumentException("not.a.valid.name");
 		sb.append(name);
@@ -200,7 +200,7 @@ public final class Json {
 	 */
 	public final static void emitString(final StringBuffer sb, final CharSequence text) {
 		sb.append('\'');
-		sb.append(Json.escape(text));
+		sb.append(J.escape(text));
 		sb.append('\'');
 	}
 
@@ -245,9 +245,9 @@ public final class Json {
 			else
 				sb.append(',');
 			sb.append('\'');
-			Json.emitName(sb, String.valueOf(e.getKey()));
+			J.emitName(sb, String.valueOf(e.getKey()));
 			sb.append("\':");
-			Json.emit(sb, e.getValue());
+			J.emit(sb, e.getValue());
 		}
 		sb.append('}');
 	}
@@ -268,7 +268,7 @@ public final class Json {
 				first = false;
 			else
 				sb.append(',');
-			Json.emit(sb, v);
+			J.emit(sb, v);
 		}
 		sb.append(']');
 	}
@@ -287,7 +287,7 @@ public final class Json {
 		for (int i = 0; i < length; i++) {
 			if (i > 0)
 				sb.append(',');
-			Json.emit(sb, Array.get(array, i));
+			J.emit(sb, Array.get(array, i));
 		}
 		sb.append(']');
 	}
@@ -347,24 +347,24 @@ public final class Json {
 		if (value == null)
 			sb.append("null");
 		else if (value instanceof CharSequence)
-			Json.emitString(sb, (CharSequence)value);
+			J.emitString(sb, (CharSequence)value);
 		else if (value instanceof Character)
-			Json.emitString(sb, String.valueOf(value));
+			J.emitString(sb, String.valueOf(value));
 		else if (value instanceof Number)
-			Json.emitNumber(sb, (Number)value);
+			J.emitNumber(sb, (Number)value);
 		else if (value instanceof Boolean)
-			Json.emitBoolean(sb, (Boolean)value);
+			J.emitBoolean(sb, (Boolean)value);
 		else if (value instanceof M)
-			Json.emitMap(sb, ((M)value).map);
+			J.emitMap(sb, ((M)value).map);
 		else if (value instanceof Map)
-			Json.emitMap(sb, (Map<?, ?>)value);
+			J.emitMap(sb, (Map<?, ?>)value);
 		else if (value instanceof L)
-			Json.emitIterable(sb, ((L)value).list);
+			J.emitIterable(sb, ((L)value).list);
 		else if (value instanceof Iterable)
-			Json.emitIterable(sb, (Iterable<?>)value);
+			J.emitIterable(sb, (Iterable<?>)value);
 		else if (value.getClass().isArray())
-			Json.emitArray(sb, value);
+			J.emitArray(sb, value);
 		else
-			Json.emitUnknown(sb, value);
+			J.emitUnknown(sb, value);
 	}
 }
