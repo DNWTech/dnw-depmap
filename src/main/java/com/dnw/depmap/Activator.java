@@ -18,9 +18,9 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.dnw.depmap.neo.BlackOrWhite;
-import com.dnw.depmap.neo.EmbeddedNeoAccessor;
-import com.dnw.depmap.neo.NeoAccessor;
 import com.dnw.depmap.neo.NeoWriter;
+import com.dnw.neo.EmbeddedNeoAccessor;
+import com.dnw.neo.NeoAccessor;
 import com.dnw.plugin.util.ConsoleUtil;
 
 /**
@@ -104,6 +104,13 @@ public class Activator extends AbstractUIPlugin {
 		return plugin;
 	}
 
+	/**
+	 * Method w.
+	 * 
+	 * @author manbaum
+	 * @since Oct 13, 2014
+	 * @return
+	 */
 	public static NeoWriter w() {
 		return plugin.writer;
 	}

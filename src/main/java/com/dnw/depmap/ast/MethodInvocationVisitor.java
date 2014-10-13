@@ -75,6 +75,14 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 		Activator.w().createInvocation(from, to, args(node.arguments()));
 	}
 
+	/**
+	 * Method args.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param list
+	 * @return
+	 */
 	private List<Object> args(List<?> list) {
 		int n = list.size();
 		List<Object> r = new ArrayList<Object>(n);
@@ -85,6 +93,14 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 		return r;
 	}
 
+	/**
+	 * Method make.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param node
+	 * @return
+	 */
 	private String make(MethodDeclaration node) {
 		StringBuffer sb = new StringBuffer();
 		if (node != null) {

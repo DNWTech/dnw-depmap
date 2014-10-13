@@ -22,6 +22,7 @@ import org.eclipse.jdt.core.dom.Modifier;
 import com.dnw.json.J;
 import com.dnw.json.K;
 import com.dnw.json.M;
+import com.dnw.neo.NeoAccessor;
 
 /**
  * Class/Interface NeoWriter.
@@ -33,6 +34,13 @@ public class NeoWriter {
 
 	private final NeoAccessor accessor;
 
+	/**
+	 * Constructor of NeoWriter.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param accessor
+	 */
 	public NeoWriter(NeoAccessor accessor) {
 		this.accessor = accessor;
 	}
@@ -44,8 +52,23 @@ public class NeoWriter {
 	public static final String CREATEMETHOD = "match (t:Type {name:{type}})  merge (t)-[:Declare]->(m:Method {name:{name}}) on create set m.displayname={dname}";
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
 
+	/**
+	 * Class/Interface ITypeBindingConverter.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 */
 	private final static class ITypeBindingConverter implements K<ITypeBinding> {
 
+		/**
+		 * Overrider method convert.
+		 * 
+		 * @author manbaum
+		 * @since Oct 10, 2014
+		 * @param value
+		 * @return
+		 * @see com.dnw.json.K#convert(java.lang.Object)
+		 */
 		@Override
 		public Object convert(ITypeBinding value) {
 			return nameOf(value);
@@ -56,14 +79,38 @@ public class NeoWriter {
 		J.register(ITypeBinding.class, new ITypeBindingConverter());
 	}
 
+	/**
+	 * Method nameOf.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param type
+	 * @return
+	 */
 	private static String nameOf(ITypeBinding type) {
 		return type.getQualifiedName();
 	}
 
+	/**
+	 * Method displayNameOf.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param type
+	 * @return
+	 */
 	private static String displayNameOf(ITypeBinding type) {
 		return type.getName();
 	}
 
+	/**
+	 * Method nameOf.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param method
+	 * @return
+	 */
 	private static String nameOf(IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(method.getDeclaringClass().getQualifiedName());
@@ -82,6 +129,14 @@ public class NeoWriter {
 		return sb.toString();
 	}
 
+	/**
+	 * Method displayNameOf.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param method
+	 * @return
+	 */
 	private static String displayNameOf(IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
 		// sb.append(method.getDeclaringClass().getName());
@@ -91,6 +146,13 @@ public class NeoWriter {
 		return sb.toString();
 	}
 
+	/**
+	 * Method createTypeNoCheck.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param type
+	 */
 	public void createTypeNoCheck(ITypeBinding type) {
 		M p = M.m().a("name", nameOf(type)).a("dname", displayNameOf(type));
 		if (type.isInterface()) {
@@ -102,16 +164,39 @@ public class NeoWriter {
 		}
 	}
 
+	/**
+	 * Method createImplementsNoCheck.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param type
+	 * @param base
+	 */
 	public void createImplementsNoCheck(ITypeBinding type, ITypeBinding base) {
 		M p = M.m().a("name", nameOf(type)).a("nameb", nameOf(base));
 		accessor.execute(CREATEIMPLEMENTS, p);
 	}
 
+	/**
+	 * Method createExtendsNoCheck.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param type
+	 * @param base
+	 */
 	public void createExtendsNoCheck(ITypeBinding type, ITypeBinding base) {
 		M p = M.m().a("name", nameOf(type)).a("nameb", nameOf(base));
 		accessor.execute(CREATEEXTENDS, p);
 	}
 
+	/**
+	 * Method createMethodNoCheck.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param method
+	 */
 	public void createMethodNoCheck(IMethodBinding method) {
 		ITypeBinding type = method.getDeclaringClass();
 		// createTypeNoCheck(type);
@@ -120,6 +205,15 @@ public class NeoWriter {
 		accessor.execute(CREATEMETHOD, p);
 	}
 
+	/**
+	 * Method createInvocationNoCheck.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param from
+	 * @param to
+	 * @param args
+	 */
 	public void createInvocationNoCheck(IMethodBinding from, IMethodBinding to, List<?> args) {
 		// createMethodNoCheck(from);
 		createMethodNoCheck(to);
@@ -127,6 +221,13 @@ public class NeoWriter {
 		accessor.execute(CREATEINVOKE, p);
 	}
 
+	/**
+	 * Method createType.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param type
+	 */
 	public void createType(ITypeBinding type) {
 		if (type != null && BlackOrWhite.allowed(nameOf(type))) {
 			createTypeNoCheck(type);
@@ -151,6 +252,13 @@ public class NeoWriter {
 		}
 	}
 
+	/**
+	 * Method createMethod.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param method
+	 */
 	public void createMethod(IMethodBinding method) {
 		ITypeBinding type = method.getDeclaringClass();
 		String typeName = nameOf(type);
@@ -159,6 +267,15 @@ public class NeoWriter {
 		}
 	}
 
+	/**
+	 * Method createInvocation.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @param from
+	 * @param to
+	 * @param args
+	 */
 	public void createInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
 		if (from != null && to != null) {
 			String typeNameF = nameOf(from.getDeclaringClass());

@@ -44,6 +44,14 @@ public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 		Activator.w().createMethod(method);
 	}
 
+	/**
+	 * Method make.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @return
+	 */
 	private String make(MethodDeclaration node) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(node.getReturnType2());

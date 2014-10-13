@@ -11,12 +11,12 @@
  *
  * Create by manbaum since Oct 12, 2014.
  */
-package com.dnw.depmap.neo;
+package com.dnw.neo;
 
 import com.dnw.json.M;
 
 /**
- * Class/Interface RestfulApiAccessor.
+ * Accessor of the Neo4j graph database using REST API.
  * 
  * @author manbaum
  * @since Oct 12, 2014
@@ -30,39 +30,52 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	 * @since Oct 12, 2014
 	 */
 	public RestfulNeoAccessor() {
-
 	}
 
 	/**
-	 * Overrider method execute.
+	 * Executes a cypher query.
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * @param statement
-	 * @param params
-	 * @see com.dnw.depmap.neo.NeoAccessor#execute(java.lang.String, com.dnw.depmap.json.V)
+	 * @param statement the cypher statement.
+	 * @param params the query parameters.
+	 * @see com.dnw.neo.NeoAccessor#execute(java.lang.String, com.dnw.json.M)
 	 */
 	@Override
 	public void execute(String statement, M params) {
 		// TODO Auto-generated method stub
-
 	}
 
+	/**
+	 * Startup the embedded database server.
+	 * 
+	 * @author manbaum
+	 * @since Oct 12, 2014
+	 * @see com.dnw.neo.NeoAccessor#startup()
+	 */
 	@Override
 	public void startup() {
-		// TODO Auto-generated method stub
-
 	}
 
+	/**
+	 * Shutdown the embedded database server.
+	 * 
+	 * @author manbaum
+	 * @since Oct 12, 2014
+	 * @see com.dnw.neo.NeoAccessor#shutdown()
+	 */
 	@Override
 	public void shutdown() {
-		// TODO Auto-generated method stub
-
 	}
 
+	/**
+	 * Adds a hook to JVM, shutdown the embedded database server when the JVM shutdown.
+	 * 
+	 * @author manbaum
+	 * @since Oct 12, 2014
+	 * @see com.dnw.neo.NeoAccessor#configAutoShutdown()
+	 */
 	@Override
 	public void configAutoShutdown() {
-		// TODO Auto-generated method stub
-
 	}
 }

@@ -34,6 +34,14 @@ import com.dnw.depmap.Activator;
  */
 public class Teller {
 
+	/**
+	 * Method fileInfo.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @return
+	 */
 	public static String fileInfo(ASTNode node) {
 		CompilationUnit unit = (CompilationUnit)node.getRoot();
 		IResource resource;
@@ -51,6 +59,14 @@ public class Teller {
 		return filename + ":" + linenum;
 	}
 
+	/**
+	 * Method tellTypeDeclaration.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @param type
+	 */
 	public static void tellTypeDeclaration(TypeDeclaration node, ITypeBinding type) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  . ");
@@ -63,6 +79,14 @@ public class Teller {
 		Activator.console.println(sb.toString());
 	}
 
+	/**
+	 * Method tellMethodDeclaration.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @param method
+	 */
 	public static void tellMethodDeclaration(MethodDeclaration node, IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  . ");
@@ -75,6 +99,14 @@ public class Teller {
 		Activator.console.println(sb.toString());
 	}
 
+	/**
+	 * Method tellMethodInvocation.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @param method
+	 */
 	public static void tellMethodInvocation(MethodInvocation node, IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
 		sb.append("  . ");

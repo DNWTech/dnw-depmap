@@ -18,36 +18,91 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * Class/Interface BlackOrWhite.
+ * 
+ * @author manbaum
+ * @since Oct 11, 2014
+ */
 public final class BlackOrWhite {
 
+	/**
+	 * Class/Interface Checker.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 */
 	public static final class Checker {
 
 		private final boolean asBlack;
 
+		/**
+		 * Constructor of Checker.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param asBlack
+		 */
 		private Checker(boolean asBlack) {
 			this.asBlack = asBlack;
 		}
 
 		private final Map<String, Pattern> map = new HashMap<String, Pattern>();
 
+		/**
+		 * Method add.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param regex
+		 */
 		public final void add(String regex) {
 			Pattern p = Pattern.compile(regex);
 			map.put(p.pattern(), p);
 		}
 
+		/**
+		 * Method add.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param p
+		 */
 		public final void add(Pattern p) {
 			map.put(p.pattern(), p);
 		}
 
+		/**
+		 * Method remove.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param regex
+		 */
 		public final void remove(String regex) {
 			Pattern p = Pattern.compile(regex);
 			map.remove(p.pattern());
 		}
 
+		/**
+		 * Method remove.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param p
+		 */
 		public final void remove(Pattern p) {
 			map.remove(p.pattern());
 		}
 
+		/**
+		 * Method anyoneMatches.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param text
+		 * @return
+		 */
 		private final boolean anyoneMatches(String text) {
 			for (Pattern p : map.values()) {
 				Matcher m = p.matcher(text);
@@ -57,6 +112,14 @@ public final class BlackOrWhite {
 			return false;
 		}
 
+		/**
+		 * Method blocked.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param text
+		 * @return
+		 */
 		public final boolean blocked(String text) {
 			if (asBlack) {
 				return anyoneMatches(text);
@@ -65,6 +128,14 @@ public final class BlackOrWhite {
 			}
 		}
 
+		/**
+		 * Method allowed.
+		 * 
+		 * @author manbaum
+		 * @since Oct 11, 2014
+		 * @param text
+		 * @return
+		 */
 		public final boolean allowed(String text) {
 			if (asBlack) {
 				return !anyoneMatches(text);
@@ -77,6 +148,14 @@ public final class BlackOrWhite {
 	public static final Checker BLACK = new Checker(true);
 	public static final Checker WHITE = new Checker(false);
 
+	/**
+	 * Method blocked.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param text
+	 * @return
+	 */
 	public static final boolean blocked(String text) {
 		if (WHITE.allowed(text))
 			return false;
@@ -84,6 +163,14 @@ public final class BlackOrWhite {
 			return BLACK.blocked(text);
 	}
 
+	/**
+	 * Method allowed.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param text
+	 * @return
+	 */
 	public static final boolean allowed(String text) {
 		if (WHITE.allowed(text))
 			return true;

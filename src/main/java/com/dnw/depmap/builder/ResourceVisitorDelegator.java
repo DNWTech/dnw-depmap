@@ -30,11 +30,13 @@ import com.dnw.depmap.Activator;
  * </p>
  * <p>
  * Usage:
- * </p>
  * 
  * <pre>
- * ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(); IResource root = ...;
- * root.accept(visitor); </pre>
+ * ResourceVisitorDelegator visitor = new ResourceVisitorDelegator();
+ * IResource root = ...;
+ * root.accept(visitor);
+ * </pre>
+ * </p>
  * 
  * @author manbaum
  * @since Sep 29, 2014
