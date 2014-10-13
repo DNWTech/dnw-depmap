@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Oct 11, 2014.
  */
-package com.dnw.depmap.json;
+package com.dnw.json;
 
 import java.util.HashMap;
 import java.util.List;
@@ -19,10 +19,10 @@ import java.util.Map;
 
 /**
  * <p>
- * A tool class to create JSON-like objects quickly and easily.
+ * A class represents the JSON-like object. Internally it use a map to hold all key-value entries.
  * </p>
  * <p>
- * To create an object like this:
+ * To create an object like:
  * 
  * <pre>
  *   {
@@ -53,7 +53,7 @@ public final class M {
 	final Map<String, Object> map;
 
 	/**
-	 * Constructor of M.
+	 * Creates an empty object. (non-public, public use refers {@link M#m()}.)
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
@@ -63,11 +63,11 @@ public final class M {
 	}
 
 	/**
-	 * Constructor of M.
+	 * Creates an object adopt the given map.
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * @param map
+	 * @param map the map to adopt.
 	 */
 	@SuppressWarnings("unchecked")
 	M(Map<String, ?> map) {
@@ -75,22 +75,22 @@ public final class M {
 	}
 
 	/**
-	 * Method m.
+	 * Returns a newly created empty object.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @return
+	 * @return an object.
 	 */
 	public static final M m() {
 		return new M();
 	}
 
 	/**
-	 * Method json.
+	 * Exports the object as a JSON format string.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @return
+	 * @return a JSON format string represents the object.
 	 */
 	public final String json() {
 		StringBuffer sb = new StringBuffer();
@@ -99,38 +99,62 @@ public final class M {
 	}
 
 	/**
-	 * Method map.
+	 * Returns the inner map.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @return
+	 * @return the inner map.
 	 */
 	public final Map<String, Object> map() {
 		return map;
 	}
 
 	/**
-	 * Method a.
+	 * Adds a key-value entry to object.
 	 * 
 	 * @author manbaum
 	 * @since Oct 12, 2014
-	 * @param key
-	 * @param value
-	 * @return
+	 * @param key the key.
+	 * @param value the value.
+	 * @return the object itself.
 	 */
 	public final M a(String key, Object value) {
-		map.put(key, Converter.convert(value));
+		map.put(key, Json.convert(value));
 		return this;
 	}
 
 	/**
-	 * Method cp.
+	 * Copy key-value entries from the given map.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @param src
-	 * @param keys
-	 * @return
+	 * @param src the source map.
+	 * @param keys keys the keys to copy from. if missing, all entries in source will be copied.
+	 * @return the object itself.
+	 */
+	public final M cp(Map<?, ?> src, Object... keys) {
+		if (keys.length > 0) {
+			for (Object k : keys) {
+				String key = String.valueOf(k);
+				map.put(key, Json.convert(src.get(k)));
+			}
+		} else {
+			for (Map.Entry<?, ?> e : src.entrySet()) {
+				String key = String.valueOf(e.getKey());
+				map.put(key, Json.convert(e.getValue()));
+			}
+		}
+		return this;
+	}
+
+	/**
+	 * Copy key-value entries from another object.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param src the source object.
+	 * @param keys the keys to copy from. if missing, all entries in source will be copied.
+	 * @return the object itself.
 	 */
 	public final M cp(M src, String... keys) {
 		if (keys.length > 0) {
@@ -144,78 +168,64 @@ public final class M {
 	}
 
 	/**
-	 * Method cp.
+	 * Remove the given keys from the object.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @param src
-	 * @param keys
-	 * @return
+	 * @param keys the keys to remove.
+	 * @return the object itself.
 	 */
-	public final M cp(Map<?, ?> src, Object... keys) {
-		if (keys.length > 0) {
-			for (Object k : keys) {
-				String key = String.valueOf(k);
-				map.put(key, Converter.convert(src.get(k)));
-			}
-		} else {
-			for (Map.Entry<?, ?> e : src.entrySet()) {
-				String key = String.valueOf(e.getKey());
-				map.put(key, Converter.convert(e.getValue()));
-			}
-		}
+	public final M rm(String... keys) {
+		for (String key : keys)
+			map.remove(key);
 		return this;
 	}
 
 	/**
-	 * Method rm.
+	 * Clear all key-value entries in the object.
 	 * 
 	 * @author manbaum
-	 * @since Oct 11, 2014
-	 * @param key
-	 * @return
+	 * @since Oct 13, 2014
+	 * @return the object itself.
 	 */
-	public final M rm(String key) {
-		map.remove(key);
-		return this;
-	}
-
 	public final M clear() {
 		map.clear();
 		return this;
 	}
 
 	/**
-	 * Method has.
+	 * Checks if the object contains the given key.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @param key
-	 * @return
+	 * @param key the key to check
+	 * @return <code>true</code> if contains, else <code>false</code>.
 	 */
 	public final boolean has(String key) {
 		return map.containsKey(key);
 	}
 
 	/**
-	 * Method v.
+	 * Returns the value associated with the given key.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @param key
-	 * @return
+	 * @param key the key.
+	 * @return the value.
 	 */
 	public final Object v(String key) {
 		return map.get(key);
 	}
 
 	/**
-	 * Method vm.
+	 * Returns the object (i.e. a map) associated with the given key.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @param key
-	 * @return
+	 * @param key the key.
+	 * @return the result object.
+	 * @throws IllegalStateException if the object associated with the key is not an object (i.e. a
+	 *             map).
 	 */
 	@SuppressWarnings("unchecked")
 	public final M vm(String key) {
@@ -229,12 +239,14 @@ public final class M {
 	}
 
 	/**
-	 * Method va.
+	 * Returns the array (i.e. a list) associated with the given key.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @param key
-	 * @return
+	 * @param key the key.
+	 * @return the result array.
+	 * @throws IllegalStateException if the object associated with the key is not an array (i.e. a
+	 *             list).
 	 */
 	public final L vl(String key) {
 		Object value = map.get(key);

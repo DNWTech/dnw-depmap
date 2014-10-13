@@ -19,9 +19,9 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.Modifier;
 
-import com.dnw.depmap.json.Converter;
-import com.dnw.depmap.json.K;
-import com.dnw.depmap.json.M;
+import com.dnw.json.Json;
+import com.dnw.json.K;
+import com.dnw.json.M;
 
 /**
  * Class/Interface NeoWriter.
@@ -44,18 +44,16 @@ public class NeoWriter {
 	public static final String CREATEMETHOD = "match (t:Type {name:{type}})  merge (t)-[:Declare]->(m:Method {name:{name}}) on create set m.displayname={dname}";
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
 
-	private final static class ITypeBindingK implements K<ITypeBinding> {
+	private final static class ITypeBindingConverter implements K<ITypeBinding> {
 
 		@Override
 		public Object convert(ITypeBinding value) {
 			return nameOf(value);
 		}
-
-		public final static ITypeBindingK K = new ITypeBindingK();
 	}
 
 	static {
-		Converter.add(ITypeBinding.class, ITypeBindingK.K);
+		Json.register(ITypeBinding.class, new ITypeBindingConverter());
 	}
 
 	private static String nameOf(ITypeBinding type) {
@@ -99,8 +97,7 @@ public class NeoWriter {
 			p.a("parent", type.getInterfaces());
 			accessor.execute(CREATEINTERFACE, p);
 		} else {
-			p.a("impls", type.getInterfaces());
-			p.a("parent", type.getSuperclass());
+			p.a("impls", type.getInterfaces()).a("parent", type.getSuperclass());
 			accessor.execute(CREATECLASS, p);
 		}
 	}

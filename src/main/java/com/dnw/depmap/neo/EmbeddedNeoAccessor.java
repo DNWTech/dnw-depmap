@@ -20,7 +20,7 @@ import org.neo4j.graphdb.factory.GraphDatabaseFactory;
 import org.neo4j.graphdb.factory.GraphDatabaseSettings;
 
 import com.dnw.depmap.Activator;
-import com.dnw.depmap.json.M;
+import com.dnw.json.M;
 
 /**
  * Class/Interface EmbeddedDatabaseAccessor.
