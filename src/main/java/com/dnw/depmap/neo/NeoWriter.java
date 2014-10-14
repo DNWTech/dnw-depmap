@@ -53,7 +53,7 @@ public class NeoWriter {
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
 
 	/**
-	 * To convert ITypeBinding objects, returns the full-qualified type name.
+	 * Converts ITypeBinding objects, returns the full-qualified type name.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
@@ -76,7 +76,15 @@ public class NeoWriter {
 	}
 
 	/**
-	 * To convert IMethodBinding objects, return the full-qualified method name.
+	 * <p>
+	 * Converts IMethodBinding objects, returns the full-qualified method name.
+	 * </p>
+	 * <p>
+	 * For non-static methods, the result likes
+	 * <code>'com.dnw.depmap.neo.NeoWriter.IMethodBindingConverter#convert(IMethodBinding)'</code>;
+	 * for static methods, the result likes
+	 * <code>com.dnw.plugin.ast.AstUtil/nameOf(ITypeBinding)</code>.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014
