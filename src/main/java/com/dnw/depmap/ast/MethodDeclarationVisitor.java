@@ -41,7 +41,7 @@ public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 		Activator.console.println(" -- Visit MethodDeclaration: " + make(node));
 		IMethodBinding method = node.resolveBinding();
 		Teller.tellMethodDeclaration(node, method);
-		Activator.w().createMethod(method);
+		Activator.w().createMethodDeclaration(method);
 	}
 
 	/**

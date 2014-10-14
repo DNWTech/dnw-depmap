@@ -49,7 +49,8 @@ public class NeoWriter {
 	public static final String CREATEINTERFACE = "merge (t:Interface {name:{name}}) on create set t.displayname={dname}, t.extends={parent}";
 	public static final String CREATEIMPLEMENTS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Implements]->(b)";
 	public static final String CREATEEXTENDS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Extends]->(b)";
-	public static final String CREATEMETHOD = "match (t:Type {name:{type}})  merge (t)-[:Declare]->(m:Method {name:{name}}) on create set m.displayname={dname}";
+	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) on create set m.displayname={dname}";
+	public static final String CREATEDECLARE = "match (t:Type {name:{tname}})  match(m:Method {name:{mname}}) merge (t)-[:Declare]->(m)";
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
 
 	/**
@@ -119,7 +120,7 @@ public class NeoWriter {
 	 * @param type
 	 */
 	public void createType(ITypeBinding type) {
-		M p = M.m().a("name", AstUtil.nameOf(type)).a("dname", AstUtil.displayNameOf(type));
+		M p = M.m().a("name", type).a("dname", AstUtil.displayNameOf(type));
 		if (type.isInterface()) {
 			p.a("parent", type.getInterfaces());
 			accessor.execute(CREATEINTERFACE, p);
@@ -138,7 +139,7 @@ public class NeoWriter {
 	 * @param base
 	 */
 	public void createImplements(ITypeBinding type, ITypeBinding base) {
-		M p = M.m().a("name", AstUtil.nameOf(type)).a("nameb", AstUtil.nameOf(base));
+		M p = M.m().a("name", type).a("nameb", base);
 		accessor.execute(CREATEIMPLEMENTS, p);
 	}
 
@@ -151,7 +152,7 @@ public class NeoWriter {
 	 * @param base
 	 */
 	public void createExtends(ITypeBinding type, ITypeBinding base) {
-		M p = M.m().a("name", AstUtil.nameOf(type)).a("nameb", AstUtil.nameOf(base));
+		M p = M.m().a("name", type).a("nameb", base);
 		accessor.execute(CREATEEXTENDS, p);
 	}
 
@@ -163,11 +164,22 @@ public class NeoWriter {
 	 * @param method
 	 */
 	public void createMethod(IMethodBinding method) {
-		ITypeBinding type = method.getDeclaringClass();
-		// createType(type);
-		M p = M.m().a("type", AstUtil.nameOf(type)).a("name", AstUtil.nameOf(method))
-				.a("dname", AstUtil.displayNameOf(method));
+		M p = M.m().a("name", method).a("dname", AstUtil.displayNameOf(method));
 		accessor.execute(CREATEMETHOD, p);
+	}
+
+	/**
+	 * Method createDeclare.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @param type
+	 * @param method
+	 */
+	public void createDeclare(IMethodBinding method) {
+		ITypeBinding type = method.getDeclaringClass();
+		M p = M.m().a("tname", type).a("mname", method);
+		accessor.execute(CREATEDECLARE, p);
 	}
 
 	/**
@@ -180,9 +192,7 @@ public class NeoWriter {
 	 * @param args
 	 */
 	public void createInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
-		// createMethod(from);
-		createMethod(to);
-		M p = M.m().a("namef", AstUtil.nameOf(from)).a("namet", AstUtil.nameOf(to)).a("args", args);
+		M p = M.m().a("namef", from).a("namet", to).a("args", args);
 		accessor.execute(CREATEINVOKE, p);
 	}
 }

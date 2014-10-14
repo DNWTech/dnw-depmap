@@ -122,18 +122,42 @@ public final class J {
 	}
 
 	/**
+	 * Method findConverter.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @param type
+	 * @return
+	 */
+	private final static K<?> findConverter(Class<?> type) {
+		K<?> k = map.get(type);
+		if (k != null)
+			return k;
+
+		k = findConverter(type.getSuperclass());
+		if (k != null)
+			return k;
+
+		for (Class<?> t : type.getInterfaces()) {
+			k = findConverter(t);
+			if (k != null)
+				return k;
+		}
+		return null;
+	}
+
+	/**
 	 * Tries to convert the given value using the registered converter.
 	 * 
 	 * @author manbaum
 	 * @since Oct 13, 2014
-	 * @param type the type of the value.
 	 * @param value the value.
 	 * @return the converted value.
 	 * @throws IllegalArgumentException if no corresponding converter registered.
 	 */
 	@SuppressWarnings("unchecked")
-	private final static <T> Object tryConverter(Class<T> type, Object value) {
-		K<T> k = (K<T>)map.get(type);
+	private final static <T> Object tryConverter(Object value) {
+		K<T> k = (K<T>)findConverter(value.getClass());
 		if (k != null)
 			return k.convert((T)value);
 		if (defaultConverter != null)
@@ -164,7 +188,7 @@ public final class J {
 		else if (value.getClass().isArray())
 			return L.l().sc(value).list;
 		else
-			return tryConverter(value.getClass(), value);
+			return tryConverter(value);
 	}
 
 	private final static Pattern NAMEPATTERN = Pattern.compile("^[\\x21-\\x7e]+$");

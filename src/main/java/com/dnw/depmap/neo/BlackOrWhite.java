@@ -147,6 +147,38 @@ public final class BlackOrWhite {
 
 	public static final Checker BLACK = new Checker(true);
 	public static final Checker WHITE = new Checker(false);
+	public static boolean preferWhite = true;
+
+	/**
+	 * <p>
+	 * Changes the prefered list to check.
+	 * </p>
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @param which the prefered list to check.
+	 * @throws IllegalArgumentException if the argument is neither <code>BlackOrWhite.BLACK</code>
+	 *             or <code>BlackOrWhite.WHITE</code>.
+	 */
+	public static final void setPrefer(Checker which) {
+		if (which == WHITE)
+			preferWhite = true;
+		else if (which == BLACK)
+			preferWhite = false;
+		else
+			throw new IllegalArgumentException("BLACK.or.WHITE?");
+	}
+
+	/**
+	 * Returns current prefered list.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @return current prefered list.
+	 */
+	public static final Checker getPrefer() {
+		return preferWhite ? WHITE : BLACK;
+	}
 
 	/**
 	 * Method blocked.
@@ -157,10 +189,17 @@ public final class BlackOrWhite {
 	 * @return
 	 */
 	public static final boolean blocked(String text) {
-		if (WHITE.allowed(text))
-			return false;
-		else
-			return BLACK.blocked(text);
+		if (preferWhite) {
+			if (WHITE.allowed(text))
+				return false;
+			else
+				return BLACK.blocked(text);
+		} else {
+			if (BLACK.blocked(text))
+				return true;
+			else
+				return WHITE.blocked(text);
+		}
 	}
 
 	/**
@@ -172,9 +211,16 @@ public final class BlackOrWhite {
 	 * @return
 	 */
 	public static final boolean allowed(String text) {
-		if (WHITE.allowed(text))
-			return true;
-		else
-			return BLACK.allowed(text);
+		if (preferWhite) {
+			if (WHITE.allowed(text))
+				return true;
+			else
+				return BLACK.allowed(text);
+		} else {
+			if (BLACK.blocked(text))
+				return false;
+			else
+				return WHITE.allowed(text);
+		}
 	}
 }

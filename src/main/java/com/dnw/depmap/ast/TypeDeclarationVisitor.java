@@ -40,6 +40,6 @@ public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
 		Activator.console.println(" -- Visit TypeDeclaration: " + node.getName());
 		ITypeBinding type = node.resolveBinding();
 		Teller.tellTypeDeclaration(node, type);
-		Activator.w().createType(type);
+		Activator.w().createFullHierarchy(type);
 	}
 }

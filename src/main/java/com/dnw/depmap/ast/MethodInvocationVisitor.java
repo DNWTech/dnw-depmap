@@ -72,7 +72,7 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 		Teller.tellMethodDeclaration(decl, from);
 		IMethodBinding to = node.resolveMethodBinding();
 		Teller.tellMethodInvocation(node, to);
-		Activator.w().createInvocation(from, to, args(node.arguments()));
+		Activator.w().createMethodInvocation(from, to, args(node.arguments()));
 	}
 
 	/**
