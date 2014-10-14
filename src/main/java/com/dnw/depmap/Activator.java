@@ -18,6 +18,7 @@ import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
 import com.dnw.depmap.neo.BlackOrWhite;
+import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
 import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
@@ -41,7 +42,7 @@ public class Activator extends AbstractUIPlugin {
 	private static Activator plugin;
 
 	private NeoAccessor accessor;
-	private NeoWriter writer;
+	private NeoDao writer;
 
 	static {
 		BlackOrWhite.WHITE.add("com\\.dnw\\..*");
@@ -73,7 +74,7 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		accessor = new EmbeddedNeoAccessor(DBPATH);
-		writer = new NeoWriter(accessor);
+		writer = new NeoDao(new NeoWriter(accessor));
 		accessor.startup();
 	}
 
@@ -111,7 +112,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @since Oct 13, 2014
 	 * @return
 	 */
-	public static NeoWriter w() {
+	public static NeoDao w() {
 		return plugin.writer;
 	}
 
