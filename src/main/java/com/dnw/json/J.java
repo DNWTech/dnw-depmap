@@ -31,22 +31,22 @@ public final class J {
 	private static K<Object> defaultConverter;
 
 	/**
-	 * Method setDefaultConverter.
+	 * Registers a default type converter. Pass in a <code>null</code> to unregister.
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014
-	 * @param converter
+	 * @param converter the default type converter, <code>null</code> for unregister.
 	 */
-	public final static void setDefaultConverter(K<Object> converter) {
+	public final static void registerDefaultConverter(K<Object> converter) {
 		defaultConverter = converter;
 	}
 
 	/**
-	 * Method getDefaultConverter.
+	 * Returns the current default type converter.
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014
-	 * @return
+	 * @return current default type converter.
 	 */
 	public final static K<Object> getDefaultConverter() {
 		return defaultConverter;
@@ -84,6 +84,19 @@ public final class J {
 		if (map.containsKey(type)) {
 			map.remove(type);
 		}
+	}
+
+	/**
+	 * Returns the current registered converter for the given type.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @param type the given type.
+	 * @return the current registered converter.
+	 */
+	@SuppressWarnings("unchecked")
+	public final static <T> K<T> getConverter(Class<T> type) {
+		return (K<T>)map.get(type);
 	}
 
 	/**
