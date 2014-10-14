@@ -80,8 +80,10 @@ public class NeoDao {
 				w.createImplements(type, t);
 			}
 			ITypeBinding t = type.getSuperclass();
-			w.createType(t);
-			w.createExtends(type, t);
+			if (t != null) {
+				w.createType(t);
+				w.createExtends(type, t);
+			}
 		}
 		return true;
 	}
@@ -114,11 +116,13 @@ public class NeoDao {
 				}
 			}
 			ITypeBinding t = type.getSuperclass();
-			if (createFullHierarchy(t))
-				w.createExtends(type, t);
-			else {
-				w.createType(t);
-				w.createExtends(type, t);
+			if (t != null) {
+				if (createFullHierarchy(t))
+					w.createExtends(type, t);
+				else {
+					w.createType(t);
+					w.createExtends(type, t);
+				}
 			}
 		}
 		return true;

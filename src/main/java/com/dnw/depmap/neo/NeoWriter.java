@@ -45,8 +45,8 @@ public class NeoWriter {
 		this.accessor = accessor;
 	}
 
-	public static final String CREATECLASS = "merge (t:Class {name:{name}}) on create set t.displayname={dname}, t.implements={impls}, t.extends={parent}";
-	public static final String CREATEINTERFACE = "merge (t:Interface {name:{name}}) on create set t.displayname={dname}, t.extends={parent}";
+	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) on create set t.displayname={dname}, t.implements={impls}, t.extends={parent}";
+	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) on create set t.displayname={dname}, t.extends={parent}";
 	public static final String CREATEIMPLEMENTS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Implements]->(b)";
 	public static final String CREATEEXTENDS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Extends]->(b)";
 	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) on create set m.displayname={dname}";

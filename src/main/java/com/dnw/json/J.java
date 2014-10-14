@@ -122,7 +122,7 @@ public final class J {
 	}
 
 	/**
-	 * Method findConverter.
+	 * Method findConverter. TODO cache
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014
@@ -134,12 +134,15 @@ public final class J {
 		if (k != null)
 			return k;
 
-		k = findConverter(type.getSuperclass());
-		if (k != null)
-			return k;
+		Class<?> s = type.getSuperclass();
+		if (s != null) {
+			k = findConverter(s);
+			if (k != null)
+				return k;
+		}
 
-		for (Class<?> t : type.getInterfaces()) {
-			k = findConverter(t);
+		for (Class<?> i : type.getInterfaces()) {
+			k = findConverter(i);
 			if (k != null)
 				return k;
 		}
