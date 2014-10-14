@@ -28,6 +28,29 @@ import java.util.regex.Pattern;
 public final class J {
 
 	private final static Map<Class<?>, K<?>> map = new HashMap<Class<?>, K<?>>();
+	private static K<Object> defaultConverter;
+
+	/**
+	 * Method setDefaultConverter.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @param converter
+	 */
+	public final static void setDefaultConverter(K<Object> converter) {
+		defaultConverter = converter;
+	}
+
+	/**
+	 * Method getDefaultConverter.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @return
+	 */
+	public final static K<Object> getDefaultConverter() {
+		return defaultConverter;
+	}
 
 	/**
 	 * Registers a type converter.
@@ -58,8 +81,9 @@ public final class J {
 	public final static <T> void unregister(Class<T> type) {
 		if (type == null)
 			throw new NullPointerException("type.is.null");
-		if (map.containsKey(type))
+		if (map.containsKey(type)) {
 			map.remove(type);
+		}
 	}
 
 	/**
@@ -85,7 +109,7 @@ public final class J {
 	}
 
 	/**
-	 * Tries to convert the given value using the registerd converter.
+	 * Tries to convert the given value using the registered converter.
 	 * 
 	 * @author manbaum
 	 * @since Oct 13, 2014
@@ -95,10 +119,12 @@ public final class J {
 	 * @throws IllegalArgumentException if no corresponding converter registered.
 	 */
 	@SuppressWarnings("unchecked")
-	private final static <T> Object tryConvert(Class<T> type, Object value) {
+	private final static <T> Object tryConverter(Class<T> type, Object value) {
 		K<T> k = (K<T>)map.get(type);
 		if (k != null)
 			return k.convert((T)value);
+		if (defaultConverter != null)
+			return defaultConverter.convert(value);
 		throw new IllegalArgumentException("unsupported.type: " + value.getClass());
 	}
 
@@ -112,21 +138,20 @@ public final class J {
 	 */
 	public final static Object convert(Object value) {
 		if (value == null || value instanceof CharSequence || value instanceof Number
-				|| value instanceof Boolean) {
+				|| value instanceof Boolean)
 			return value;
-		} else if (value instanceof M) {
+		else if (value instanceof M)
 			return ((M)value).map;
-		} else if (value instanceof Map) {
+		else if (value instanceof Map)
 			return M.m().cp((Map<?, ?>)value).map;
-		} else if (value instanceof L) {
+		else if (value instanceof L)
 			return ((L)value).list;
-		} else if (value instanceof Iterable) {
+		else if (value instanceof Iterable)
 			return L.l().sc((Iterable<?>)value).list;
-		} else if (value.getClass().isArray()) {
+		else if (value.getClass().isArray())
 			return L.l().sc(value).list;
-		} else {
-			return tryConvert(value.getClass(), value);
-		}
+		else
+			return tryConverter(value.getClass(), value);
 	}
 
 	private final static Pattern NAMEPATTERN = Pattern.compile("^[\\x21-\\x7e]+$");
@@ -159,31 +184,33 @@ public final class J {
 		final StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < text.length(); i++) {
 			char ch = text.charAt(i);
-			if (ch == 0)
+			if (ch == 0) {
 				sb.append("\\0");
-			else if (ch == '\n')
+			} else if (ch == '\n') {
 				sb.append("\\n");
-			else if (ch == '\r')
+			} else if (ch == '\r') {
 				sb.append("\\r");
-			else if (ch < 32) {
+			} else if (ch < 32) {
 				sb.append("\\x");
-				if (ch < 16)
+				if (ch < 16) {
 					sb.append('0');
+				}
 				sb.append(Integer.toHexString(ch));
 			} else if (ch == '\\' || ch == '\'' || ch == '\"') {
 				sb.append("\\");
 				sb.append(ch);
-			} else if (ch <= 126)
+			} else if (ch <= 126) {
 				sb.append(ch);
-			else {
+			} else {
 				int n = Character.codePointAt(text, i);
 				sb.append("\\u");
-				if (n < 16)
+				if (n < 16) {
 					sb.append("000");
-				else if (n < 256)
+				} else if (n < 256) {
 					sb.append("00");
-				else if (n < 4096)
+				} else if (n < 4096) {
 					sb.append("0");
+				}
 				sb.append(Integer.toHexString(n));
 			}
 		}
@@ -240,10 +267,11 @@ public final class J {
 		sb.append('{');
 		boolean first = true;
 		for (Map.Entry<?, ?> e : map.entrySet()) {
-			if (first)
+			if (first) {
 				first = false;
-			else
+			} else {
 				sb.append(',');
+			}
 			sb.append('\'');
 			J.emitName(sb, String.valueOf(e.getKey()));
 			sb.append("\':");
@@ -264,10 +292,11 @@ public final class J {
 		sb.append('[');
 		boolean first = true;
 		for (Object v : collection) {
-			if (first)
+			if (first) {
 				first = false;
-			else
+			} else {
 				sb.append(',');
+			}
 			J.emit(sb, v);
 		}
 		sb.append(']');
@@ -285,8 +314,9 @@ public final class J {
 		sb.append('[');
 		int length = Array.getLength(array);
 		for (int i = 0; i < length; i++) {
-			if (i > 0)
+			if (i > 0) {
 				sb.append(',');
+			}
 			J.emit(sb, Array.get(array, i));
 		}
 		sb.append(']');
@@ -325,7 +355,7 @@ public final class J {
 	 * <code>java.math.BigDecimal</code>, denoted as JavaScript numeric literal.</li>
 	 * <li>Values in class <code>char</code>, <code>java.lang.Character</code>,
 	 * <code>java.lang.String</code>, or in class derived from <code>java.lang.CharSequence</code> ,
-	 * denoted as JavaScript string literal.</li>
+	 * denoted as JavaScript string literal, make character escape if need.</li>
 	 * <li>Values in class <code>com.dnw.json.M</code>, or in class derived from
 	 * <code>java.util.Map</code>, denoted as JavaScript object literal.</li>
 	 * <li>Values in class <code>com.dnw.json.L</code>, or in class derived from
@@ -344,27 +374,28 @@ public final class J {
 	 * @param value the object to be append.
 	 */
 	public final static void emit(final StringBuffer sb, final Object value) {
-		if (value == null)
+		if (value == null) {
 			sb.append("null");
-		else if (value instanceof CharSequence)
+		} else if (value instanceof CharSequence) {
 			J.emitString(sb, (CharSequence)value);
-		else if (value instanceof Character)
+		} else if (value instanceof Character) {
 			J.emitString(sb, String.valueOf(value));
-		else if (value instanceof Number)
+		} else if (value instanceof Number) {
 			J.emitNumber(sb, (Number)value);
-		else if (value instanceof Boolean)
+		} else if (value instanceof Boolean) {
 			J.emitBoolean(sb, (Boolean)value);
-		else if (value instanceof M)
+		} else if (value instanceof M) {
 			J.emitMap(sb, ((M)value).map);
-		else if (value instanceof Map)
+		} else if (value instanceof Map) {
 			J.emitMap(sb, (Map<?, ?>)value);
-		else if (value instanceof L)
+		} else if (value instanceof L) {
 			J.emitIterable(sb, ((L)value).list);
-		else if (value instanceof Iterable)
+		} else if (value instanceof Iterable) {
 			J.emitIterable(sb, (Iterable<?>)value);
-		else if (value.getClass().isArray())
+		} else if (value.getClass().isArray()) {
 			J.emitArray(sb, value);
-		else
+		} else {
 			J.emitUnknown(sb, value);
+		}
 	}
 }
