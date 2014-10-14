@@ -53,7 +53,7 @@ public class NeoWriter {
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
 
 	/**
-	 * Class/Interface ITypeBindingConverter.
+	 * To convert ITypeBinding objects, returns the full-qualified type name.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
@@ -75,8 +75,32 @@ public class NeoWriter {
 		}
 	}
 
+	/**
+	 * To convert IMethodBinding objects, return the full-qualified method name.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 */
+	private final static class IMethodBindingConverter implements K<IMethodBinding> {
+
+		/**
+		 * Converts the given value to a JSON compatible value.
+		 * 
+		 * @author manbaum
+		 * @since Oct 14, 2014
+		 * @param value the value to convert.
+		 * @return the converted value.
+		 * @see com.dnw.json.K#convert(java.lang.Object)
+		 */
+		@Override
+		public Object convert(IMethodBinding value) {
+			return AstUtil.nameOf(value);
+		}
+	}
+
 	static {
 		J.register(ITypeBinding.class, new ITypeBindingConverter());
+		J.register(IMethodBinding.class, new IMethodBindingConverter());
 	}
 
 	/**
