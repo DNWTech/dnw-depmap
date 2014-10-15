@@ -120,7 +120,7 @@ public class NeoWriter {
 	 * @param type
 	 */
 	public void createType(ITypeBinding type) {
-		M p = M.m().a("name", type).a("caption", AstUtil.displayNameOf(type));
+		M p = M.m().a("name", type).a("caption", AstUtil.captionOf(type));
 		if (type.isInterface()) {
 			p.a("extends", type.getInterfaces());
 			accessor.execute(CREATEINTERFACE, p);
@@ -164,7 +164,7 @@ public class NeoWriter {
 	 * @param method
 	 */
 	public void createMethod(IMethodBinding method) {
-		M p = M.m().a("name", method).a("caption", AstUtil.displayNameOf(method));
+		M p = M.m().a("name", method).a("caption", AstUtil.captionOf(method));
 		accessor.execute(CREATEMETHOD, p);
 	}
 

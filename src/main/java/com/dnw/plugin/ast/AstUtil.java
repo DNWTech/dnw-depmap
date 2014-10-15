@@ -26,6 +26,18 @@ import org.eclipse.jdt.core.dom.Modifier;
 public final class AstUtil {
 
 	/**
+	 * Method replaceAllGenericTypeParameters.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 * @param name
+	 * @return
+	 */
+	public final static String replaceAllGenericTypeParameters(String name) {
+		return name.replaceAll("<[^>]+>", "<?>");
+	}
+
+	/**
 	 * Method nameOf.
 	 * 
 	 * @author manbaum
@@ -34,7 +46,7 @@ public final class AstUtil {
 	 * @return
 	 */
 	public final static String nameOf(ITypeBinding type) {
-		return type.getQualifiedName();
+		return type.getErasure().getQualifiedName();
 	}
 
 	/**
@@ -45,8 +57,8 @@ public final class AstUtil {
 	 * @param type
 	 * @return
 	 */
-	public final static String displayNameOf(ITypeBinding type) {
-		return type.getName();
+	public final static String captionOf(ITypeBinding type) {
+		return type.getErasure().getName();
 	}
 
 	/**
@@ -59,7 +71,7 @@ public final class AstUtil {
 	 */
 	public final static String nameOf(IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(method.getDeclaringClass().getQualifiedName());
+		sb.append(method.getDeclaringClass().getErasure().getQualifiedName());
 		sb.append(Modifier.isStatic(method.getModifiers()) ? '/' : '#');
 		sb.append(method.isConstructor() ? "<ctor>" : method.getName());
 		sb.append('(');
@@ -69,7 +81,7 @@ public final class AstUtil {
 				first = false;
 			else
 				sb.append(',');
-			sb.append(t.getQualifiedName());
+			sb.append(t.getErasure().getQualifiedName());
 		}
 		sb.append(')');
 		return sb.toString();
@@ -83,12 +95,12 @@ public final class AstUtil {
 	 * @param method
 	 * @return
 	 */
-	public final static String displayNameOf(IMethodBinding method) {
+	public final static String captionOf(IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
-		// sb.append(method.getDeclaringClass().getName());
-		// sb.append(Modifier.isStatic(method.getModifiers()) ? '/' : '#');
 		sb.append(method.isConstructor() ? "<ctor>" : method.getName());
-		sb.append("()");
+		sb.append('(');
+		sb.append(method.getParameterTypes().length);
+		sb.append(')');
 		return sb.toString();
 	}
 }
