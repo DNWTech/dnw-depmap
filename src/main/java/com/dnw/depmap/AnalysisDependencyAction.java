@@ -47,20 +47,25 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 	 */
 	@Override
 	public void run(IAction action) {
-		if (selection instanceof IStructuredSelection) {
-			@SuppressWarnings("rawtypes") Iterator it;
-			for (it = ((IStructuredSelection)selection).iterator(); it.hasNext();) {
-				Object element = it.next();
-				IResource resource = null;
-				if (element instanceof IResource) {
-					resource = (IResource)element;
-				} else if (element instanceof IAdaptable) {
-					resource = (IResource)((IAdaptable)element).getAdapter(IResource.class);
-				}
-				if (resource != null) {
-					analysisDependency(resource);
+		Activator.getDefault().accessor.startup();
+		try {
+			if (selection instanceof IStructuredSelection) {
+				@SuppressWarnings("rawtypes") Iterator it;
+				for (it = ((IStructuredSelection)selection).iterator(); it.hasNext();) {
+					Object element = it.next();
+					IResource resource = null;
+					if (element instanceof IResource) {
+						resource = (IResource)element;
+					} else if (element instanceof IAdaptable) {
+						resource = (IResource)((IAdaptable)element).getAdapter(IResource.class);
+					}
+					if (resource != null) {
+						analysisDependency(resource);
+					}
 				}
 			}
+		} finally {
+			Activator.getDefault().accessor.shutdown();
 		}
 	}
 

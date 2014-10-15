@@ -41,8 +41,8 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	private NeoAccessor accessor;
-	private NeoDao writer;
+	NeoAccessor accessor;
+	NeoDao writer;
 
 	static {
 		BlackOrWhite.WHITE.add("com\\.dnw\\..*");
@@ -75,7 +75,6 @@ public class Activator extends AbstractUIPlugin {
 		plugin = this;
 		accessor = new EmbeddedNeoAccessor(DBPATH);
 		writer = new NeoDao(new NeoWriter(accessor));
-		accessor.startup();
 	}
 
 	/**
