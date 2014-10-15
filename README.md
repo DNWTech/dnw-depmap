@@ -28,14 +28,14 @@ Getting Start
 
 Data Model
 ----------
-- ```Class``` - as a node
+- ```Class``` - as a node, labeled with ```'Type'``` and ```'Class'```.
  - property ```name```: the full qualified class name with all type parameters replaced with ```'?'```. e.g. ```'java.util.ArrayList<?>'```.
  - property ```displayname```: the bare name (no package name) of the class with type parameters. e.g. ```'ArrayList<Object>'```.
  - property ```parent```: the full qualified class name of it's superclass. e.g. ```'java.lang.Object'```. 
  - property ```impls```: an array contains names of interfaces which implements. e.g. ```['java.util.List<?>']```. 
-- ```Interface``` - as a node
+- ```Interface``` - as a node, labeled with ```'Type'``` and ```'Interface'```.
  - property ```name```: the full qualified class name with all type parameters replaced with ```'?'```. e.g. ```'java.util.List<?>'```.
- - property ```displayname```: the bare name (no package name) of the class with type parameters. e.g. ```'ArrayList<Object>'```. 
+ - property ```displayname```: the bare name (no package name) of the class with type parameters. e.g. ```'List<Object>'```. 
  - property ```parent```: an array contains names of interfaces which extends. e.g. ```['java.util.Collection<?>']```.
 
 License
