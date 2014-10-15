@@ -1,16 +1,16 @@
 DNW-depmap
 =============
 
-DNW-depmap is an Eclipse plug-in to help create Java code dependency map. Our goal is to help developer easily identify
- the areas of influence when they change code.
+DNW-depmap is an Eclipse plug-in project to create Java code dependency map,
+which can be used by developers to help them easily find what's the influence of arbitrary code modifications.
 
 Development Environment
 -----------------------
-- JDK 1.7 (Neo4j graph database need)
-- Eclipse 3.7 (indigo)
-  - import [codetemplates.xml](https://github.com/manbaum/dnw-depmap/blob/develop/codetemplates.xml) into ```Preferences|Java|Code Style|Code Templates```
-  - import [codestyle.xml](https://github.com/manbaum/dnw-depmap/blob/develop/codestyle.xml) into ```Preferences|Java|Code Style|Formatter```
-- Format code before commit
+- JDK 1.7 (Neo4j graph database's prerequisites)
+- Eclipse 3.7 (code name Indigo)
+  - Import [codetemplates.xml](https://github.com/manbaum/dnw-depmap/blob/develop/codetemplates.xml) into ```Preferences|Java|Code Style|Code Templates```.
+  - Import [codestyle.xml](https://github.com/manbaum/dnw-depmap/blob/develop/codestyle.xml) into ```Preferences|Java|Code Style|Formatter```.
+- Format the code before commit, Thanks.
 
 Getting Start
 -------------
