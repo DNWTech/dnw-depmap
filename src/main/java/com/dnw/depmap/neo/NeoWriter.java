@@ -45,13 +45,13 @@ public class NeoWriter {
 		this.accessor = accessor;
 	}
 
-	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) on create set t.displayname={dname}, t.implements={impls}, t.extends={parent}";
-	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) on create set t.displayname={dname}, t.extends={parent}";
+	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) on create set t.caption={caption}, t.implements={implements}, t.extends={extends}";
+	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) on create set t.caption={caption}, t.extends={extends}";
 	public static final String CREATEIMPLEMENTS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Implements]->(b)";
 	public static final String CREATEEXTENDS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Extends]->(b)";
-	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) on create set m.displayname={dname}";
-	public static final String CREATEDECLARE = "match (t:Type {name:{tname}})  match(m:Method {name:{mname}}) merge (t)-[:Declare]->(m)";
-	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invoke {args:{args}}]->(t)";
+	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) on create set m.caption={caption}";
+	public static final String CREATEDECLARE = "match (t:Type {name:{tname}})  match(m:Method {name:{mname}}) merge (t)-[:Declares]->(m)";
+	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invokes {args:{args}}]->(t)";
 
 	/**
 	 * Converts ITypeBinding objects, returns the full-qualified type name.
@@ -120,12 +120,12 @@ public class NeoWriter {
 	 * @param type
 	 */
 	public void createType(ITypeBinding type) {
-		M p = M.m().a("name", type).a("dname", AstUtil.displayNameOf(type));
+		M p = M.m().a("name", type).a("caption", AstUtil.displayNameOf(type));
 		if (type.isInterface()) {
-			p.a("parent", type.getInterfaces());
+			p.a("extends", type.getInterfaces());
 			accessor.execute(CREATEINTERFACE, p);
 		} else {
-			p.a("impls", type.getInterfaces()).a("parent", type.getSuperclass());
+			p.a("implements", type.getInterfaces()).a("extends", type.getSuperclass());
 			accessor.execute(CREATECLASS, p);
 		}
 	}
@@ -164,7 +164,7 @@ public class NeoWriter {
 	 * @param method
 	 */
 	public void createMethod(IMethodBinding method) {
-		M p = M.m().a("name", method).a("dname", AstUtil.displayNameOf(method));
+		M p = M.m().a("name", method).a("caption", AstUtil.displayNameOf(method));
 		accessor.execute(CREATEMETHOD, p);
 	}
 
