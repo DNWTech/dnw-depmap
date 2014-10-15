@@ -1,5 +1,5 @@
 /**
- * !(#) AnalysisDependencyAction.java
+ * !(#) AnalyzeDependencyAction.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -28,12 +28,12 @@ import org.eclipse.ui.IWorkbenchPart;
 import com.dnw.depmap.builder.ResourceVisitorDelegator;
 
 /**
- * Class/Interface AnalysisDependencyAction.
+ * Class/Interface AnalyzeDependencyAction.
  * 
  * @author manbaum
  * @since Oct 10, 2014
  */
-public class AnalysisDependencyAction implements IObjectActionDelegate {
+public class AnalyzeDependencyAction implements IObjectActionDelegate {
 
 	private ISelection selection;
 
@@ -60,7 +60,7 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 						resource = (IResource)((IAdaptable)element).getAdapter(IResource.class);
 					}
 					if (resource != null) {
-						analysisDependency(resource);
+						analyzeDependency(resource);
 					}
 				}
 			}
@@ -70,13 +70,13 @@ public class AnalysisDependencyAction implements IObjectActionDelegate {
 	}
 
 	/**
-	 * Method analysisDependency.
+	 * Method analyzeDependency.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
 	 * @param unit
 	 */
-	private void analysisDependency(IResource resource) {
+	private void analyzeDependency(IResource resource) {
 		ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(null);
 		try {
 			resource.accept(visitor);

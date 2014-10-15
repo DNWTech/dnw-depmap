@@ -43,13 +43,13 @@
       </objectContribution>
       <objectContribution
             adaptable="true"
-            id="com.dnw.depmap.analysisdependency"
+            id="com.dnw.depmap.analyzedependency"
             nameFilter="*"
             objectClass="org.eclipse.jdt.core.IJavaElement">
          <action
-               class="com.dnw.depmap.AnalysisDependencyAction"
-               id="com.dnw.depmap.analysisdependency"
-               label="Analysis Dependency"
+               class="com.dnw.depmap.AnalyzeDependencyAction"
+               id="com.dnw.depmap.analyzedependencyaction"
+               label="Analyze Dependency"
                menubarPath="additions">
          </action>
       </objectContribution>
