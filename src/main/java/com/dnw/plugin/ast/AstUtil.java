@@ -73,14 +73,15 @@ public final class AstUtil {
 		StringBuffer sb = new StringBuffer();
 		sb.append(method.getDeclaringClass().getErasure().getQualifiedName());
 		sb.append(Modifier.isStatic(method.getModifiers()) ? '/' : '#');
-		sb.append(method.isConstructor() ? "<ctor>" : method.getName());
+		sb.append(method.getName());
 		sb.append('(');
 		boolean first = true;
 		for (ITypeBinding t : method.getParameterTypes()) {
-			if (first)
+			if (first) {
 				first = false;
-			else
+			} else {
 				sb.append(',');
+			}
 			sb.append(t.getErasure().getQualifiedName());
 		}
 		sb.append(')');
@@ -97,10 +98,8 @@ public final class AstUtil {
 	 */
 	public final static String captionOf(IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(method.isConstructor() ? "<ctor>" : method.getName());
-		sb.append('(');
-		sb.append(method.getParameterTypes().length);
-		sb.append(')');
+		sb.append(method.getName());
+		sb.append("()");
 		return sb.toString();
 	}
 }
