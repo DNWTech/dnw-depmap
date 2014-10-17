@@ -1,5 +1,5 @@
 /**
- * !(#) ResourceVisitorDelegator.java
+ * !(#) FactoryBasedResourceVisitor.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,13 +11,14 @@
  *
  * Create by manbaum since Sep 29, 2014.
  */
-package com.dnw.depmap.visitor;
+package com.dnw.plugin.resource;
 
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
+
 
 /**
  * <p>
@@ -38,9 +39,9 @@ import org.eclipse.core.runtime.SubMonitor;
  * @author manbaum
  * @since Sep 29, 2014
  */
-public class DelegateResourceVisitor implements IResourceVisitor {
+public class FactoryBasedResourceVisitor implements IResourceVisitor {
 
-	private final VisitorFactory factory;
+	private final IResourceVisitorFactory factory;
 	private final SubMonitor monitor;
 
 	/**
@@ -50,7 +51,7 @@ public class DelegateResourceVisitor implements IResourceVisitor {
 	 * @since Sep 29, 2014
 	 * @param monitor
 	 */
-	public DelegateResourceVisitor(VisitorFactory factory, IProgressMonitor monitor) {
+	public FactoryBasedResourceVisitor(IResourceVisitorFactory factory, IProgressMonitor monitor) {
 		this.factory = factory;
 		this.monitor = SubMonitor.convert(monitor);
 	}

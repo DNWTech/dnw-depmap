@@ -17,13 +17,15 @@ import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
-import com.dnw.depmap.neo.BlackOrWhite;
 import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
-import com.dnw.depmap.visitor.FileExtVisitorFactory;
 import com.dnw.depmap.visitor.JavaFileVisitor;
 import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
+import com.dnw.plugin.matcher.CompositeList;
+import com.dnw.plugin.matcher.RegexMatcher;
+import com.dnw.plugin.matcher.StringMatcher;
+import com.dnw.plugin.resource.FileExtResourceVisitorFactory;
 import com.dnw.plugin.util.ConsoleUtil;
 
 /**
@@ -43,19 +45,20 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	public static final FileExtVisitorFactory factory = new FileExtVisitorFactory();
+	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
+	public static final CompositeList<String> blackOrWhite = new CompositeList<String>();
 
 	public NeoAccessor accessor;
 	public NeoDao neo;
 
 	static {
-		BlackOrWhite.WHITE.add("com\\.dnw\\..*");
-		BlackOrWhite.WHITE.add("org\\.eclipse\\.jdt\\.core\\.dom\\..*");
-		BlackOrWhite.WHITE.add("java\\.lang\\.Object");
-		BlackOrWhite.BLACK.add(".*");
+		factory.registerVisitor("java", JavaFileVisitor.class);
+		// factory.registerVisitor("xml", XmlFileVisitor.class);
 
-		factory.register("java", JavaFileVisitor.class);
-		//factory.register("xml", XmlFileVisitor.class);
+		blackOrWhite.addAllowMatcher(new RegexMatcher("com\\.dnw\\..*"));
+		blackOrWhite.addAllowMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
+		blackOrWhite.addAllowMatcher(new StringMatcher("java.lang.Object"));
+		blackOrWhite.addBlockMatcher(new RegexMatcher(".*"));
 	}
 
 	/**
@@ -81,7 +84,7 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		accessor = new EmbeddedNeoAccessor(DBPATH);
-		neo = new NeoDao(new NeoWriter(accessor));
+		neo = new NeoDao(new NeoWriter(accessor), blackOrWhite);
 	}
 
 	/**

@@ -19,6 +19,7 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import com.dnw.plugin.ast.AstUtil;
+import com.dnw.plugin.matcher.IListService;
 
 /**
  * Class/Interface NeoDao.
@@ -29,6 +30,7 @@ import com.dnw.plugin.ast.AstUtil;
 public class NeoDao {
 
 	private final NeoWriter w;
+	private final IListService<String> filter;
 
 	/**
 	 * Constructor of NeoDao.
@@ -37,8 +39,9 @@ public class NeoDao {
 	 * @since Oct 14, 2014
 	 * @param accessor
 	 */
-	public NeoDao(NeoWriter writer) {
+	public NeoDao(NeoWriter writer, IListService<String> filter) {
 		this.w = writer;
+		this.filter = filter;
 	}
 
 	/**
@@ -52,7 +55,7 @@ public class NeoDao {
 		if (type == null)
 			return false;
 		String name = AstUtil.nameOf(type);
-		if (BlackOrWhite.blocked(name))
+		if (filter.blocks(name))
 			return false;
 		w.createType(type);
 		return true;

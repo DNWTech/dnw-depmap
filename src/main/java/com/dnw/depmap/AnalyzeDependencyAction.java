@@ -31,8 +31,8 @@ import org.eclipse.jface.viewers.IStructuredSelection;
 import org.eclipse.ui.IObjectActionDelegate;
 import org.eclipse.ui.IWorkbenchPart;
 
-import com.dnw.depmap.visitor.DelegateResourceVisitor;
-import com.dnw.depmap.visitor.FindSupportResourceVisitor;
+import com.dnw.plugin.resource.FactoryBasedResourceFinder;
+import com.dnw.plugin.resource.FactoryBasedResourceVisitor;
 
 /**
  * Class/Interface AnalyzeDependencyAction.
@@ -63,11 +63,11 @@ public class AnalyzeDependencyAction implements IObjectActionDelegate {
 					monitor.beginTask("AnalyzeDependency", 100);
 					try {
 						SubMonitor sub = SubMonitor.convert(monitor, 1000);
-						FindSupportResourceVisitor finder = filterSupportedResource(ss,
+						FactoryBasedResourceFinder finder = filterSupportedResource(ss,
 								sub.newChild(50));
 						Activator.getDefault().accessor.startup();
-						sub.setWorkRemaining(finder.getSupportted().size() * 100 + 1);
-						for (IResource resource : finder.getSupportted()) {
+						sub.setWorkRemaining(finder.getSupportedList().size() * 100 + 1);
+						for (IResource resource : finder.getSupportedList()) {
 							IResourceVisitor visitor = Activator.factory.createVisitor(resource,
 									sub.newChild(100));
 							if (visitor != null) {
@@ -89,9 +89,9 @@ public class AnalyzeDependencyAction implements IObjectActionDelegate {
 		}
 	}
 
-	private FindSupportResourceVisitor filterSupportedResource(IStructuredSelection selection,
+	private FactoryBasedResourceFinder filterSupportedResource(IStructuredSelection selection,
 			IProgressMonitor monitor) {
-		FindSupportResourceVisitor finder = new FindSupportResourceVisitor(Activator.factory,
+		FactoryBasedResourceFinder finder = new FactoryBasedResourceFinder(Activator.factory,
 				monitor);
 		for (@SuppressWarnings("rawtypes") Iterator it = selection.iterator(); it.hasNext();) {
 			Object element = it.next();
@@ -156,7 +156,7 @@ public class AnalyzeDependencyAction implements IObjectActionDelegate {
 	 * @param unit
 	 */
 	private void analyzeDependency(IProgressMonitor monitor, IResource resource) {
-		DelegateResourceVisitor visitor = new DelegateResourceVisitor(Activator.factory, monitor);
+		FactoryBasedResourceVisitor visitor = new FactoryBasedResourceVisitor(Activator.factory, monitor);
 		try {
 			resource.accept(visitor);
 		} catch (JavaModelException e) {

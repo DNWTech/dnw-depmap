@@ -1,5 +1,5 @@
 /**
- * !(#) VisitorFactory.java
+ * !(#) FileExtResourceVisitorFactory.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,38 +11,31 @@
  *
  * Create by manbaum since Oct 16, 2014.
  */
-package com.dnw.depmap.visitor;
+package com.dnw.plugin.resource;
 
 import org.eclipse.core.resources.IResource;
-import org.eclipse.core.resources.IResourceVisitor;
-import org.eclipse.core.runtime.IProgressMonitor;
+
 
 /**
- * Class/Interface VisitorFactory.
+ * Class/Interface FileExtResourceVisitorFactory.
  * 
  * @author manbaum
  * @since Oct 16, 2014
  */
-public interface VisitorFactory {
+public class FileExtResourceVisitorFactory extends
+		AbstractTypeRegistryResourceVisitorFactory<String> {
 
 	/**
-	 * Method support.
+	 * Overrider method resolveKey.
 	 * 
 	 * @author manbaum
-	 * @since Oct 16, 2014
+	 * @since Oct 17, 2014
 	 * @param resource
 	 * @return
+	 * @see com.dnw.plugin.resource.AbstractTypeRegistryResourceVisitorFactory#resolveKey(org.eclipse.core.resources.IResource)
 	 */
-	boolean support(IResource resource);
-
-	/**
-	 * Method findVisitor.
-	 * 
-	 * @author manbaum
-	 * @since Oct 16, 2014
-	 * @param resource
-	 * @param monitor
-	 * @return
-	 */
-	IResourceVisitor createVisitor(IResource resource, IProgressMonitor monitor);
+	@Override
+	protected String resolveKey(IResource resource) {
+		return resource.getFileExtension();
+	}
 }
