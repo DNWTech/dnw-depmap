@@ -16,7 +16,7 @@ package com.dnw.plugin.ast.mock;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import com.dnw.plugin.ast.VisitContext;
-import com.dnw.plugin.ast.Visitor;
+import com.dnw.plugin.ast.IVisitor;
 
 /**
  * Class/Interface MockCompilationUnitVisitor.
@@ -24,7 +24,7 @@ import com.dnw.plugin.ast.Visitor;
  * @author manbaum
  * @since Sep 30, 2014
  */
-public class MockCompilationUnitVisitor implements Visitor<CompilationUnit> {
+public class MockCompilationUnitVisitor implements IVisitor<CompilationUnit> {
 
 	/**
 	 * Overrider method visit.
@@ -32,7 +32,7 @@ public class MockCompilationUnitVisitor implements Visitor<CompilationUnit> {
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * @param node
-	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
+	 * @see com.dnw.plugin.ast.IVisitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	public void visit(CompilationUnit node, VisitContext context) {
 	}

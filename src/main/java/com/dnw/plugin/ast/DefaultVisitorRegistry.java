@@ -24,9 +24,9 @@ import org.eclipse.jdt.core.dom.ASTNode;
  * @author manbaum
  * @since Sep 29, 2014
  */
-public final class DefaultVisitorRegistry implements VisitorRegistry {
+public final class DefaultVisitorRegistry implements IVisitorRegistry {
 
-	private final Map<Class<?>, Visitor<?>> map = new HashMap<Class<?>, Visitor<?>>();
+	private final Map<Class<?>, IVisitor<?>> map = new HashMap<Class<?>, IVisitor<?>>();
 
 	/**
 	 * Constructor of DefaultVisitorRegistry.
@@ -45,9 +45,9 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * @param type
 	 * @param visitor
 	 * @return
-	 * @see com.dnw.plugin.ast.VisitorRegistry#add(java.lang.Class, com.dnw.plugin.ast.Visitor)
+	 * @see com.dnw.plugin.ast.IVisitorRegistry#add(java.lang.Class, com.dnw.plugin.ast.IVisitor)
 	 */
-	public <T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type, V visitor) {
+	public <T extends ASTNode, V extends IVisitor<T>> boolean add(Class<T> type, V visitor) {
 		if (map.containsKey(type))
 			return false;
 		else {
@@ -63,10 +63,10 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * @since Sep 29, 2014
 	 * @param type
 	 * @return
-	 * @see com.dnw.plugin.ast.VisitorRegistry#remove(java.lang.Class)
+	 * @see com.dnw.plugin.ast.IVisitorRegistry#remove(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ASTNode, V extends Visitor<T>> V remove(Class<T> type) {
+	public <T extends ASTNode, V extends IVisitor<T>> V remove(Class<T> type) {
 		return (V)map.remove(type);
 	}
 
@@ -75,7 +75,7 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * @see com.dnw.plugin.ast.VisitorRegistry#clear()
+	 * @see com.dnw.plugin.ast.IVisitorRegistry#clear()
 	 */
 	public void clear() {
 		map.clear();
@@ -88,10 +88,10 @@ public final class DefaultVisitorRegistry implements VisitorRegistry {
 	 * @since Sep 29, 2014
 	 * @param type
 	 * @return
-	 * @see com.dnw.plugin.ast.VisitorRegistry#lookup(java.lang.Class)
+	 * @see com.dnw.plugin.ast.IVisitorRegistry#lookup(java.lang.Class)
 	 */
 	@SuppressWarnings("unchecked")
-	public <T extends ASTNode, V extends Visitor<T>> V lookup(Class<T> type) {
+	public <T extends ASTNode, V extends IVisitor<T>> V lookup(Class<T> type) {
 		return (V)map.get(type);
 	}
 }

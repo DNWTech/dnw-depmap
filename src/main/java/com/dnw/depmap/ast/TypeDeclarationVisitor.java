@@ -17,8 +17,9 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.dnw.depmap.Activator;
+import com.dnw.plugin.ast.AstUtil;
+import com.dnw.plugin.ast.IVisitor;
 import com.dnw.plugin.ast.VisitContext;
-import com.dnw.plugin.ast.Visitor;
 
 /**
  * Class/Interface TypeDeclarationVisitor.
@@ -26,7 +27,7 @@ import com.dnw.plugin.ast.Visitor;
  * @author manbaum
  * @since Oct 10, 2014
  */
-public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
+public class TypeDeclarationVisitor implements IVisitor<TypeDeclaration> {
 
 	/**
 	 * Overrider method visit.
@@ -35,13 +36,13 @@ public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
 	 * @since Oct 10, 2014
 	 * @param node
 	 * @param context
-	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
+	 * @see com.dnw.plugin.ast.IVisitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
 	public void visit(TypeDeclaration node, VisitContext context) {
 		Activator.console.println(" -- Visit TypeDeclaration: " + node.getName());
 		ITypeBinding type = node.resolveBinding();
-		Teller.tellTypeDeclaration(node, type);
-		Activator.w().createFullHierarchy(type);
+		Activator.console.println(AstUtil.infoOf(context, node, type));
+		Activator.neo().createFullHierarchy(type);
 	}
 }

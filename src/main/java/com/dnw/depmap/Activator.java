@@ -13,15 +13,26 @@
  */
 package com.dnw.depmap;
 
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 import org.eclipse.jface.resource.ImageDescriptor;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
+import com.dnw.depmap.ast.MethodDeclarationVisitor;
+import com.dnw.depmap.ast.MethodInvocationVisitor;
+import com.dnw.depmap.ast.TypeDeclarationVisitor;
 import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
 import com.dnw.depmap.visitor.JavaFileVisitor;
 import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
+import com.dnw.plugin.ast.DefaultVisitorRegistry;
+import com.dnw.plugin.ast.IVisitorDelegator;
+import com.dnw.plugin.ast.IVisitorRegistry;
+import com.dnw.plugin.ast.NodeTypeSet;
+import com.dnw.plugin.ast.RegistryBasedVisitorDelegator;
 import com.dnw.plugin.matcher.CompositeList;
 import com.dnw.plugin.matcher.RegexMatcher;
 import com.dnw.plugin.matcher.StringMatcher;
@@ -40,26 +51,34 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "com.dnw.depmap";
 	private static String DBPATH = "/Users/manbaum/workspace/neo4j-community-2.1.5/data/graph.db";
 
-	public static final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
-
 	// The shared instance
 	private static Activator plugin;
 
+	public static final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
-	public static final CompositeList<String> blackOrWhite = new CompositeList<String>();
+	public static final CompositeList<String> filter = new CompositeList<String>();
 
-	public NeoAccessor accessor;
-	public NeoDao neo;
+	public static final NodeTypeSet stopSet = new NodeTypeSet();
+	public static final IVisitorRegistry registry = new DefaultVisitorRegistry();
+	public static final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry,
+			stopSet);
 
 	static {
 		factory.registerVisitor("java", JavaFileVisitor.class);
 		// factory.registerVisitor("xml", XmlFileVisitor.class);
 
-		blackOrWhite.addAllowMatcher(new RegexMatcher("com\\.dnw\\..*"));
-		blackOrWhite.addAllowMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
-		blackOrWhite.addAllowMatcher(new StringMatcher("java.lang.Object"));
-		blackOrWhite.addBlockMatcher(new RegexMatcher(".*"));
+		filter.addAllowMatcher(new StringMatcher("java.lang.Object"));
+		filter.addAllowMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
+		filter.addAllowMatcher(new RegexMatcher("com\\.dnw\\..*"));
+		filter.addBlockMatcher(new RegexMatcher(".*"));
+
+		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
+		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());
+		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
 	}
+
+	public NeoAccessor accessor;
+	public NeoDao neo;
 
 	/**
 	 * Constructor of Activator.
@@ -84,7 +103,7 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		accessor = new EmbeddedNeoAccessor(DBPATH);
-		neo = new NeoDao(new NeoWriter(accessor), blackOrWhite);
+		neo = new NeoDao(new NeoWriter(accessor), filter);
 	}
 
 	/**
@@ -121,7 +140,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @since Oct 13, 2014
 	 * @return
 	 */
-	public static NeoDao w() {
+	public static NeoDao neo() {
 		return plugin.neo;
 	}
 

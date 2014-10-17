@@ -15,7 +15,6 @@ package com.dnw.plugin.resource;
 
 import org.eclipse.core.resources.IResource;
 
-
 /**
  * Class/Interface FileExtResourceVisitorFactory.
  * 

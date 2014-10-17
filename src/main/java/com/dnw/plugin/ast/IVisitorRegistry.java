@@ -1,5 +1,5 @@
 /**
- * !(#) VisitorRegistry.java
+ * !(#) IVisitorRegistry.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,12 +16,12 @@ package com.dnw.plugin.ast;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 /**
- * Class/Interface VisitorRegistry.
+ * Class/Interface IVisitorRegistry.
  * 
  * @author manbaum
  * @since Sep 30, 2014
  */
-public interface VisitorRegistry {
+public interface IVisitorRegistry {
 
 	/**
 	 * Method add.
@@ -32,7 +32,7 @@ public interface VisitorRegistry {
 	 * @param visitor
 	 * @return
 	 */
-	<T extends ASTNode, V extends Visitor<T>> boolean add(Class<T> type, V visitor);
+	<T extends ASTNode, V extends IVisitor<T>> boolean add(Class<T> type, V visitor);
 
 	/**
 	 * Method remove.
@@ -42,7 +42,7 @@ public interface VisitorRegistry {
 	 * @param type
 	 * @return
 	 */
-	<T extends ASTNode, V extends Visitor<T>> V remove(Class<T> type);
+	<T extends ASTNode, V extends IVisitor<T>> V remove(Class<T> type);
 
 	/**
 	 * Method clear.
@@ -60,5 +60,5 @@ public interface VisitorRegistry {
 	 * @param type
 	 * @return
 	 */
-	<T extends ASTNode, V extends Visitor<T>> V lookup(Class<T> type);
+	<T extends ASTNode, V extends IVisitor<T>> V lookup(Class<T> type);
 }

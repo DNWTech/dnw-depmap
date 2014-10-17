@@ -1,5 +1,5 @@
 /**
- * !(#) DefaultVisitorDelegator.java
+ * !(#) RegistryBasedVisitorDelegator.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,27 +16,27 @@ package com.dnw.plugin.ast;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 /**
- * Class/Interface DefaultVisitorDelegator.
+ * Class/Interface RegistryBasedVisitorDelegator.
  * 
  * @author manbaum
  * @since Sep 30, 2014
  */
-public final class DefaultVisitorDelegator implements VisitorDelegator {
+public final class RegistryBasedVisitorDelegator implements IVisitorDelegator {
 
+	private final IVisitorRegistry registry;
 	private final NodeTypeSet stopSet;
-	private final VisitorRegistry registry;
 
 	/**
-	 * Constructor of DefaultVisitorDelegator.
+	 * Constructor of RegistryBasedVisitorDelegator.
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * @param stopSet
 	 * @param registry
 	 */
-	public DefaultVisitorDelegator(NodeTypeSet stopSet, VisitorRegistry registry) {
-		this.stopSet = stopSet;
+	public RegistryBasedVisitorDelegator(IVisitorRegistry registry, NodeTypeSet stopSet) {
 		this.registry = registry;
+		this.stopSet = stopSet;
 	}
 
 	/**
@@ -47,7 +47,7 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @param node
 	 * @param context
 	 * @return
-	 * @see com.dnw.plugin.ast.VisitorDelegator#preVisit(org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
+	 * @see com.dnw.plugin.ast.IVisitorDelegator#preVisit(org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
 	public boolean preVisit(ASTNode node, VisitContext context) {
@@ -68,7 +68,7 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @since Sep 30, 2014
 	 * @param node
 	 * @param context
-	 * @see com.dnw.plugin.ast.VisitorDelegator#postVisit(org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
+	 * @see com.dnw.plugin.ast.IVisitorDelegator#postVisit(org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
 	public void postVisit(ASTNode node, VisitContext context) {
@@ -88,12 +88,12 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @param node
 	 * @param context
 	 * @return
-	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(java.lang.Class,
+	 * @see com.dnw.plugin.ast.IVisitorDelegator#visit(java.lang.Class,
 	 *      org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
 	public <T extends ASTNode> boolean visit(Class<T> type, T node, VisitContext context) {
-		Visitor<T> visitor = registry.lookup(type);
+		IVisitor<T> visitor = registry.lookup(type);
 		if (visitor != null) {
 			visitor.visit(node, context);
 		}
@@ -108,7 +108,7 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @param type
 	 * @param node
 	 * @param context
-	 * @see com.dnw.plugin.ast.VisitorDelegator#endVisit(java.lang.Class,
+	 * @see com.dnw.plugin.ast.IVisitorDelegator#endVisit(java.lang.Class,
 	 *      org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override

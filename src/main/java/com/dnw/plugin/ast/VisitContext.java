@@ -19,9 +19,10 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 
 /**
- * Class/Interface VisitContext.
+ * Class/Interface Visit
  * 
  * @author manbaum
  * @since Oct 16, 2014
@@ -31,11 +32,22 @@ public class VisitContext {
 	public final IFile file;
 	public final ASTParser parser;
 	public final ICompilationUnit unit;
-	public final ASTNode root;
+	public final CompilationUnit root;
 	public final SubMonitor monitor;
 	public int currentPosition;
 
-	public VisitContext(IFile file, ASTParser parser, ICompilationUnit unit, ASTNode root,
+	/**
+	 * Constructor of VisitContext.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param file
+	 * @param parser
+	 * @param unit
+	 * @param root
+	 * @param monitor
+	 */
+	public VisitContext(IFile file, ASTParser parser, ICompilationUnit unit, CompilationUnit root,
 			IProgressMonitor monitor) {
 		this.file = file;
 		this.parser = parser;
@@ -44,5 +56,49 @@ public class VisitContext {
 		this.monitor = SubMonitor.convert(monitor, root.getLength());
 		this.monitor.setTaskName(file.getFullPath().toString());
 		currentPosition = 0;
+	}
+
+	/**
+	 * Method fileInfo.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param node
+	 * @return
+	 */
+	public String fileInfo(ASTNode node) {
+		String filename = file.getFullPath().toString();
+		String linenum = String.valueOf(root.getLineNumber(node.getStartPosition()));
+		return filename + ":" + linenum;
+	}
+
+	/**
+	 * Method updateProgressPreVisit.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param node
+	 */
+	public void updateProgressPreVisit(ASTNode node) {
+		int delta = node.getStartPosition() - currentPosition;
+		if (delta > 0) {
+			currentPosition += delta;
+			monitor.worked(delta);
+		}
+	}
+
+	/**
+	 * Method updateProgressPostVisit.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param node
+	 */
+	public void updateProgressPostVisit(ASTNode node) {
+		int delta = node.getStartPosition() + node.getLength() - currentPosition;
+		if (delta > 0) {
+			currentPosition += delta;
+			monitor.worked(delta);
+		}
 	}
 }

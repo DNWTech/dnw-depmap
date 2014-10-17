@@ -1,5 +1,5 @@
 /**
- * !(#) Visitor.java
+ * !(#) IVisitor.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -16,13 +16,13 @@ package com.dnw.plugin.ast;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 /**
- * Class/Interface Visitor.
+ * Class/Interface IVisitor.
  * 
  * @author manbaum
  * @since Sep 29, 2014
  * @param <T>
  */
-public interface Visitor<T extends ASTNode> {
+public interface IVisitor<T extends ASTNode> {
 
 	/**
 	 * Method visit.

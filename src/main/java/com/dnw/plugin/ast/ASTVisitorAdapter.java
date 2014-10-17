@@ -1,5 +1,5 @@
 /**
- * !(#) AstVisitorBridge.java
+ * !(#) ASTVisitorAdapter.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -101,25 +101,25 @@ import org.eclipse.jdt.core.dom.WhileStatement;
 import org.eclipse.jdt.core.dom.WildcardType;
 
 /**
- * Class/Interface ASTVisitorBridge.
+ * Class/Interface ASTVisitorAdapter.
  * 
  * @author manbaum
  * @since Sep 29, 2014
  */
-public final class AstVisitorBridge extends ASTVisitor {
+public final class ASTVisitorAdapter extends ASTVisitor {
 
 	private final VisitContext context;
-	private final VisitorDelegator delegator;
+	private final IVisitorDelegator delegator;
 
 	/**
-	 * Constructor of ASTVisitorBridge.
+	 * Constructor of ASTVisitorAdapter.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * @param context
 	 * @param delegator
 	 */
-	public AstVisitorBridge(VisitContext context, VisitorDelegator delegator) {
+	public ASTVisitorAdapter(VisitContext context, IVisitorDelegator delegator) {
 		this.context = context;
 		this.delegator = delegator;
 	}

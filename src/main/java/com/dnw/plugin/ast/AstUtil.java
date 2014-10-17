@@ -15,7 +15,10 @@ package com.dnw.plugin.ast;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
+import org.eclipse.jdt.core.dom.MethodDeclaration;
+import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.Modifier;
+import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 /**
  * Class/Interface AstUtil.
@@ -100,6 +103,75 @@ public final class AstUtil {
 		StringBuffer sb = new StringBuffer();
 		sb.append(method.getName());
 		sb.append("()");
+		return sb.toString();
+	}
+
+	/**
+	 * Method fileInfo.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @return
+	 */
+
+	/**
+	 * Method tellTypeDeclaration.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @param type
+	 */
+	public static String infoOf(VisitContext context, TypeDeclaration node, ITypeBinding type) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("  . ");
+		sb.append(node.getName());
+		sb.append(" bound to: ");
+		sb.append(type != null ? type.getQualifiedName() : "nothing");
+		sb.append(" (");
+		sb.append(context.fileInfo(node));
+		sb.append(")");
+		return sb.toString();
+	}
+
+	/**
+	 * Method tellMethodDeclaration.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @param method
+	 */
+	public static String infoOf(VisitContext context, MethodDeclaration node, IMethodBinding method) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("  . ");
+		sb.append(node.getName());
+		sb.append(" bound to: ");
+		sb.append(method != null ? method.getName() + "()" : "nothing");
+		sb.append(" (");
+		sb.append(context.fileInfo(node));
+		sb.append(")");
+		return sb.toString();
+	}
+
+	/**
+	 * Method tellMethodInvocation.
+	 * 
+	 * @author manbaum
+	 * @since Oct 11, 2014
+	 * @param node
+	 * @param method
+	 */
+	public static String infoOf(VisitContext context, MethodInvocation node, IMethodBinding method) {
+		StringBuffer sb = new StringBuffer();
+		sb.append("  . ");
+		sb.append(node.getName());
+		sb.append(" bound to: ");
+		sb.append(method != null ? method.getName() + "()" : "nothing");
+		sb.append(" (");
+		sb.append(context.fileInfo(node));
+		sb.append(")");
 		return sb.toString();
 	}
 }

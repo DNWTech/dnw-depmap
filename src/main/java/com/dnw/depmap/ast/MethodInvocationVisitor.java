@@ -24,8 +24,9 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import com.dnw.depmap.Activator;
+import com.dnw.plugin.ast.AstUtil;
+import com.dnw.plugin.ast.IVisitor;
 import com.dnw.plugin.ast.VisitContext;
-import com.dnw.plugin.ast.Visitor;
 
 /**
  * Class/Interface MethodInvocationVisitor.
@@ -33,7 +34,7 @@ import com.dnw.plugin.ast.Visitor;
  * @author manbaum
  * @since Sep 29, 2014
  */
-public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
+public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 
 	/**
 	 * Constructor of MethodInvocationVisitor.
@@ -52,7 +53,7 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 	 * @param node
 	 * @param context
 	 * @return
-	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(org.eclipse.jdt.core.dom.ASTNode, boolean)
+	 * @see com.dnw.plugin.ast.IVisitorDelegator#visit(org.eclipse.jdt.core.dom.ASTNode, boolean)
 	 */
 	@Override
 	public void visit(MethodInvocation node, VisitContext context) {
@@ -71,10 +72,10 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 			return;
 
 		IMethodBinding from = decl.resolveBinding();
-		Teller.tellMethodDeclaration(decl, from);
+		Activator.console.println(AstUtil.infoOf(context, decl, from));
 		IMethodBinding to = node.resolveMethodBinding();
-		Teller.tellMethodInvocation(node, to);
-		Activator.w().createMethodInvocation(from, to, args(node.arguments()));
+		Activator.console.println(AstUtil.infoOf(context, node, to));
+		Activator.neo().createMethodInvocation(from, to, args(node.arguments()));
 	}
 
 	/**

@@ -21,23 +21,13 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
-import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
-import org.eclipse.jdt.core.dom.MethodDeclaration;
-import org.eclipse.jdt.core.dom.MethodInvocation;
-import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jdt.core.dom.CompilationUnit;
 
-import com.dnw.depmap.ast.MethodDeclarationVisitor;
-import com.dnw.depmap.ast.MethodInvocationVisitor;
-import com.dnw.depmap.ast.TypeDeclarationVisitor;
-import com.dnw.plugin.ast.AstVisitorBridge;
-import com.dnw.plugin.ast.DefaultVisitorDelegator;
-import com.dnw.plugin.ast.DefaultVisitorRegistry;
-import com.dnw.plugin.ast.NodeTypeSet;
+import com.dnw.plugin.ast.ASTVisitorAdapter;
+import com.dnw.plugin.ast.IVisitorDelegator;
 import com.dnw.plugin.ast.VisitContext;
-import com.dnw.plugin.ast.VisitorDelegator;
-import com.dnw.plugin.ast.VisitorRegistry;
 
 /**
  * Class/Interface JavaFileVisitor.
@@ -47,16 +37,7 @@ import com.dnw.plugin.ast.VisitorRegistry;
  */
 public class JavaFileVisitor implements IResourceVisitor {
 
-	public static final NodeTypeSet stopSet = new NodeTypeSet();
-	public static final VisitorRegistry registry = new DefaultVisitorRegistry();
-	public static final VisitorDelegator delegator = new DefaultVisitorDelegator(stopSet, registry);
-
-	static {
-		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
-		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());
-		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
-	}
-
+	private final IVisitorDelegator delegator;
 	private final IProgressMonitor monitor;
 
 	/**
@@ -66,7 +47,8 @@ public class JavaFileVisitor implements IResourceVisitor {
 	 * @since Oct 16, 2014
 	 * @param monitor
 	 */
-	public JavaFileVisitor(IProgressMonitor monitor) {
+	public JavaFileVisitor(IVisitorDelegator delegator, IProgressMonitor monitor) {
+		this.delegator = delegator;
 		this.monitor = monitor;
 	}
 
@@ -93,9 +75,9 @@ public class JavaFileVisitor implements IResourceVisitor {
 			//		parser.setBindingsRecovery(true);
 			ICompilationUnit unit = JavaCore.createCompilationUnitFrom(file);
 			parser.setSource(unit);
-			ASTNode root = parser.createAST(null);
+			CompilationUnit root = (CompilationUnit)parser.createAST(null);
 			VisitContext context = new VisitContext(file, parser, unit, root, monitor);
-			ASTVisitor visitor = new AstVisitorBridge(context, delegator);
+			ASTVisitor visitor = new ASTVisitorAdapter(context, delegator);
 			root.accept(visitor);
 		} finally {
 			monitor.done();
