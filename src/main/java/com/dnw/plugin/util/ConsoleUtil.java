@@ -57,6 +57,18 @@ public class ConsoleUtil {
 	}
 
 	/**
+	 * Method createConsole.
+	 * 
+	 * @author manbaum
+	 * @since Jan 31, 2013
+	 * @param name
+	 * @return
+	 */
+	public static ConsoleUtil createConsole(String name) {
+		return createConsole(ConsolePlugin.getDefault().getConsoleManager(), name);
+	}
+
+	/**
 	 * Method findConsole.
 	 * 
 	 * @author manbaum
@@ -71,18 +83,6 @@ public class ConsoleUtil {
 				return new ConsoleUtil((MessageConsole)c);
 		}
 		return null;
-	}
-
-	/**
-	 * Method createConsole.
-	 * 
-	 * @author manbaum
-	 * @since Jan 31, 2013
-	 * @param name
-	 * @return
-	 */
-	public static ConsoleUtil createConsole(String name) {
-		return createConsole(ConsolePlugin.getDefault().getConsoleManager(), name);
 	}
 
 	/**
@@ -116,17 +116,6 @@ public class ConsoleUtil {
 	}
 
 	/**
-	 * Method getInternalConsole.
-	 * 
-	 * @author manbaum
-	 * @since Oct 10, 2014
-	 * @return
-	 */
-	public MessageConsole getInternalConsole() {
-		return console;
-	}
-
-	/**
 	 * Method messageOfThrowable.
 	 * 
 	 * @author manbaum
@@ -134,7 +123,7 @@ public class ConsoleUtil {
 	 * @param e
 	 * @return
 	 */
-	public String messageOfThrowable(Throwable e) {
+	public static String messageOfThrowable(Throwable e) {
 		StringBuffer sb = new StringBuffer();
 		sb.append(e.getClass().getName());
 		sb.append(": ");
@@ -149,6 +138,17 @@ public class ConsoleUtil {
 			sb.append(")");
 		}
 		return sb.toString();
+	}
+
+	/**
+	 * Method getInternalConsole.
+	 * 
+	 * @author manbaum
+	 * @since Oct 10, 2014
+	 * @return
+	 */
+	public MessageConsole getInternalConsole() {
+		return console;
 	}
 
 	/**
