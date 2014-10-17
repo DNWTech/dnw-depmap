@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Sep 30, 2014.
  */
-package com.dnw.depmap.visitor;
+package com.dnw.depmap.resource;
 
 import java.io.IOException;
 

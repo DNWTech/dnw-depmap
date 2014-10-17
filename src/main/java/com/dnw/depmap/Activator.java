@@ -25,7 +25,7 @@ import com.dnw.depmap.ast.MethodInvocationVisitor;
 import com.dnw.depmap.ast.TypeDeclarationVisitor;
 import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
-import com.dnw.depmap.visitor.JavaFileVisitor;
+import com.dnw.depmap.resource.JavaFileVisitor;
 import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
 import com.dnw.plugin.ast.DefaultVisitorRegistry;
