@@ -3,44 +3,7 @@
 <plugin>
 
    <extension
-         id="com.dnw.depmap.builder"
-         name="Dependency Map Builder"
-         point="org.eclipse.core.resources.builders">
-      <builder
-            hasNature="true">
-         <run
-               class="com.dnw.depmap.Builder">
-         </run>
-      </builder>
-   </extension>
-   <extension
-         id="com.dnw.depmap.nature"
-         name="Dependency Map Nature"
-         point="org.eclipse.core.resources.natures">
-      <runtime>
-         <run
-               class="com.dnw.depmap.Nature">
-         </run>
-      </runtime>
-      <builder
-            id="com.dnw.depmap.builder">
-      </builder>
-   </extension>
-   <extension
          point="org.eclipse.ui.popupMenus">
-      <objectContribution
-            adaptable="true"
-            objectClass="org.eclipse.core.resources.IProject"
-            nameFilter="*"
-            id="com.dnw.depmap.togglenature">
-         <action
-               label="Add/Remove Dependency Map Nature"
-               class="com.dnw.depmap.ToggleNatureAction"
-               menubarPath="additions"
-               enablesFor="+"
-               id="com.dnw.depmap.togglenatureaction">
-         </action>
-      </objectContribution>
       <objectContribution
             adaptable="true"
             id="com.dnw.depmap.analyzedependency"
@@ -53,17 +16,6 @@
                menubarPath="additions">
          </action>
       </objectContribution>
-   </extension>
-   <extension
-         id="com.dnw.depmap.problem"
-         name="Denpendency Map Problem"
-         point="org.eclipse.core.resources.markers">
-      <super
-            type="com.dnw.depmap.problemmarker">
-      </super>
-      <persistent
-            value="true">
-      </persistent>
    </extension>
 
 </plugin>
