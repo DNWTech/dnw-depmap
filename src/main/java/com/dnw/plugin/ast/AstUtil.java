@@ -29,15 +29,15 @@ import org.eclipse.jdt.core.dom.TypeDeclaration;
 public final class AstUtil {
 
 	/**
-	 * Method replaceAllGenericTypeParameters.
+	 * Method removeTypeParameters.
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014
 	 * @param name
 	 * @return
 	 */
-	public final static String replaceAllGenericTypeParameters(String name) {
-		return name.replaceAll("<[^>]+>", "<?>");
+	public final static String removeTypeParameters(String name) {
+		return name.replaceAll("<[^>]+>", "");
 	}
 
 	/**
@@ -49,7 +49,7 @@ public final class AstUtil {
 	 * @return
 	 */
 	public final static String nameOf(ITypeBinding type) {
-		return type.getErasure().getQualifiedName();
+		return removeTypeParameters(type.getQualifiedName());
 	}
 
 	/**
@@ -61,7 +61,7 @@ public final class AstUtil {
 	 * @return
 	 */
 	public final static String captionOf(ITypeBinding type) {
-		return type.getErasure().getName();
+		return removeTypeParameters(type.getName());
 	}
 
 	/**
@@ -74,7 +74,7 @@ public final class AstUtil {
 	 */
 	public final static String nameOf(IMethodBinding method) {
 		StringBuffer sb = new StringBuffer();
-		sb.append(method.getDeclaringClass().getErasure().getQualifiedName());
+		sb.append(nameOf(method.getDeclaringClass()));
 		sb.append(Modifier.isStatic(method.getModifiers()) ? '/' : '#');
 		sb.append(method.getName());
 		sb.append('(');
@@ -85,7 +85,7 @@ public final class AstUtil {
 			} else {
 				sb.append(',');
 			}
-			sb.append(t.getErasure().getQualifiedName());
+			sb.append(nameOf(t));
 		}
 		sb.append(')');
 		return sb.toString();
