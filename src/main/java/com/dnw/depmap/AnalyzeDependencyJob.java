@@ -66,20 +66,25 @@ public final class AnalyzeDependencyJob extends Job {
 			IProgressMonitor monitor) {
 		FactoryBasedResourceFinder finder = new FactoryBasedResourceFinder(Activator.factory,
 				monitor);
-		for (@SuppressWarnings("rawtypes") Iterator it = selection.iterator(); it.hasNext();) {
-			Object element = it.next();
-			try {
-				if (element instanceof IResource) {
-					((IResource)element).accept(finder);
-				} else if (element instanceof IAdaptable) {
-					IResource resource = (IResource)((IAdaptable)element)
-							.getAdapter(IResource.class);
-					if (resource != null)
-						resource.accept(finder);
+		try {
+			monitor.beginTask("Finding files...", selection.size());
+			for (@SuppressWarnings("rawtypes") Iterator it = selection.iterator(); it.hasNext();) {
+				Object element = it.next();
+				try {
+					if (element instanceof IResource) {
+						((IResource)element).accept(finder);
+					} else if (element instanceof IAdaptable) {
+						IResource resource = (IResource)((IAdaptable)element)
+								.getAdapter(IResource.class);
+						if (resource != null)
+							resource.accept(finder);
+					}
+				} catch (CoreException e) {
+					Activator.console.println(e);
 				}
-			} catch (CoreException e) {
-				Activator.console.println(e);
 			}
+		} finally {
+			monitor.done();
 		}
 		return finder;
 	}
@@ -118,8 +123,10 @@ public final class AnalyzeDependencyJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask("AnalyzeDependency", 100);
 		try {
-			SubMonitor sub = SubMonitor.convert(monitor, 1000);
-			IResourceFinder finder = filterSupportedResource(selection, sub.newChild(50));
+			SubMonitor sub = SubMonitor.convert(monitor, 100);
+			IResourceFinder finder = filterSupportedResource(selection, sub.newChild(3));
+			Activator.console.println("*** Total " + finder.getSupportedList().size()
+					+ " file(s) found.");
 			sub.setWorkRemaining(finder.getSupportedList().size() * 100 + 1);
 			Activator.getDefault().accessor.startup();
 			visitAllResources(finder.getSupportedList(), sub);

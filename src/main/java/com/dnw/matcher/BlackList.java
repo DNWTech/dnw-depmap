@@ -13,18 +13,15 @@
  */
 package com.dnw.matcher;
 
-import java.util.ArrayList;
-import java.util.List;
-
 /**
  * Class/Interface BlackList.
  * 
  * @author manbaum
  * @since Oct 17, 2014
  */
-public class BlackList<T> implements IListService<T> {
+public class BlackList<T> implements IFilterService<T> {
 
-	private final List<IMatcher<T>> list = new ArrayList<IMatcher<T>>();
+	private final ListMatcher<T> list = new ListMatcher<T>();
 
 	/**
 	 * Method addMatcher.
@@ -34,7 +31,19 @@ public class BlackList<T> implements IListService<T> {
 	 * @param m
 	 */
 	public void addMatcher(IMatcher<T> m) {
-		list.add(m);
+		list.addMatcher(m);
+	}
+
+	/**
+	 * Method addMatcher.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param i
+	 * @param m
+	 */
+	public void addMatcher(int i, IMatcher<T> m) {
+		list.addMatcher(i, m);
 	}
 
 	/**
@@ -45,7 +54,18 @@ public class BlackList<T> implements IListService<T> {
 	 * @param m
 	 */
 	public void removeMatcher(IMatcher<T> m) {
-		list.remove(m);
+		list.removeMatcher(m);
+	}
+
+	/**
+	 * Method removeMatcher.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param i
+	 */
+	public void removeMatcher(int i) {
+		list.removeMatcher(i);
 	}
 
 	/**
@@ -59,36 +79,30 @@ public class BlackList<T> implements IListService<T> {
 	}
 
 	/**
-	 * Overrider method blocks.
-	 * 
-	 * @author manbaum
-	 * @since Oct 17, 2014
-	 * @param value
-	 * @return
-	 * @see com.dnw.matcher.IListService#blocks(java.lang.Object)
-	 */
-	@Override
-	public boolean blocks(T value) {
-		for (int i = list.size() - 1; i > 0; i--)
-			if (list.get(i).matches(value))
-				return true;
-		return false;
-	}
-
-	/**
 	 * Overrider method allows.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
 	 * @param value
 	 * @return
-	 * @see com.dnw.matcher.IListService#allows(java.lang.Object)
+	 * @see com.dnw.matcher.IFilterService#allows(java.lang.Object)
 	 */
 	@Override
 	public boolean allows(T value) {
-		for (int i = list.size() - 1; i > 0; i--)
-			if (list.get(i).matches(value))
-				return false;
-		return true;
+		return !list.matches(value);
+	}
+
+	/**
+	 * Overrider method blocks.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param value
+	 * @return
+	 * @see com.dnw.matcher.IFilterService#blocks(java.lang.Object)
+	 */
+	@Override
+	public boolean blocks(T value) {
+		return !allows(value);
 	}
 }

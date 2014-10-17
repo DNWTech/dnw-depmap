@@ -1,5 +1,5 @@
 /**
- * !(#) AbstractSetBasedMatcher.java
+ * !(#) SetMatcher.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -17,45 +17,35 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * Class/Interface AbstractSetBasedMatcher.
+ * Class/Interface SetMatcher.
  * 
  * @author manbaum
  * @since Oct 17, 2014
  */
-public abstract class AbstractSetBasedMatcher<S, T> implements IMatcher<S> {
+public class SetMatcher<T> implements IMatcher<T> {
 
-	protected final Set<T> set = new HashSet<T>();
+	private final Set<IMatcher<T>> set = new HashSet<IMatcher<T>>();
 
 	/**
-	 * Method decorate.
+	 * Method addMatcher.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param value
-	 * @return
+	 * @param m
 	 */
-	protected abstract T decorates(S value);
-
-	/**
-	 * Method addCandidate.
-	 * 
-	 * @author manbaum
-	 * @since Oct 17, 2014
-	 * @param candidate
-	 */
-	public void addCandidate(S candidate) {
-		set.add(decorates(candidate));
+	public void addMatcher(IMatcher<T> m) {
+		set.add(m);
 	}
 
 	/**
-	 * Method removeCandidate.
+	 * Method removeMatcher.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param candidate
+	 * @param m
 	 */
-	public void removeCandidate(S candidate) {
-		set.remove(decorates(candidate));
+	public void removeMatcher(IMatcher<T> m) {
+		set.remove(m);
 	}
 
 	/**
@@ -78,7 +68,11 @@ public abstract class AbstractSetBasedMatcher<S, T> implements IMatcher<S> {
 	 * @see com.dnw.matcher.IMatcher#matches(java.lang.Object)
 	 */
 	@Override
-	public boolean matches(S value) {
-		return set.contains(decorates(value));
+	public boolean matches(T value) {
+		for (IMatcher<T> m : set) {
+			if (m.matches(value))
+				return true;
+		}
+		return false;
 	}
 }

@@ -26,9 +26,9 @@ import com.dnw.depmap.ast.TypeDeclarationVisitor;
 import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
 import com.dnw.depmap.resource.JavaFileVisitor;
-import com.dnw.matcher.CompositeList;
 import com.dnw.matcher.RegexMatcher;
 import com.dnw.matcher.StringMatcher;
+import com.dnw.matcher.WhiteList;
 import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
 import com.dnw.plugin.ast.DefaultVisitorRegistry;
@@ -56,7 +56,7 @@ public class Activator extends AbstractUIPlugin {
 
 	public static final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
-	public static final CompositeList<String> filter = new CompositeList<String>();
+	public static final WhiteList<String> filter = new WhiteList<String>();
 
 	public static final NodeTypeSet stopSet = new NodeTypeSet();
 	public static final IVisitorRegistry registry = new DefaultVisitorRegistry();
@@ -67,10 +67,9 @@ public class Activator extends AbstractUIPlugin {
 		factory.registerVisitor("java", JavaFileVisitor.class);
 		// factory.registerVisitor("xml", XmlFileVisitor.class);
 
-		filter.addAllowMatcher(new StringMatcher("java.lang.Object"));
-		filter.addAllowMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
-		filter.addAllowMatcher(new RegexMatcher("com\\.dnw\\..*"));
-		filter.addBlockMatcher(new RegexMatcher(".*"));
+		filter.addMatcher(new StringMatcher("java.lang.Object"));
+		filter.addMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
+		filter.addMatcher(new RegexMatcher("com\\.dnw\\..*"));
 
 		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
 		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());

@@ -25,8 +25,8 @@ import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import com.dnw.depmap.Activator;
 import com.dnw.plugin.ast.ASTVisitorAdapter;
-import com.dnw.plugin.ast.IVisitorDelegator;
 import com.dnw.plugin.ast.VisitContext;
 
 /**
@@ -37,7 +37,6 @@ import com.dnw.plugin.ast.VisitContext;
  */
 public class JavaFileVisitor implements IResourceVisitor {
 
-	private final IVisitorDelegator delegator;
 	private final IProgressMonitor monitor;
 
 	/**
@@ -47,8 +46,7 @@ public class JavaFileVisitor implements IResourceVisitor {
 	 * @since Oct 16, 2014
 	 * @param monitor
 	 */
-	public JavaFileVisitor(IVisitorDelegator delegator, IProgressMonitor monitor) {
-		this.delegator = delegator;
+	public JavaFileVisitor(IProgressMonitor monitor) {
 		this.monitor = monitor;
 	}
 
@@ -72,12 +70,11 @@ public class JavaFileVisitor implements IResourceVisitor {
 			ASTParser parser = ASTParser.newParser(AST.JLS3);
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setResolveBindings(true);
-			//		parser.setBindingsRecovery(true);
 			ICompilationUnit unit = JavaCore.createCompilationUnitFrom(file);
 			parser.setSource(unit);
 			CompilationUnit root = (CompilationUnit)parser.createAST(null);
 			VisitContext context = new VisitContext(file, parser, unit, root, monitor);
-			ASTVisitor visitor = new ASTVisitorAdapter(context, delegator);
+			ASTVisitor visitor = new ASTVisitorAdapter(context, Activator.delegator);
 			root.accept(visitor);
 		} finally {
 			monitor.done();

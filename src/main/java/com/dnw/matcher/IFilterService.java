@@ -1,5 +1,5 @@
 /**
- * !(#) IListService.java
+ * !(#) IFilterService.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,12 +14,22 @@
 package com.dnw.matcher;
 
 /**
- * Class/Interface IListService.
+ * Class/Interface IFilterService.
  * 
  * @author manbaum
  * @since Oct 17, 2014
  */
-public interface IListService<T> {
+public interface IFilterService<T> {
+
+	/**
+	 * Method allows.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 * @param value
+	 * @return
+	 */
+	boolean allows(T value);
 
 	/**
 	 * Method blocks.
@@ -31,13 +41,4 @@ public interface IListService<T> {
 	 */
 	boolean blocks(T value);
 
-	/**
-	 * Method allows.
-	 * 
-	 * @author manbaum
-	 * @since Oct 17, 2014
-	 * @param value
-	 * @return
-	 */
-	boolean allows(T value);
 }

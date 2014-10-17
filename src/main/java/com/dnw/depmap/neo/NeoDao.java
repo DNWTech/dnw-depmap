@@ -18,7 +18,7 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
-import com.dnw.matcher.IListService;
+import com.dnw.matcher.IFilterService;
 import com.dnw.plugin.ast.AstUtil;
 
 /**
@@ -30,7 +30,7 @@ import com.dnw.plugin.ast.AstUtil;
 public class NeoDao {
 
 	private final NeoWriter w;
-	private final IListService<String> filter;
+	private final IFilterService<String> filter;
 
 	/**
 	 * Constructor of NeoDao.
@@ -39,7 +39,7 @@ public class NeoDao {
 	 * @since Oct 14, 2014
 	 * @param accessor
 	 */
-	public NeoDao(NeoWriter writer, IListService<String> filter) {
+	public NeoDao(NeoWriter writer, IFilterService<String> filter) {
 		this.w = writer;
 		this.filter = filter;
 	}
