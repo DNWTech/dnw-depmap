@@ -11,12 +11,13 @@
  *
  * Create by manbaum since Sep 29, 2014.
  */
-package com.dnw.depmap.builder;
+package com.dnw.depmap.visitor;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jdt.core.ICompilationUnit;
 import org.eclipse.jdt.core.JavaCore;
 import org.eclipse.jdt.core.dom.AST;
@@ -34,6 +35,7 @@ import com.dnw.plugin.ast.AstVisitorBridge;
 import com.dnw.plugin.ast.DefaultVisitorDelegator;
 import com.dnw.plugin.ast.DefaultVisitorRegistry;
 import com.dnw.plugin.ast.NodeTypeSet;
+import com.dnw.plugin.ast.VisitContext;
 import com.dnw.plugin.ast.VisitorDelegator;
 import com.dnw.plugin.ast.VisitorRegistry;
 
@@ -55,6 +57,19 @@ public class JavaFileVisitor implements IResourceVisitor {
 		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
 	}
 
+	private final IProgressMonitor monitor;
+
+	/**
+	 * Constructor of JavaFileVisitor.
+	 * 
+	 * @author manbaum
+	 * @since Oct 16, 2014
+	 * @param monitor
+	 */
+	public JavaFileVisitor(IProgressMonitor monitor) {
+		this.monitor = monitor;
+	}
+
 	@Override
 	/**
 	 * Overrider method visit.
@@ -69,18 +84,21 @@ public class JavaFileVisitor implements IResourceVisitor {
 	 * @see org.eclipse.core.resources.IResourceVisitor#visit(org.eclipse.core.resources.IResource)
 	 */
 	public boolean visit(IResource resource) throws CoreException {
-		IFile file = (IFile)resource.getAdapter(IFile.class);
-		if (file != null) {
-			ASTVisitor visitor = new AstVisitorBridge(delegator);
+		IFile file = (IFile)resource;
+		try {
+			monitor.beginTask(file.getFullPath().toString(), 10);
 			ASTParser parser = ASTParser.newParser(AST.JLS3);
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
 			parser.setResolveBindings(true);
-			parser.setBindingsRecovery(true);
+			//		parser.setBindingsRecovery(true);
 			ICompilationUnit unit = JavaCore.createCompilationUnitFrom(file);
 			parser.setSource(unit);
 			ASTNode root = parser.createAST(null);
+			VisitContext context = new VisitContext(file, parser, unit, root, monitor);
+			ASTVisitor visitor = new AstVisitorBridge(context, delegator);
 			root.accept(visitor);
-			return true;
+		} finally {
+			monitor.done();
 		}
 		return false;
 	}

@@ -29,9 +29,10 @@ public interface VisitorDelegator {
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * @param node
+	 * @param context
 	 * @return
 	 */
-	boolean preVisit(ASTNode node);
+	boolean preVisit(ASTNode node, VisitContext context);
 
 	/**
 	 * Method postVisit.
@@ -39,8 +40,9 @@ public interface VisitorDelegator {
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * @param node
+	 * @param context
 	 */
-	void postVisit(ASTNode node);
+	void postVisit(ASTNode node, VisitContext context);
 
 	/**
 	 * Method visit.
@@ -49,9 +51,10 @@ public interface VisitorDelegator {
 	 * @since Sep 29, 2014
 	 * @param type
 	 * @param node
+	 * @param context
 	 * @return
 	 */
-	<T extends ASTNode> boolean visit(Class<T> type, T node);
+	<T extends ASTNode> boolean visit(Class<T> type, T node, VisitContext context);
 
 	/**
 	 * Method endVisit.
@@ -60,6 +63,7 @@ public interface VisitorDelegator {
 	 * @since Sep 29, 2014
 	 * @param type
 	 * @param node
+	 * @param context
 	 */
-	<T extends ASTNode> void endVisit(Class<T> type, T node);
+	<T extends ASTNode> void endVisit(Class<T> type, T node, VisitContext context);
 }

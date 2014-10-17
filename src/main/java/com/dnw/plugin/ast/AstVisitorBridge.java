@@ -108,6 +108,7 @@ import org.eclipse.jdt.core.dom.WildcardType;
  */
 public final class AstVisitorBridge extends ASTVisitor {
 
+	private final VisitContext context;
 	private final VisitorDelegator delegator;
 
 	/**
@@ -115,9 +116,11 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
+	 * @param context
 	 * @param delegator
 	 */
-	public AstVisitorBridge(VisitorDelegator delegator) {
+	public AstVisitorBridge(VisitContext context, VisitorDelegator delegator) {
+		this.context = context;
 		this.delegator = delegator;
 	}
 
@@ -133,7 +136,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 */
 	@Override
 	public boolean preVisit2(ASTNode node) {
-		return delegator.preVisit(node);
+		return delegator.preVisit(node, context);
 	}
 
 	/**
@@ -146,7 +149,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 */
 	@Override
 	public void postVisit(ASTNode node) {
-		delegator.postVisit(node);
+		delegator.postVisit(node, context);
 	}
 
 	/**
@@ -160,7 +163,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 *         <code>false</code> if the children of this node should be skipped.
 	 */
 	private <T extends ASTNode> boolean visit(Class<T> type, T node) {
-		return delegator.visit(type, node);
+		return delegator.visit(type, node, context);
 	}
 
 	/**
@@ -172,7 +175,7 @@ public final class AstVisitorBridge extends ASTVisitor {
 	 * @param node the node to visit.
 	 */
 	private <T extends ASTNode> void endVisit(Class<T> type, T node) {
-		delegator.endVisit(type, node);
+		delegator.endVisit(type, node, context);
 	}
 
 	/**

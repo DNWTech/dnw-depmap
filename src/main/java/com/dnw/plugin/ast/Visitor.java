@@ -30,6 +30,7 @@ public interface Visitor<T extends ASTNode> {
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * @param node
+	 * @param context
 	 */
-	void visit(T node);
+	void visit(T node, VisitContext context);
 }

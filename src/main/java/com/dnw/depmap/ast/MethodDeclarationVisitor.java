@@ -18,6 +18,7 @@ import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import com.dnw.depmap.Activator;
+import com.dnw.plugin.ast.VisitContext;
 import com.dnw.plugin.ast.Visitor;
 
 /**
@@ -34,10 +35,11 @@ public class MethodDeclarationVisitor implements Visitor<MethodDeclaration> {
 	 * @author manbaum
 	 * @since Oct 10, 2014
 	 * @param node
+	 * @param context
 	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
-	public void visit(MethodDeclaration node) {
+	public void visit(MethodDeclaration node, VisitContext context) {
 		Activator.console.println(" -- Visit MethodDeclaration: " + make(node));
 		IMethodBinding method = node.resolveBinding();
 		Teller.tellMethodDeclaration(node, method);

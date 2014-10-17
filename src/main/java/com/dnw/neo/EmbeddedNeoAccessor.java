@@ -57,7 +57,7 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	@Override
 	public void execute(String statement, M params) {
 		if (gdb == null) {
-			throw new IllegalStateException("graph.database.does.startup");
+			throw new IllegalStateException("graph.database.does.not.startup");
 		}
 		Transaction tx = gdb.beginTx();
 		try {

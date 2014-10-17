@@ -22,7 +22,7 @@ Export-Package: com.dnw.depmap;
    org.eclipse.jface.viewers,
    org.osgi.framework",
  com.dnw.depmap.ast;uses:="org.eclipse.jdt.core.dom,com.dnw.plugin.ast",
- com.dnw.depmap.builder;
+ com.dnw.depmap.visitor;
   uses:="org.eclipse.core.resources,
    javax.xml.parsers,
    org.xml.sax.helpers,

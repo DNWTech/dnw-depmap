@@ -23,7 +23,7 @@ import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IConfigurationElement;
 import org.eclipse.core.runtime.IProgressMonitor;
 
-import com.dnw.depmap.builder.ResourceVisitorDelegator;
+import com.dnw.depmap.visitor.DelegateResourceVisitor;
 
 /**
  * <p>
@@ -157,7 +157,7 @@ public class Builder extends IncrementalProjectBuilder {
 	 * @throws CoreException
 	 */
 	protected void fullBuild(final IProgressMonitor monitor) throws CoreException {
-		ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(monitor);
+		DelegateResourceVisitor visitor = new DelegateResourceVisitor(Activator.factory, monitor);
 		getProject().accept(visitor);
 	}
 
@@ -173,7 +173,7 @@ public class Builder extends IncrementalProjectBuilder {
 	 */
 	protected void incrementalBuild(IResourceDelta delta, IProgressMonitor monitor)
 			throws CoreException {
-		ResourceVisitorDelegator visitor = new ResourceVisitorDelegator(monitor);
+		DelegateResourceVisitor visitor = new DelegateResourceVisitor(Activator.factory, monitor);
 		IResource resource = delta.getResource();
 		switch (delta.getKind()) {
 		case IResourceDelta.ADDED:

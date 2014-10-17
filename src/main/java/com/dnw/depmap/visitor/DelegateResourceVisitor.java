@@ -11,18 +11,13 @@
  *
  * Create by manbaum since Sep 29, 2014.
  */
-package com.dnw.depmap.builder;
+package com.dnw.depmap.visitor;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
-
-import com.dnw.depmap.Activator;
+import org.eclipse.core.runtime.SubMonitor;
 
 /**
  * <p>
@@ -32,7 +27,9 @@ import com.dnw.depmap.Activator;
  * Usage:
  * 
  * <pre>
- * ResourceVisitorDelegator visitor = new ResourceVisitorDelegator();
+ * VisitorFactory factory = ...
+ * IProgressMonitor monitor = ...
+ * DelegateResourceVisitor visitor = new DelegateResourceVisitor(factory, monitor);
  * IResource root = ...;
  * root.accept(visitor);
  * </pre>
@@ -41,16 +38,10 @@ import com.dnw.depmap.Activator;
  * @author manbaum
  * @since Sep 29, 2014
  */
-public class ResourceVisitorDelegator implements IResourceVisitor {
+public class DelegateResourceVisitor implements IResourceVisitor {
 
-	private static final Map<String, IResourceVisitor> map = new HashMap<String, IResourceVisitor>();
-
-	private final IProgressMonitor monitor;
-
-	static {
-		map.put("java", new JavaFileVisitor());
-		map.put("xml", new XmlFileVisitor());
-	}
+	private final VisitorFactory factory;
+	private final SubMonitor monitor;
 
 	/**
 	 * Constructor of ResourceVisitorDelegator.
@@ -59,8 +50,9 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 * @since Sep 29, 2014
 	 * @param monitor
 	 */
-	public ResourceVisitorDelegator(IProgressMonitor monitor) {
-		this.monitor = monitor;
+	public DelegateResourceVisitor(VisitorFactory factory, IProgressMonitor monitor) {
+		this.factory = factory;
+		this.monitor = SubMonitor.convert(monitor);
 	}
 
 	/**
@@ -76,19 +68,11 @@ public class ResourceVisitorDelegator implements IResourceVisitor {
 	 */
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
-		IFile file = (IFile)resource.getAdapter(IFile.class);
-		if (file != null) {
-			String ext = file.getFileExtension();
-			if (ext != null) {
-				IResourceVisitor visitor = map.get(ext.toLowerCase());
-				if (visitor != null) {
-					Activator.console.println("=== Visit file: " + file.getName());
-					visitor.visit(file);
-				} else {
-					Activator.console.println("=== No visitor for: " + file.getName());
-				}
-			}
+		if (monitor.isCanceled())
 			return false;
+		IResourceVisitor visitor = factory.createVisitor(resource, monitor.newChild(1));
+		if (visitor != null) {
+			visitor.visit(resource);
 		}
 		return true;
 	}

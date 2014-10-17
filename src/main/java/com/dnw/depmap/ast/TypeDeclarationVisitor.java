@@ -17,6 +17,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
 import com.dnw.depmap.Activator;
+import com.dnw.plugin.ast.VisitContext;
 import com.dnw.plugin.ast.Visitor;
 
 /**
@@ -33,10 +34,11 @@ public class TypeDeclarationVisitor implements Visitor<TypeDeclaration> {
 	 * @author manbaum
 	 * @since Oct 10, 2014
 	 * @param node
+	 * @param context
 	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
 	@Override
-	public void visit(TypeDeclaration node) {
+	public void visit(TypeDeclaration node, VisitContext context) {
 		Activator.console.println(" -- Visit TypeDeclaration: " + node.getName());
 		ITypeBinding type = node.resolveBinding();
 		Teller.tellTypeDeclaration(node, type);

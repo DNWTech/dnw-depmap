@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Sep 30, 2014.
  */
-package com.dnw.depmap.builder;
+package com.dnw.depmap.visitor;
 
 import java.io.IOException;
 
@@ -22,6 +22,7 @@ import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
+import org.eclipse.core.runtime.IProgressMonitor;
 import org.xml.sax.SAXException;
 
 import com.dnw.depmap.Activator;
@@ -39,13 +40,17 @@ public class XmlFileVisitor implements IResourceVisitor {
 
 	public final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
 
+	private final IProgressMonitor monitor;
+
 	/**
 	 * Constructor of XmlFileVisitor.
 	 * 
 	 * @author manbaum
-	 * @since Sep 30, 2014
+	 * @since Oct 16, 2014
+	 * @param monitor
 	 */
-	public XmlFileVisitor() {
+	public XmlFileVisitor(IProgressMonitor monitor) {
+		this.monitor = monitor;
 	}
 
 	/**
@@ -80,11 +85,14 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 */
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
-		IFile file = (IFile)resource.getAdapter(IFile.class);
-		if (file != null) {
+		IFile file = (IFile)resource;
+		try {
+			monitor.beginTask(file.getFullPath().toOSString(), 10);
 			MarkerUtil.deleteMarkers(file, MARKER_TYPE);
 			XmlFileErrorHandler reporter = new XmlFileErrorHandler(file, MARKER_TYPE);
 			doParse(file, reporter);
+		} finally {
+			monitor.done();
 		}
 		return false;
 	}

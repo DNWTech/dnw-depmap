@@ -45,11 +45,19 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * @param node
+	 * @param context
 	 * @return
-	 * @see com.dnw.plugin.ast.VisitorDelegator#preVisit(org.eclipse.jdt.core.dom.ASTNode)
+	 * @see com.dnw.plugin.ast.VisitorDelegator#preVisit(org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
-	public boolean preVisit(ASTNode node) {
+	public boolean preVisit(ASTNode node, VisitContext context) {
+		if (context.monitor.isCanceled())
+			return false;
+		int delta = node.getStartPosition() - context.currentPosition;
+		if (delta > 0) {
+			context.currentPosition += delta;
+			context.monitor.worked(delta);
+		}
 		return !stopSet.contains(node.getNodeType());
 	}
 
@@ -59,10 +67,16 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * @param node
-	 * @see com.dnw.plugin.ast.VisitorDelegator#postVisit(org.eclipse.jdt.core.dom.ASTNode)
+	 * @param context
+	 * @see com.dnw.plugin.ast.VisitorDelegator#postVisit(org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
-	public void postVisit(ASTNode node) {
+	public void postVisit(ASTNode node, VisitContext context) {
+		int delta = node.getStartPosition() + node.getLength() - context.currentPosition;
+		if (delta > 0) {
+			context.currentPosition += delta;
+			context.monitor.worked(delta);
+		}
 	}
 
 	/**
@@ -72,21 +86,16 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @since Sep 30, 2014
 	 * @param type
 	 * @param node
+	 * @param context
 	 * @return
 	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(java.lang.Class,
-	 *      org.eclipse.jdt.core.dom.ASTNode)
+	 *      org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
-	public <T extends ASTNode> boolean visit(Class<T> type, T node) {
-		// String text = node.toString();
-		// int p = text.indexOf('\n');
-		// String firstLine = p >= 0 ? text.substring(0, p) : text;
-		// Activator.console.println("Visit node: [" + type.getSimpleName() +
-		// "] "
-		// + firstLine);
+	public <T extends ASTNode> boolean visit(Class<T> type, T node, VisitContext context) {
 		Visitor<T> visitor = registry.lookup(type);
 		if (visitor != null) {
-			visitor.visit(node);
+			visitor.visit(node, context);
 		}
 		return true;
 	}
@@ -98,10 +107,11 @@ public final class DefaultVisitorDelegator implements VisitorDelegator {
 	 * @since Sep 30, 2014
 	 * @param type
 	 * @param node
+	 * @param context
 	 * @see com.dnw.plugin.ast.VisitorDelegator#endVisit(java.lang.Class,
-	 *      org.eclipse.jdt.core.dom.ASTNode)
+	 *      org.eclipse.jdt.core.dom.ASTNode,com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
-	public <T extends ASTNode> void endVisit(Class<T> type, T node) {
+	public <T extends ASTNode> void endVisit(Class<T> type, T node, VisitContext context) {
 	}
 }

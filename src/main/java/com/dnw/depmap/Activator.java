@@ -20,6 +20,8 @@ import org.osgi.framework.BundleContext;
 import com.dnw.depmap.neo.BlackOrWhite;
 import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
+import com.dnw.depmap.visitor.FileExtVisitorFactory;
+import com.dnw.depmap.visitor.JavaFileVisitor;
 import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
 import com.dnw.plugin.util.ConsoleUtil;
@@ -41,14 +43,19 @@ public class Activator extends AbstractUIPlugin {
 	// The shared instance
 	private static Activator plugin;
 
-	NeoAccessor accessor;
-	NeoDao writer;
+	public static final FileExtVisitorFactory factory = new FileExtVisitorFactory();
+
+	public NeoAccessor accessor;
+	public NeoDao neo;
 
 	static {
 		BlackOrWhite.WHITE.add("com\\.dnw\\..*");
 		BlackOrWhite.WHITE.add("org\\.eclipse\\.jdt\\.core\\.dom\\..*");
 		BlackOrWhite.WHITE.add("java\\.lang\\.Object");
 		BlackOrWhite.BLACK.add(".*");
+
+		factory.register("java", JavaFileVisitor.class);
+		//factory.register("xml", XmlFileVisitor.class);
 	}
 
 	/**
@@ -74,7 +81,7 @@ public class Activator extends AbstractUIPlugin {
 		super.start(context);
 		plugin = this;
 		accessor = new EmbeddedNeoAccessor(DBPATH);
-		writer = new NeoDao(new NeoWriter(accessor));
+		neo = new NeoDao(new NeoWriter(accessor));
 	}
 
 	/**
@@ -112,7 +119,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @return
 	 */
 	public static NeoDao w() {
-		return plugin.writer;
+		return plugin.neo;
 	}
 
 	/**

@@ -52,6 +52,7 @@ public class NeoWriter {
 	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) on create set m.caption={caption}";
 	public static final String CREATEDECLARE = "match (t:Type {name:{tname}})  match(m:Method {name:{mname}}) merge (t)-[:Declares]->(m)";
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invokes {args:{args}}]->(t)";
+	public static final String CREATEOVERRIDE = "match (m:Method {name:{name}}) match (b:Method {name:{bname}}) merge (m)-[:Overrides]-(b)";
 
 	/**
 	 * Converts ITypeBinding objects, returns the full-qualified type name.

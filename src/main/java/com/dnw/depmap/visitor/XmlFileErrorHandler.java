@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Sep 30, 2014.
  */
-package com.dnw.depmap.builder;
+package com.dnw.depmap.visitor;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IMarker;

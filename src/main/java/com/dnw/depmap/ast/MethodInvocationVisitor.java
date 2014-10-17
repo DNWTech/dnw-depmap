@@ -24,6 +24,7 @@ import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.SingleVariableDeclaration;
 
 import com.dnw.depmap.Activator;
+import com.dnw.plugin.ast.VisitContext;
 import com.dnw.plugin.ast.Visitor;
 
 /**
@@ -49,11 +50,12 @@ public class MethodInvocationVisitor implements Visitor<MethodInvocation> {
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 * @param node
+	 * @param context
 	 * @return
 	 * @see com.dnw.plugin.ast.VisitorDelegator#visit(org.eclipse.jdt.core.dom.ASTNode, boolean)
 	 */
 	@Override
-	public void visit(MethodInvocation node) {
+	public void visit(MethodInvocation node, VisitContext context) {
 		Activator.console.println(" -- Visit MethodInvocation: " + node.toString());
 		ASTNode p = node.getParent();
 		while (p != null) {

@@ -15,6 +15,7 @@ package com.dnw.plugin.ast.mock;
 
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import com.dnw.plugin.ast.VisitContext;
 import com.dnw.plugin.ast.Visitor;
 
 /**
@@ -33,6 +34,6 @@ public class MockCompilationUnitVisitor implements Visitor<CompilationUnit> {
 	 * @param node
 	 * @see com.dnw.plugin.ast.Visitor#visit(org.eclipse.jdt.core.dom.ASTNode)
 	 */
-	public void visit(CompilationUnit node) {
+	public void visit(CompilationUnit node, VisitContext context) {
 	}
 }
