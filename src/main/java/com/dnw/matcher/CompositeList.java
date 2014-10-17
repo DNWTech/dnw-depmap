@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Oct 17, 2014.
  */
-package com.dnw.plugin.matcher;
+package com.dnw.matcher;
 
 /**
  * Class/Interface CompositeList.
@@ -117,7 +117,7 @@ public class CompositeList<T> implements IListService<T> {
 	 * @since Oct 17, 2014
 	 * @param value
 	 * @return
-	 * @see com.dnw.plugin.matcher.IListService#blocks(java.lang.Object)
+	 * @see com.dnw.matcher.IListService#blocks(java.lang.Object)
 	 */
 	@Override
 	public boolean blocks(T value) {
@@ -141,7 +141,7 @@ public class CompositeList<T> implements IListService<T> {
 	 * @since Oct 17, 2014
 	 * @param value
 	 * @return
-	 * @see com.dnw.plugin.matcher.IListService#allows(java.lang.Object)
+	 * @see com.dnw.matcher.IListService#allows(java.lang.Object)
 	 */
 	@Override
 	public boolean allows(T value) {

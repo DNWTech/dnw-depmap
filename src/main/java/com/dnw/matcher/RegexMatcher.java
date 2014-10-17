@@ -1,5 +1,5 @@
 /**
- * !(#) CompositeStringMatcher.java
+ * !(#) RegexMatcher.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,51 +11,52 @@
  *
  * Create by manbaum since Oct 17, 2014.
  */
-package com.dnw.plugin.matcher;
+package com.dnw.matcher;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.regex.Pattern;
 
 /**
- * Class/Interface CompositeStringMatcher.
+ * Class/Interface RegexMatcher.
  * 
  * @author manbaum
  * @since Oct 17, 2014
  */
-public class CompositeStringMatcher implements IMatcher<String> {
+public class RegexMatcher implements IMatcher<String> {
 
-	private final Set<IMatcher<String>> set = new HashSet<IMatcher<String>>();
+	private final Pattern pattern;
 
 	/**
-	 * Method addMatcher.
+	 * Constructor of RegexMatcher.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param m
+	 * @param pattern
 	 */
-	public void addMatcher(IMatcher<String> m) {
-		set.add(m);
+	public RegexMatcher(Pattern pattern) {
+		this.pattern = pattern;
 	}
 
 	/**
-	 * Method removeMatcher.
+	 * Constructor of RegexMatcher.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param m
+	 * @param pattern
 	 */
-	public void removeMatcher(IMatcher<String> m) {
-		set.remove(m);
+	public RegexMatcher(String pattern) {
+		this.pattern = Pattern.compile(pattern);
 	}
 
 	/**
-	 * Method clear.
+	 * Constructor of RegexMatcher.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
+	 * @param pattern
+	 * @param flags
 	 */
-	public void clear() {
-		set.clear();
+	public RegexMatcher(String pattern, int flags) {
+		this.pattern = Pattern.compile(pattern, flags);
 	}
 
 	/**
@@ -65,14 +66,10 @@ public class CompositeStringMatcher implements IMatcher<String> {
 	 * @since Oct 17, 2014
 	 * @param value
 	 * @return
-	 * @see com.dnw.plugin.matcher.IMatcher#matches(java.lang.Object)
+	 * @see com.dnw.matcher.IMatcher#matches(java.lang.Object)
 	 */
 	@Override
 	public boolean matches(String value) {
-		for (IMatcher<String> m : set) {
-			if (m.matches(value))
-				return true;
-		}
-		return false;
+		return pattern == null ? false : pattern.matcher(value).matches();
 	}
 }

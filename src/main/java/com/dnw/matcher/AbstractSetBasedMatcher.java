@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Oct 17, 2014.
  */
-package com.dnw.plugin.matcher;
+package com.dnw.matcher;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -75,7 +75,7 @@ public abstract class AbstractSetBasedMatcher<S, T> implements IMatcher<S> {
 	 * @since Oct 17, 2014
 	 * @param value
 	 * @return
-	 * @see com.dnw.plugin.matcher.IMatcher#matches(java.lang.Object)
+	 * @see com.dnw.matcher.IMatcher#matches(java.lang.Object)
 	 */
 	@Override
 	public boolean matches(S value) {

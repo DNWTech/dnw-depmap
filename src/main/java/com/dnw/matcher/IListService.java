@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Oct 17, 2014.
  */
-package com.dnw.plugin.matcher;
+package com.dnw.matcher;
 
 /**
  * Class/Interface IListService.

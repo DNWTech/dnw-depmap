@@ -18,8 +18,8 @@ import java.util.List;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
+import com.dnw.matcher.IListService;
 import com.dnw.plugin.ast.AstUtil;
-import com.dnw.plugin.matcher.IListService;
 
 /**
  * Class/Interface NeoDao.

@@ -1,5 +1,5 @@
 /**
- * !(#) StringMatcher.java
+ * !(#) CompositeStringMatcher.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -11,42 +11,51 @@
  *
  * Create by manbaum since Oct 17, 2014.
  */
-package com.dnw.plugin.matcher;
+package com.dnw.matcher;
+
+import java.util.HashSet;
+import java.util.Set;
 
 /**
- * Class/Interface StringMatcher.
+ * Class/Interface CompositeStringMatcher.
  * 
  * @author manbaum
  * @since Oct 17, 2014
  */
-public class StringMatcher implements IMatcher<String> {
+public class CompositeStringMatcher implements IMatcher<String> {
 
-	private final String target;
-	private final boolean ignoreCase;
+	private final Set<IMatcher<String>> set = new HashSet<IMatcher<String>>();
 
 	/**
-	 * Constructor of StringMatcher.
+	 * Method addMatcher.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param target
+	 * @param m
 	 */
-	public StringMatcher(String target) {
-		this.target = target;
-		this.ignoreCase = false;
+	public void addMatcher(IMatcher<String> m) {
+		set.add(m);
 	}
 
 	/**
-	 * Constructor of StringMatcher.
+	 * Method removeMatcher.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param target
-	 * @param ignoreCase
+	 * @param m
 	 */
-	public StringMatcher(String target, boolean ignoreCase) {
-		this.target = target;
-		this.ignoreCase = ignoreCase;
+	public void removeMatcher(IMatcher<String> m) {
+		set.remove(m);
+	}
+
+	/**
+	 * Method clear.
+	 * 
+	 * @author manbaum
+	 * @since Oct 17, 2014
+	 */
+	public void clear() {
+		set.clear();
 	}
 
 	/**
@@ -56,15 +65,14 @@ public class StringMatcher implements IMatcher<String> {
 	 * @since Oct 17, 2014
 	 * @param value
 	 * @return
-	 * @see com.dnw.plugin.matcher.IMatcher#matches(java.lang.Object)
+	 * @see com.dnw.matcher.IMatcher#matches(java.lang.Object)
 	 */
 	@Override
 	public boolean matches(String value) {
-		if (target == value)
-			return true;
-		else if (target == null)
-			return false;
-		else
-			return ignoreCase ? target.equalsIgnoreCase(value) : target.equals(value);
+		for (IMatcher<String> m : set) {
+			if (m.matches(value))
+				return true;
+		}
+		return false;
 	}
 }
