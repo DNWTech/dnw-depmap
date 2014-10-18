@@ -27,6 +27,15 @@ public interface NeoAccessor {
 	 * Executes a cypher query.
 	 * 
 	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param statement the cypher statement.
+	 */
+	void execute(String statement);
+
+	/**
+	 * Executes a cypher query.
+	 * 
+	 * @author manbaum
 	 * @since Oct 12, 2014
 	 * @param statement the cypher statement.
 	 * @param params the query parameters.

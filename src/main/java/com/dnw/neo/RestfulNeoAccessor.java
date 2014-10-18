@@ -33,6 +33,20 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	}
 
 	/**
+	 * Overrider method execute.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param statement
+	 * @see com.dnw.neo.NeoAccessor#execute(java.lang.String)
+	 */
+	@Override
+	public void execute(String statement) {
+		// TODO Auto-generated method stub
+
+	}
+
+	/**
 	 * Executes a cypher query.
 	 * 
 	 * @author manbaum

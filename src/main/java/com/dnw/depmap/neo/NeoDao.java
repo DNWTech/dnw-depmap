@@ -46,6 +46,16 @@ public class NeoDao {
 	}
 
 	/**
+	 * Method clear.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 */
+	public void clear() {
+		w.clear();
+	}
+
+	/**
 	 * Method isBlocked.
 	 * 
 	 * @author manbaum
