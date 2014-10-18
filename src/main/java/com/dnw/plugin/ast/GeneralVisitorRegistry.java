@@ -1,5 +1,5 @@
 /**
- * !(#) DefaultVisitorRegistry.java
+ * !(#) GeneralVisitorRegistry.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -19,22 +19,22 @@ import java.util.Map;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 /**
- * Class/Interface DefaultVisitorRegistry.
+ * Class/Interface GeneralVisitorRegistry.
  * 
  * @author manbaum
  * @since Sep 29, 2014
  */
-public final class DefaultVisitorRegistry implements IVisitorRegistry {
+public final class GeneralVisitorRegistry implements IVisitorRegistry {
 
 	private final Map<Class<?>, IVisitor<?>> map = new HashMap<Class<?>, IVisitor<?>>();
 
 	/**
-	 * Constructor of DefaultVisitorRegistry.
+	 * Constructor of GeneralVisitorRegistry.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
 	 */
-	public DefaultVisitorRegistry() {
+	public GeneralVisitorRegistry() {
 	}
 
 	/**

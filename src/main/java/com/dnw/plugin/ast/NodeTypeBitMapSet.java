@@ -1,5 +1,5 @@
 /**
- * !(#) NodeTypeSet.java
+ * !(#) NodeTypeBitMapSet.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -20,7 +20,7 @@ package com.dnw.plugin.ast;
  * @author manbaum
  * @since Sep 29, 2014
  */
-public class NodeTypeSet {
+public class NodeTypeBitMapSet {
 
 	private long n0 = 0L;
 	private long n1 = 0L;

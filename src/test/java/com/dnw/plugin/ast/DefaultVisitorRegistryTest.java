@@ -29,7 +29,7 @@ import com.dnw.plugin.ast.mock.MockCompilationUnitVisitor;
  */
 public class DefaultVisitorRegistryTest {
 
-	private final DefaultVisitorRegistry reg = new DefaultVisitorRegistry();
+	private final GeneralVisitorRegistry reg = new GeneralVisitorRegistry();
 
 	/**
 	 * Method setUp.

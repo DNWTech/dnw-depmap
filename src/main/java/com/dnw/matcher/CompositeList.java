@@ -128,14 +128,18 @@ public class CompositeList<T> implements IFilterService<T> {
 	public boolean allows(T value) {
 		if (preferWhite) {
 			if (white.matches(value))
-				return true; // 只要白名单有，不管黑白名单有没有，让过。
+				// 只要白名单有，不管黑白名单有没有，让过。
+				return true;
 			else
-				return !black.matches(value); // 黑白名单都没有，让过。仅黑名单有，就不让过。
+				// 黑白名单都没有，让过。仅黑名单有，不让过。
+				return !black.matches(value);
 		} else {
-			if (black.matches(value)) // 只要黑名单有，不管白名单有没有，不让过。
+			if (black.matches(value))
+				// 只要黑名单有，不管白名单有没有，不让过。
 				return false;
 			else
-				return white.matches(value); // 仅白名单有，让过。黑白名单都没有，不让过。
+				// 仅白名单有，让过。黑白名单都没有，不让过。
+				return white.matches(value);
 		}
 	}
 

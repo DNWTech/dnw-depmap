@@ -24,7 +24,7 @@ import org.eclipse.jdt.core.dom.ASTNode;
 public final class RegistryBasedVisitorDelegator implements IVisitorDelegator {
 
 	private final IVisitorRegistry registry;
-	private final NodeTypeSet stopSet;
+	private final NodeTypeBitMapSet stopSet;
 
 	/**
 	 * Constructor of RegistryBasedVisitorDelegator.
@@ -34,7 +34,7 @@ public final class RegistryBasedVisitorDelegator implements IVisitorDelegator {
 	 * @param stopSet
 	 * @param registry
 	 */
-	public RegistryBasedVisitorDelegator(IVisitorRegistry registry, NodeTypeSet stopSet) {
+	public RegistryBasedVisitorDelegator(IVisitorRegistry registry, NodeTypeBitMapSet stopSet) {
 		this.registry = registry;
 		this.stopSet = stopSet;
 	}

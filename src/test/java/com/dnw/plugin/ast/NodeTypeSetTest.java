@@ -26,7 +26,7 @@ import org.junit.Test;
  */
 public class NodeTypeSetTest {
 
-	private final NodeTypeSet set = new NodeTypeSet();
+	private final NodeTypeBitMapSet set = new NodeTypeBitMapSet();
 
 	/**
 	 * Method setUp.

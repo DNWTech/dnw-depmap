@@ -31,10 +31,10 @@ import com.dnw.matcher.StringMatcher;
 import com.dnw.matcher.WhiteList;
 import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
-import com.dnw.plugin.ast.DefaultVisitorRegistry;
+import com.dnw.plugin.ast.GeneralVisitorRegistry;
 import com.dnw.plugin.ast.IVisitorDelegator;
 import com.dnw.plugin.ast.IVisitorRegistry;
-import com.dnw.plugin.ast.NodeTypeSet;
+import com.dnw.plugin.ast.NodeTypeBitMapSet;
 import com.dnw.plugin.ast.RegistryBasedVisitorDelegator;
 import com.dnw.plugin.resource.FileExtResourceVisitorFactory;
 import com.dnw.plugin.util.ConsoleUtil;
@@ -58,8 +58,8 @@ public class Activator extends AbstractUIPlugin {
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
 	public static final WhiteList<String> filter = new WhiteList<String>();
 
-	public static final NodeTypeSet stopSet = new NodeTypeSet();
-	public static final IVisitorRegistry registry = new DefaultVisitorRegistry();
+	public static final NodeTypeBitMapSet stopSet = new NodeTypeBitMapSet();
+	public static final IVisitorRegistry registry = new GeneralVisitorRegistry();
 	public static final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry,
 			stopSet);
 

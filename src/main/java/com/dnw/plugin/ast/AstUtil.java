@@ -151,7 +151,7 @@ public final class AstUtil {
 		sb.append(method != null ? method.getName() + "()" : "nothing");
 		sb.append(" (");
 		sb.append(context.fileInfo(node));
-		sb.append(")");
+		sb.append(')');
 		return sb.toString();
 	}
 
@@ -171,7 +171,7 @@ public final class AstUtil {
 		sb.append(method != null ? method.getName() + "()" : "nothing");
 		sb.append(" (");
 		sb.append(context.fileInfo(node));
-		sb.append(")");
+		sb.append(')');
 		return sb.toString();
 	}
 }
