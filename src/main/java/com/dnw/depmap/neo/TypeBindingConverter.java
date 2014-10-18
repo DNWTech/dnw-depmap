@@ -24,7 +24,7 @@ import com.dnw.plugin.ast.AstUtil;
  * @author manbaum
  * @since Oct 10, 2014
  */
-final class ITypeBindingConverter implements K<ITypeBinding> {
+final class TypeBindingConverter implements K<ITypeBinding> {
 
 	/**
 	 * Converts the given value to a JSON compatible value.

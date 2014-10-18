@@ -31,7 +31,7 @@ import com.dnw.plugin.ast.AstUtil;
  * @author manbaum
  * @since Oct 14, 2014
  */
-final class IMethodBindingConverter implements K<IMethodBinding> {
+final class MethodBindingConverter implements K<IMethodBinding> {
 
 	/**
 	 * Converts the given value to a JSON compatible value.

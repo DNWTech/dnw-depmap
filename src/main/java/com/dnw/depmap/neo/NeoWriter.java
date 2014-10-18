@@ -54,8 +54,8 @@ public class NeoWriter {
 	public static final String CREATEOVERRIDE = "match (m:Method {name:{name}}) match (b:Method {name:{bname}}) merge (m)-[:Overrides]-(b)";
 
 	static {
-		J.register(ITypeBinding.class, new ITypeBindingConverter());
-		J.register(IMethodBinding.class, new IMethodBindingConverter());
+		J.register(ITypeBinding.class, new TypeBindingConverter());
+		J.register(IMethodBinding.class, new MethodBindingConverter());
 	}
 
 	/**
