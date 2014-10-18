@@ -79,6 +79,8 @@ public class Activator extends AbstractUIPlugin {
 	public NeoAccessor accessor;
 	public NeoDao neo;
 
+	public static final boolean clearDatabase = true;
+
 	/**
 	 * Constructor of Activator.
 	 * 

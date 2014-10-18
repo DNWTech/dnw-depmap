@@ -49,6 +49,28 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	 * Executes a cypher query.
 	 * 
 	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param statement the cypher statement.
+	 * @see com.dnw.neo.NeoAccessor#execute(java.lang.String)
+	 */
+	public void execute(String statement) {
+		if (gdb == null) {
+			throw new IllegalStateException("graph.database.does.not.startup");
+		}
+		Transaction tx = gdb.beginTx();
+		try {
+			Activator.console.println(" -> executing: " + statement);
+			engine.execute(statement);
+			tx.success();
+		} finally {
+			tx.close();
+		}
+	}
+
+	/**
+	 * Executes a cypher query.
+	 * 
+	 * @author manbaum
 	 * @since Oct 12, 2014
 	 * @param statement the cypher statement.
 	 * @param params the query parameters.
@@ -62,7 +84,7 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 		Transaction tx = gdb.beginTx();
 		try {
 			Activator.console.println(" -> executing: " + statement);
-			Activator.console.println(" ->     " + params.json());
+			Activator.console.println(" ->   " + params.json());
 			engine.execute(statement, params.map());
 			tx.success();
 		} finally {
