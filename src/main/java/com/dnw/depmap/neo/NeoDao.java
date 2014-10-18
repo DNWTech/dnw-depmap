@@ -57,18 +57,6 @@ public class NeoDao {
 	}
 
 	/**
-	 * Method internalCreateType.
-	 * 
-	 * @author manbaum
-	 * @since Oct 18, 2014
-	 * @param method
-	 * @return
-	 */
-	private boolean isBlocked(IMethodBinding method) {
-		return filter.blocks(AstUtil.nameOf(method.getDeclaringClass()));
-	}
-
-	/**
 	 * Method createType.
 	 * 
 	 * @author manbaum
