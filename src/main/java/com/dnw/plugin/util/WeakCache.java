@@ -78,4 +78,14 @@ public final class WeakCache<K, V> {
 		WeakReference<V> ref = map.get(key);
 		return ref != null ? ref.get() : null;
 	}
+
+	/**
+	 * Method clear.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 */
+	public void clear() {
+		map.clear();
+	}
 }

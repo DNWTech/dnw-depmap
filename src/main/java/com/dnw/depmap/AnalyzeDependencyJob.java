@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
+import com.dnw.depmap.neo.BindingCache;
 import com.dnw.plugin.resource.FactoryBasedResourceFinder;
 import com.dnw.plugin.resource.IResourceFinder;
 
@@ -123,6 +124,7 @@ public final class AnalyzeDependencyJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask("AnalyzeDependency", 100);
 		try {
+			BindingCache.clear();
 			SubMonitor sub = SubMonitor.convert(monitor, 100);
 			IResourceFinder finder = filterSupportedResource(selection, sub.newChild(3));
 			Activator.console.println("*** Total " + finder.getSupportedList().size()

@@ -23,7 +23,7 @@ import com.dnw.plugin.util.WeakCache;
  * @author manbaum
  * @since Oct 18, 2014
  */
-final class BindingCache {
+public final class BindingCache {
 
 	public static final WeakCache<IBinding, String> cache = new WeakCache<IBinding, String>();
 
@@ -72,5 +72,15 @@ final class BindingCache {
 	 */
 	public static final String get(IBinding key) {
 		return cache.get(key);
+	}
+
+	/**
+	 * Method clear.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 */
+	public static final void clear() {
+		cache.clear();
 	}
 }
