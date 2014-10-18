@@ -31,7 +31,7 @@ import com.dnw.plugin.resource.FactoryBasedResourceFinder;
 import com.dnw.plugin.resource.IResourceFinder;
 
 /**
- * Class/Interface AnalyzeDependencyJob.
+ * The job to analyzing the dependency.
  * 
  * @author manbaum
  * @since Oct 17, 2014
@@ -45,8 +45,8 @@ public final class AnalyzeDependencyJob extends Job {
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param name
-	 * @param selection
+	 * @param name the display name of this job.
+	 * @param selection the selection of Java elements to be analyzed.
 	 */
 	public AnalyzeDependencyJob(String name, IStructuredSelection selection) {
 		super(name);
@@ -54,13 +54,13 @@ public final class AnalyzeDependencyJob extends Job {
 	}
 
 	/**
-	 * Method filterSupportedResource.
+	 * Traverses the selection to find out files of known types.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param selection
-	 * @param monitor
-	 * @return
+	 * @param selection the selection of Java elements to be analyzed.
+	 * @param monitor the progress monitor.
+	 * @return an <code>IResourceFinder</code> object holds the result.
 	 */
 	private final IResourceFinder filterSupportedResource(IStructuredSelection selection,
 			IProgressMonitor monitor) {
@@ -90,12 +90,12 @@ public final class AnalyzeDependencyJob extends Job {
 	}
 
 	/**
-	 * Method visitAllResources.
+	 * Analyzes each file in the given list to generate the dependency map.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param resources
-	 * @param sub
+	 * @param resources a list of files to be analyzed.
+	 * @param sub the progress monitor.
 	 */
 	private final void visitAllResources(List<IResource> resources, SubMonitor sub) {
 		for (IResource resource : resources) {
@@ -111,28 +111,37 @@ public final class AnalyzeDependencyJob extends Job {
 	}
 
 	/**
-	 * Overrider method run.
+	 * Executes this job. Returns the result of the execution.
 	 * 
 	 * @author manbaum
 	 * @since Oct 17, 2014
-	 * @param monitor
-	 * @return
+	 * @param monitor the monitor to be used for reporting progress and responding to cancellation.
+	 *            The monitor is never <code>null</code>.
+	 * @return resulting status of the run. The result must not be <code>null</code>.
 	 * @see org.eclipse.core.runtime.jobs.Job#run(org.eclipse.core.runtime.IProgressMonitor)
 	 */
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
 		monitor.beginTask("AnalyzeDependency", 100);
 		try {
+			// divides the whole progress into 100 ticks.
 			SubMonitor sub = SubMonitor.convert(monitor, 100);
+			// finding known resources will use 3 ticks.
 			IResourceFinder finder = filterSupportedResource(selection, sub.newChild(3));
 			Activator.console.println("*** Total " + finder.getSupportedList().size()
 					+ " file(s) found.");
+			// re-divides the remaining progress according to the number of files.
+			// each file can use 100 ticks. 1 more tick used as a guard.
 			sub.setWorkRemaining(finder.getSupportedList().size() * 100 + 1);
+			// starts up the Neo4j database.
 			Activator.getDefault().accessor.startup();
+			// cleans up the database if required.
 			if (Activator.clearDatabase) {
 				Activator.neo().clear();
 			}
+			// visit all resources to generate dependency map. 
 			visitAllResources(finder.getSupportedList(), sub);
+			// shuts down the database after generating.
 			Activator.getDefault().accessor.shutdown();
 		} finally {
 			monitor.done();

@@ -121,8 +121,9 @@ public final class J {
 		map.clear();
 	}
 
+	// TODO: using a cache to improve the performance.
 	/**
-	 * Method findConverter. TODO cache
+	 * Method findConverter.
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014

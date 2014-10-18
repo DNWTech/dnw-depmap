@@ -29,7 +29,8 @@ import com.dnw.plugin.ast.IVisitor;
 import com.dnw.plugin.ast.VisitContext;
 
 /**
- * Class/Interface MethodInvocationVisitor.
+ * Visitor to visit <code>MethodInvocation</code> AST node, generating the corresponding method
+ * invocation nodes and relations.
  * 
  * @author manbaum
  * @since Sep 29, 2014
@@ -37,27 +38,20 @@ import com.dnw.plugin.ast.VisitContext;
 public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 
 	/**
-	 * Constructor of MethodInvocationVisitor.
+	 * The method will be called when a <code>MethodInvocation</code> node is met.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 */
-	public MethodInvocationVisitor() {
-	}
-
-	/**
-	 * Overrider method visit.
-	 * 
-	 * @author manbaum
-	 * @since Sep 29, 2014
-	 * @param node
-	 * @param context
-	 * @return
-	 * @see com.dnw.plugin.ast.IVisitorDelegator#visit(org.eclipse.jdt.core.dom.ASTNode, boolean)
+	 * @param node the <code>MethodInvocation</code> node.
+	 * @param context the visiting context.
+	 * @see com.dnw.plugin.ast.IVisitor#visit(org.eclipse.jdt.core.dom.ASTNode,
+	 *      com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
 	public void visit(MethodInvocation node, VisitContext context) {
 		Activator.console.println(" -- Visit MethodInvocation: " + node.toString());
+		// find the containing method of this method invocation.
+		// TODO: what if a method invocation not happens in a method? i.e. during class initialization.
 		ASTNode p = node.getParent();
 		while (p != null) {
 			if (p instanceof MethodDeclaration) {
@@ -75,16 +69,17 @@ public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 		Activator.console.println(AstUtil.infoOf(context, decl, from));
 		IMethodBinding to = node.resolveMethodBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, to));
+		// call DAO to generate the method node and its related relationships.
 		Activator.neo().createInvocation(from, to, args(node.arguments()));
 	}
 
 	/**
-	 * Method args.
+	 * Makes the string representation of all arguments passed by this method invocation.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * @param list
-	 * @return
+	 * @param list a list of <code>Expression</code>.
+	 * @return a string list contains all arguments passed by this method invocation.
 	 */
 	private List<Object> args(List<?> list) {
 		int n = list.size();
@@ -97,12 +92,12 @@ public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 	}
 
 	/**
-	 * Method make.
+	 * Makes the string representation of this method invocation.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * @param node
-	 * @return
+	 * @param node the <code>MethodInvocation</code> node.
+	 * @return the string representation.
 	 */
 	private String make(MethodDeclaration node) {
 		StringBuffer sb = new StringBuffer();

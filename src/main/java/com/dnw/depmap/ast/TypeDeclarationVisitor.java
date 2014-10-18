@@ -22,7 +22,8 @@ import com.dnw.plugin.ast.IVisitor;
 import com.dnw.plugin.ast.VisitContext;
 
 /**
- * Class/Interface TypeDeclarationVisitor.
+ * Visitor to visit <code>TypeDeclaration</code> AST node, generating the corresponding method
+ * declaration nodes and relations.
  * 
  * @author manbaum
  * @since Oct 10, 2014
@@ -30,19 +31,21 @@ import com.dnw.plugin.ast.VisitContext;
 public class TypeDeclarationVisitor implements IVisitor<TypeDeclaration> {
 
 	/**
-	 * Overrider method visit.
+	 * The method will be called when a <code>TypeDeclaration</code> node is met.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * @param node
-	 * @param context
-	 * @see com.dnw.plugin.ast.IVisitor#visit(org.eclipse.jdt.core.dom.ASTNode)
+	 * @param node the <code>TypeDeclaration</code> node.
+	 * @param context the visiting context.
+	 * @see com.dnw.plugin.ast.IVisitor#visit(org.eclipse.jdt.core.dom.ASTNode,
+	 *      com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
 	public void visit(TypeDeclaration node, VisitContext context) {
 		Activator.console.println(" -- Visit TypeDeclaration: " + node.getName());
 		ITypeBinding type = node.resolveBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, type));
+		// call DAO to generate the method node and its related relationships.
 		Activator.neo().createType(type);
 	}
 }

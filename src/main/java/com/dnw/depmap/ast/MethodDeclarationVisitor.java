@@ -23,7 +23,8 @@ import com.dnw.plugin.ast.IVisitor;
 import com.dnw.plugin.ast.VisitContext;
 
 /**
- * Class/Interface MethodDeclarationVisitor.
+ * Visitor to visit <code>MethodDeclaration</code> AST node, generating the corresponding method
+ * declaration nodes and relations.
  * 
  * @author manbaum
  * @since Oct 10, 2014
@@ -31,29 +32,31 @@ import com.dnw.plugin.ast.VisitContext;
 public class MethodDeclarationVisitor implements IVisitor<MethodDeclaration> {
 
 	/**
-	 * Overrider method visit.
+	 * The method will be called when a <code>MethodDeclaration</code> node is met.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
-	 * @param node
-	 * @param context
-	 * @see com.dnw.plugin.ast.IVisitor#visit(org.eclipse.jdt.core.dom.ASTNode)
+	 * @param node the <code>MethodDeclaration</code> node.
+	 * @param context the visiting context.
+	 * @see com.dnw.plugin.ast.IVisitor#visit(org.eclipse.jdt.core.dom.ASTNode,
+	 *      com.dnw.plugin.ast.VisitContext)
 	 */
 	@Override
 	public void visit(MethodDeclaration node, VisitContext context) {
 		Activator.console.println(" -- Visit MethodDeclaration: " + make(node));
 		IMethodBinding method = node.resolveBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, method));
+		// call DAO to generate the method node and its related relationships.
 		Activator.neo().createMethod(method);
 	}
 
 	/**
-	 * Method make.
+	 * Makes a string representation of the <code>MethodDeclaration</code> node.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
-	 * @param node
-	 * @return
+	 * @param node the <code>MethodDeclaration</code> node.
+	 * @return the string representation.
 	 */
 	private String make(MethodDeclaration node) {
 		StringBuffer sb = new StringBuffer();

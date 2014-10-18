@@ -16,21 +16,21 @@ package com.dnw.plugin.ast;
 import org.eclipse.jdt.core.dom.ASTNode;
 
 /**
- * Class/Interface IVisitor.
+ * A visitor can visit the given type of AST node.
  * 
  * @author manbaum
  * @since Sep 29, 2014
- * @param <T>
+ * @param <T> the given type.
  */
 public interface IVisitor<T extends ASTNode> {
 
 	/**
-	 * Method visit.
+	 * This method will be called when the given type of AST node is met.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * @param node
-	 * @param context
+	 * @param node the given type of AST node.
+	 * @param context the visiting context.
 	 */
 	void visit(T node, VisitContext context);
 }

@@ -49,20 +49,30 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.dnw.depmap";
+	// The directory locates the Neo4j database store.
 	private static String DBPATH = "/Users/manbaum/workspace/neo4j-community-2.1.5/data/graph.db";
 
-	// The shared instance
+	// The shared instance.
 	private static Activator plugin;
 
+	// The plug-in's console.
 	public static final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
+	// This factory defines what kinds of files will be inspected in a project.
+	// For now, we only support .java files.
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
+	// The white list to limit what packages or classes should be focused.
 	public static final WhiteList<String> filter = new WhiteList<String>();
 
+	// The AST node type set defines a stop set. (not used now)
+	// All nodes with its type in this set will be ignored, do not traverse it to improve the performance.
 	public static final NodeTypeBitMapSet stopSet = new NodeTypeBitMapSet();
+	// Register the corresponding AST visitor to visit the AST.
 	public static final IVisitorRegistry registry = new GeneralVisitorRegistry();
+	// Apply the stop set on the visitors.
 	public static final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry,
 			stopSet);
 
+	// TODO: the following setting should be put in a Eclipse preference page.
 	static {
 		factory.registerVisitor("java", JavaFileVisitor.class);
 		// factory.registerVisitor("xml", XmlFileVisitor.class);
@@ -76,9 +86,11 @@ public class Activator extends AbstractUIPlugin {
 		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
 	}
 
+	// Neo4j database Cypher language executor.
 	public NeoAccessor accessor;
+	// Call Neo4j accessor to generate all AST nodes and its relations.
 	public NeoDao neo;
-
+	// If it's true, the database will be cleaned before AST traverse. 
 	public static final boolean clearDatabase = true;
 
 	/**
@@ -91,12 +103,12 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Overrider method start.
+	 * Starts up this plug-in.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * @param context
-	 * @throws Exception
+	 * @param context the bundle context for this plug-in.
+	 * @throws Exception if this plug-in did not start up properly.
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#start(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -108,12 +120,12 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Overrider method stop.
+	 * Stops this plug-in.
 	 * 
 	 * @author manbaum
 	 * @since Sep 29, 2014
-	 * @param context
-	 * @throws Exception
+	 * @param context the bundle context for this plug-in.
+	 * @throws Exception if this plug-in did not stopped properly.
 	 * @see org.eclipse.ui.plugin.AbstractUIPlugin#stop(org.osgi.framework.BundleContext)
 	 */
 	@Override
@@ -135,11 +147,11 @@ public class Activator extends AbstractUIPlugin {
 	}
 
 	/**
-	 * Method w.
+	 * Exposes the database operations.
 	 * 
 	 * @author manbaum
 	 * @since Oct 13, 2014
-	 * @return
+	 * @return the DAO of Neo4j database.
 	 */
 	public static NeoDao neo() {
 		return plugin.neo;
