@@ -15,6 +15,7 @@ package com.dnw.depmap.neo;
 
 import java.util.List;
 
+import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
@@ -57,6 +58,30 @@ public class NeoDao {
 	}
 
 	/**
+	 * Method isBlocked.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param method
+	 * @return
+	 */
+	private boolean isBlocked(IMethodBinding method) {
+		return filter.blocks(AstUtil.nameOf(method));
+	}
+
+	/**
+	 * Method isCached.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param binding
+	 * @return
+	 */
+	private boolean isCached(IBinding binding) {
+		return BindingCache.contains(binding);
+	}
+
+	/**
 	 * Method createType.
 	 * 
 	 * @author manbaum
@@ -68,37 +93,12 @@ public class NeoDao {
 			return false;
 		if (isBlocked(type))
 			return false;
-		if (!BindingCache.contains(type)) {
-			String name = AstUtil.nameOf(type);
-			BindingCache.put(type, name);
-			w.createType(type);
-		}
-		return true;
-	}
-
-	/**
-	 * Creates a type with full type hierarchy.
-	 * 
-	 * @author manbaum
-	 * @since Oct 14, 2014
-	 */
-	public boolean createType(ITypeBinding type) {
-		if (!createBareType(type))
-			return false;
-		if (type.isInterface()) {
-			for (ITypeBinding t : type.getInterfaces()) {
-				if (createType(t))
-					w.createExtends(type, t);
-			}
-		} else {
-			for (ITypeBinding t : type.getInterfaces()) {
-				if (createType(t))
-					w.createImplements(type, t);
-			}
-			ITypeBinding t = type.getSuperclass();
-			if (createType(t))
-				w.createExtends(type, t);
-		}
+		ITypeBinding declaration = type.getTypeDeclaration();
+		if (isCached(declaration))
+			return true;
+		String name = AstUtil.nameOf(declaration);
+		BindingCache.put(declaration, name);
+		w.createType(declaration);
 		return true;
 	}
 
@@ -113,12 +113,77 @@ public class NeoDao {
 	public boolean createBareMethod(IMethodBinding method) {
 		if (method == null)
 			return false;
-		if (!createType(method.getDeclaringClass()))
+		if (isBlocked(method))
 			return false;
-		if (!BindingCache.contains(method)) {
-			BindingCache.put(method, AstUtil.nameOf(method));
-			w.createMethod(method);
-			w.createDeclare(method);
+		ITypeBinding type = method.getDeclaringClass();
+		if (!createBareType(type))
+			return false;
+		IMethodBinding declaration = method.getMethodDeclaration();
+		if (isCached(declaration))
+			return true;
+		BindingCache.put(declaration, AstUtil.nameOf(declaration));
+		w.createMethod(declaration);
+		w.createDeclare(declaration);
+		return true;
+	}
+
+	/**
+	 * Method createBareInvocation.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param from
+	 * @param to
+	 * @param args
+	 * @return
+	 */
+	public boolean createBareInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
+		if (!createBareMethod(from))
+			return false;
+		if (!createBareMethod(to))
+			return false;
+		IMethodBinding df = from.getMethodDeclaration();
+		IMethodBinding dt = to.getMethodDeclaration();
+		w.createInvocation(df, dt, args);
+		return true;
+	}
+
+	/**
+	 * Creates a type with full type hierarchy.
+	 * 
+	 * @author manbaum
+	 * @since Oct 14, 2014
+	 */
+	public boolean createType(ITypeBinding type) {
+		if (type == null)
+			return false;
+		if (isBlocked(type))
+			return false;
+		ITypeBinding declaration = type.getTypeDeclaration();
+		if (isCached(declaration))
+			return true;
+		String name = AstUtil.nameOf(declaration);
+		BindingCache.put(declaration, name);
+		w.createType(declaration);
+		if (type.isInterface()) {
+			for (ITypeBinding t : type.getInterfaces()) {
+				if (createType(t)) {
+					ITypeBinding d = t.getTypeDeclaration();
+					w.createExtends(declaration, d);
+				}
+			}
+		} else {
+			for (ITypeBinding t : type.getInterfaces()) {
+				if (createType(t)) {
+					ITypeBinding d = t.getTypeDeclaration();
+					w.createExtends(declaration, d);
+				}
+			}
+			ITypeBinding t = type.getSuperclass();
+			if (createType(t)) {
+				ITypeBinding d = t.getTypeDeclaration();
+				w.createExtends(declaration, d);
+			}
 		}
 		return true;
 	}
@@ -132,30 +197,46 @@ public class NeoDao {
 	 * @return
 	 */
 	public boolean createMethod(IMethodBinding method) {
-		if (!createBareMethod(method))
+		if (method == null)
+			return false;
+		if (isBlocked(method))
 			return false;
 		ITypeBinding type = method.getDeclaringClass();
+		if (!createType(type))
+			return false;
+		IMethodBinding declaration = method.getMethodDeclaration();
+		if (isCached(declaration))
+			return true;
+		BindingCache.put(declaration, AstUtil.nameOf(declaration));
+		w.createMethod(declaration);
+		w.createDeclare(declaration);
 		if (type.isInterface()) {
 			for (ITypeBinding t : type.getInterfaces()) {
 				for (IMethodBinding m : t.getDeclaredMethods()) {
-					if (method.overrides(m))
+					if (method.overrides(m)) {
+						IMethodBinding d = m.getMethodDeclaration();
 						if (createMethod(m))
-							w.createOverride(method, m);
+							w.createOverride(declaration, d);
+					}
 				}
 			}
 		} else {
 			for (ITypeBinding t : type.getInterfaces()) {
 				for (IMethodBinding m : t.getDeclaredMethods()) {
-					if (method.overrides(m))
+					if (method.overrides(m)) {
+						IMethodBinding d = m.getMethodDeclaration();
 						if (createMethod(m))
-							w.createOverride(method, m);
+							w.createOverride(declaration, d);
+					}
 				}
 			}
 			ITypeBinding t = type.getSuperclass();
 			for (IMethodBinding m : t.getDeclaredMethods()) {
-				if (method.overrides(m))
+				if (method.overrides(m)) {
+					IMethodBinding d = m.getMethodDeclaration();
 					if (createMethod(m))
-						w.createOverride(method, m);
+						w.createOverride(declaration, d);
+				}
 			}
 		}
 		return true;
@@ -170,14 +251,14 @@ public class NeoDao {
 	 * @param to
 	 * @param args
 	 */
-	public boolean createMethodInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
-		if (from == null && to == null)
-			return false;
+	public boolean createInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
 		if (!createMethod(from))
 			return false;
 		if (!createMethod(to))
 			return false;
-		w.createInvocation(from, to, args);
+		IMethodBinding df = from.getMethodDeclaration();
+		IMethodBinding dt = to.getMethodDeclaration();
+		w.createInvocation(df, dt, args);
 		return true;
 	}
 }

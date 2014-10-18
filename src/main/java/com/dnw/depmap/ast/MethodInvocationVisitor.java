@@ -75,7 +75,7 @@ public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 		Activator.console.println(AstUtil.infoOf(context, decl, from));
 		IMethodBinding to = node.resolveMethodBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, to));
-		Activator.neo().createMethodInvocation(from, to, args(node.arguments()));
+		Activator.neo().createInvocation(from, to, args(node.arguments()));
 	}
 
 	/**
