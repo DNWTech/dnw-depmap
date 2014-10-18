@@ -45,107 +45,131 @@ public class NeoDao {
 	}
 
 	/**
+	 * Method isBlocked.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param type
+	 * @return
+	 */
+	private boolean isBlocked(ITypeBinding type) {
+		return filter.blocks(AstUtil.nameOf(type));
+	}
+
+	/**
+	 * Method internalCreateType.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param method
+	 * @return
+	 */
+	private boolean isBlocked(IMethodBinding method) {
+		return filter.blocks(AstUtil.nameOf(method.getDeclaringClass()));
+	}
+
+	/**
 	 * Method createType.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
 	 * @param type
 	 */
-	public boolean createType(ITypeBinding type) {
+	public boolean createBareType(ITypeBinding type) {
 		if (type == null)
 			return false;
-		String name = AstUtil.nameOf(type);
-		if (filter.blocks(name))
+		if (isBlocked(type))
 			return false;
-		w.createType(type);
+		if (!BindingCache.contains(type)) {
+			String name = AstUtil.nameOf(type);
+			BindingCache.put(type, name);
+			w.createType(type);
+		}
 		return true;
 	}
 
 	/**
-	 * Method createHierarchy.
+	 * Creates a type with full type hierarchy.
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014
-	 * @param type
+	 */
+	public boolean createType(ITypeBinding type) {
+		if (!createBareType(type))
+			return false;
+		if (type.isInterface()) {
+			for (ITypeBinding t : type.getInterfaces()) {
+				if (createType(t))
+					w.createExtends(type, t);
+			}
+		} else {
+			for (ITypeBinding t : type.getInterfaces()) {
+				if (createType(t))
+					w.createImplements(type, t);
+			}
+			ITypeBinding t = type.getSuperclass();
+			if (createType(t))
+				w.createExtends(type, t);
+		}
+		return true;
+	}
+
+	/**
+	 * Method internalCreateMethod.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param method
 	 * @return
 	 */
-	public boolean createHierarchy(ITypeBinding type) {
-		if (!createType(type))
+	public boolean createBareMethod(IMethodBinding method) {
+		if (method == null)
 			return false;
-		if (type.isInterface()) {
-			for (ITypeBinding t : type.getInterfaces()) {
-				w.createType(t);
-				w.createExtends(type, t);
-			}
-		} else {
-			for (ITypeBinding t : type.getInterfaces()) {
-				w.createType(t);
-				w.createImplements(type, t);
-			}
-			ITypeBinding t = type.getSuperclass();
-			if (t != null) {
-				w.createType(t);
-				w.createExtends(type, t);
-			}
+		if (!createType(method.getDeclaringClass()))
+			return false;
+		if (!BindingCache.contains(method)) {
+			BindingCache.put(method, AstUtil.nameOf(method));
+			w.createMethod(method);
+			w.createDeclare(method);
 		}
 		return true;
 	}
 
 	/**
-	 * Method createTypeHierarchy.
-	 * 
-	 * @author manbaum
-	 * @since Oct 14, 2014
-	 */
-	public boolean createFullHierarchy(ITypeBinding type) {
-		if (!createType(type))
-			return false;
-		if (type.isInterface()) {
-			for (ITypeBinding t : type.getInterfaces()) {
-				if (createFullHierarchy(t))
-					w.createExtends(type, t);
-				else {
-					w.createType(t);
-					w.createExtends(type, t);
-				}
-			}
-		} else {
-			for (ITypeBinding t : type.getInterfaces()) {
-				if (createFullHierarchy(t))
-					w.createImplements(type, t);
-				else {
-					w.createType(t);
-					w.createImplements(type, t);
-				}
-			}
-			ITypeBinding t = type.getSuperclass();
-			if (t != null) {
-				if (createFullHierarchy(t))
-					w.createExtends(type, t);
-				else {
-					w.createType(t);
-					w.createExtends(type, t);
-				}
-			}
-		}
-		return true;
-	}
-
-	/**
-	 * Method createMethod.
+	 * Creates a method with its override hierarchy.
 	 * 
 	 * @author manbaum
 	 * @since Oct 10, 2014
 	 * @param method
+	 * @return
 	 */
-	public boolean createMethodDeclaration(IMethodBinding method) {
-		if (method == null)
+	public boolean createMethod(IMethodBinding method) {
+		if (!createBareMethod(method))
 			return false;
 		ITypeBinding type = method.getDeclaringClass();
-		if (!createType(type))
-			return false;
-		w.createMethod(method);
-		w.createDeclare(method);
+		if (type.isInterface()) {
+			for (ITypeBinding t : type.getInterfaces()) {
+				for (IMethodBinding m : t.getDeclaredMethods()) {
+					if (method.overrides(m))
+						if (createMethod(m))
+							w.createOverride(method, m);
+				}
+			}
+		} else {
+			for (ITypeBinding t : type.getInterfaces()) {
+				for (IMethodBinding m : t.getDeclaredMethods()) {
+					if (method.overrides(m))
+						if (createMethod(m))
+							w.createOverride(method, m);
+				}
+			}
+			ITypeBinding t = type.getSuperclass();
+			for (IMethodBinding m : t.getDeclaredMethods()) {
+				if (method.overrides(m))
+					if (createMethod(m))
+						w.createOverride(method, m);
+			}
+		}
 		return true;
 	}
 
@@ -161,9 +185,9 @@ public class NeoDao {
 	public boolean createMethodInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
 		if (from == null && to == null)
 			return false;
-		if (!createMethodDeclaration(from))
+		if (!createMethod(from))
 			return false;
-		if (!createMethodDeclaration(to))
+		if (!createMethod(to))
 			return false;
 		w.createInvocation(from, to, args);
 		return true;

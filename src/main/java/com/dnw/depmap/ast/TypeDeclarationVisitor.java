@@ -43,6 +43,6 @@ public class TypeDeclarationVisitor implements IVisitor<TypeDeclaration> {
 		Activator.console.println(" -- Visit TypeDeclaration: " + node.getName());
 		ITypeBinding type = node.resolveBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, type));
-		Activator.neo().createFullHierarchy(type);
+		Activator.neo().createType(type);
 	}
 }

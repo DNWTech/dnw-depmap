@@ -44,7 +44,7 @@ public class MethodDeclarationVisitor implements IVisitor<MethodDeclaration> {
 		Activator.console.println(" -- Visit MethodDeclaration: " + make(node));
 		IMethodBinding method = node.resolveBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, method));
-		Activator.neo().createMethodDeclaration(method);
+		Activator.neo().createMethod(method);
 	}
 
 	/**

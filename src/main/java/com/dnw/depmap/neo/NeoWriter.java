@@ -19,7 +19,6 @@ import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import com.dnw.json.J;
-import com.dnw.json.K;
 import com.dnw.json.M;
 import com.dnw.neo.NeoAccessor;
 import com.dnw.plugin.ast.AstUtil;
@@ -53,60 +52,6 @@ public class NeoWriter {
 	public static final String CREATEDECLARE = "match (t:Type {name:{tname}})  match(m:Method {name:{mname}}) merge (t)-[:Declares]->(m)";
 	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invokes {args:{args}}]->(t)";
 	public static final String CREATEOVERRIDE = "match (m:Method {name:{name}}) match (b:Method {name:{bname}}) merge (m)-[:Overrides]-(b)";
-
-	/**
-	 * Converts ITypeBinding objects, returns the full-qualified type name.
-	 * 
-	 * @author manbaum
-	 * @since Oct 10, 2014
-	 */
-	private final static class ITypeBindingConverter implements K<ITypeBinding> {
-
-		/**
-		 * Converts the given value to a JSON compatible value.
-		 * 
-		 * @author manbaum
-		 * @since Oct 10, 2014
-		 * @param value the value to convert.
-		 * @return the converted value.
-		 * @see com.dnw.json.K#convert(java.lang.Object)
-		 */
-		@Override
-		public Object convert(ITypeBinding value) {
-			return AstUtil.nameOf(value);
-		}
-	}
-
-	/**
-	 * <p>
-	 * Converts IMethodBinding objects, returns the full-qualified method name.
-	 * </p>
-	 * <p>
-	 * For non-static methods, the result likes
-	 * <code>'com.dnw.depmap.neo.NeoWriter.IMethodBindingConverter#convert(IMethodBinding)'</code>;
-	 * for static methods, the result likes
-	 * <code>com.dnw.plugin.ast.AstUtil/nameOf(ITypeBinding)</code>.
-	 * </p>
-	 * 
-	 * @author manbaum
-	 * @since Oct 14, 2014
-	 */
-	private final static class IMethodBindingConverter implements K<IMethodBinding> {
-
-		/**
-		 * Converts the given value to a JSON compatible value.
-		 * 
-		 * @author manbaum
-		 * @since Oct 14, 2014
-		 * @param value the value to convert.
-		 * @return the converted value.
-		 * @see com.dnw.json.K#convert(java.lang.Object)
-		 */
-		@Override
-		public Object convert(IMethodBinding value) {
-			return AstUtil.nameOf(value);
-		}
-	}
 
 	static {
 		J.register(ITypeBinding.class, new ITypeBindingConverter());
@@ -195,5 +140,18 @@ public class NeoWriter {
 	public void createInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
 		M p = M.m().a("namef", from).a("namet", to).a("args", args);
 		accessor.execute(CREATEINVOKE, p);
+	}
+
+	/**
+	 * Method createOverride.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param method
+	 * @param base
+	 */
+	public void createOverride(IMethodBinding method, IMethodBinding base) {
+		M p = M.m().a("name", method).a("bname", base);
+		accessor.execute(CREATEOVERRIDE, p);
 	}
 }
