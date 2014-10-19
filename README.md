@@ -1,8 +1,8 @@
 DNW-depmap
-=============
+==========
 
-DNW-depmap is an Eclipse plug-in project to create Java code dependency map,
-which can be used by developers to help them easily find what's the influence of arbitrary code modifications.
+DNW-depmap is an Eclipse plug-in to create Java code dependency map,
+which can be used by developers to help them easily find the influence of arbitrary code modifications.
 
 Development Environment
 -----------------------
@@ -32,9 +32,7 @@ Getting Start
     (Refer to Neo4j [Cypher Refcard 2.1.5](http://neo4j.com/docs/2.1.5/refcard/).)
 12. If you want to select some other Java files and re-generating the map data, please shutdown the local Neo4j server first,
     when generating is done, you can restart the Neo4j server and do some manipulations.
-13. Another thing should be aware of is that the newly generated data will be mixed with the old data.
-    If you want to clean all old data, please excute some appropriate Cypher statements,
-    like ```match ()-[r]-() match (n) delete r, n```.
+13. Before generating a new map, this program will try to clear all data in the database, to avoid the newly generated data be mixed with the old data. But if the data is too huge, sometimes it will cause a memory overflow error. If this happens, please clear the database manully, excute some appropriate Cypher statements in browser, like ```match ()-[r]-() match (n) delete r, n```.
 
 Data Model
 ----------
@@ -44,6 +42,7 @@ Data Model
   - Property ```caption```: The simple name (no package name) of the class without type parameter. e.g. ```'ArrayList'```.
   - Property ```extends```: The qualified name of its superclass. e.g. ```'java.lang.Object'```.
   - Property ```implements```: An array contains all names of interfaces which the class implements. e.g. ```['java.util.List']```.
+  - Property ```isAbstract```: Indicates if this is an abstract class.
 - Node labeled ```Interface``` denotes a Java interface.
   - Property ```name```: The qualified name of the interface without type parameter. e.g. ```'java.util.List'```.
   - Property ```caption```: The simple name (no package name) of the interface without type parameter. e.g. ```'List'```.
@@ -55,6 +54,7 @@ Data Model
     * For a static method, uses ```'/'``` as the delimiter. e.g. ```'java.util.Arrays/asList(java.lang.Object[])'```.
     * For a non-static method, uses ```'#'``` as the delimiter. e.g. ```'java.lang.Object#wait()'```.
   - Property ```caption```: Which concatenates the method name and a pair of parentheses. e.g. ```'asList()'```.
+  - Property ```isAbstract``` : Indicates if this is an abstract method.
 - Relation type ```Declares``` denotes the method declaration, the from side should be a ```Type``` node, and the to side should be a ```Method``` node.
 - Relation type ```Invokes``` denotes the method invocation, it happens between two ```Method``` nodes.
 - Relation type ```Overrides``` denotes the method override, it happens between two ```Method``` nodes. There are two kinds of override: Superclass override and Interface override.
