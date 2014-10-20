@@ -17,5 +17,19 @@
          </action>
       </objectContribution>
    </extension>
+   <extension
+         point="org.eclipse.ui.preferencePages">
+      <page
+            class="com.dnw.depmap.preferences.RootPreferenePage"
+            id="com.dnw.depmap.preferences.DependencyMapPreferenePage"
+            name="Dependency Map">
+      </page>
+   </extension>
+   <extension
+         point="org.eclipse.core.runtime.preferences">
+      <initializer
+            class="com.dnw.depmap.preferences.PreferenceInitializer">
+      </initializer>
+   </extension>
 
 </plugin>
