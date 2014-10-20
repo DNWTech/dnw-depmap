@@ -27,6 +27,7 @@ import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.core.runtime.jobs.Job;
 import org.eclipse.jface.viewers.IStructuredSelection;
 
+import com.dnw.depmap.neo.BindingCache;
 import com.dnw.plugin.resource.FactoryBasedResourceFinder;
 import com.dnw.plugin.resource.IResourceFinder;
 
@@ -139,6 +140,8 @@ public final class AnalyzeDependencyJob extends Job {
 			if (Activator.clearDatabase) {
 				Activator.neo().clear();
 			}
+			// clears the binding cache.
+			BindingCache.clear();
 			// visit all resources to generate dependency map. 
 			visitAllResources(finder.getSupportedList(), sub);
 			// shuts down the database after generating.
