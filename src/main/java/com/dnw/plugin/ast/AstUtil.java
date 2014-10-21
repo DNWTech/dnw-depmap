@@ -130,7 +130,9 @@ public final class AstUtil {
 		sb.append(" bound to: ");
 		sb.append(type != null ? type.getQualifiedName() : "nothing");
 		sb.append(" (");
-		sb.append(context.fileInfo(node));
+		sb.append(context.fileOf(node));
+		sb.append(':');
+		sb.append(context.lineOf(node));
 		sb.append(")");
 		return sb.toString();
 	}
@@ -150,7 +152,9 @@ public final class AstUtil {
 		sb.append(" bound to: ");
 		sb.append(method != null ? method.getName() + "()" : "nothing");
 		sb.append(" (");
-		sb.append(context.fileInfo(node));
+		sb.append(context.fileOf(node));
+		sb.append(':');
+		sb.append(context.lineOf(node));
 		sb.append(')');
 		return sb.toString();
 	}
@@ -170,7 +174,9 @@ public final class AstUtil {
 		sb.append(" bound to: ");
 		sb.append(method != null ? method.getName() + "()" : "nothing");
 		sb.append(" (");
-		sb.append(context.fileInfo(node));
+		sb.append(context.fileOf(node));
+		sb.append(':');
+		sb.append(context.lineOf(node));
 		sb.append(')');
 		return sb.toString();
 	}

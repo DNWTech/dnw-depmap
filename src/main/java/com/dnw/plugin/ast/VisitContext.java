@@ -66,10 +66,20 @@ public class VisitContext {
 	 * @param node
 	 * @return
 	 */
-	public String fileInfo(ASTNode node) {
-		String filename = file.getFullPath().toString();
-		String linenum = String.valueOf(root.getLineNumber(node.getStartPosition()));
-		return filename + ":" + linenum;
+	public String fileOf(ASTNode node) {
+		return file.getFullPath().toString();
+	}
+
+	/**
+	 * Method lineOf.
+	 * 
+	 * @author manbaum
+	 * @since Oct 21, 2014
+	 * @param node
+	 * @return
+	 */
+	public int lineOf(ASTNode node) {
+		return root.getLineNumber(node.getStartPosition());
 	}
 
 	/**

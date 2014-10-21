@@ -37,7 +37,6 @@ import com.dnw.json.M;
  */
 public class RestfulNeoAccessor implements NeoAccessor {
 
-	private String rootUrl;
 	private final Client client;
 	private final WebTarget rootTarget;
 
@@ -49,27 +48,22 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	 * @param serverRoot
 	 */
 	public RestfulNeoAccessor(String rootUrl) {
-		this.rootUrl = rootUrl;
 		client = ClientBuilder.newBuilder().build();
 		rootTarget = client.target(rootUrl);
 	}
 
 	/**
-	 * Overrider method execute.
+	 * Method sendRequest.
 	 * 
 	 * @author manbaum
-	 * @since Oct 18, 2014
-	 * @param statement
-	 * @see com.dnw.neo.NeoAccessor#execute(java.lang.String)
+	 * @since Oct 21, 2014
+	 * @param target
+	 * @param data
+	 * @return
 	 */
-	@Override
-	public void execute(String statement) {
-		M s = M.m().a("statement", statement);
-		M m = M.m().a("statements", L.l().a(s));
-		//Client client = ClientBuilder.newBuilder().build();
-		WebTarget target = rootTarget.path("transaction/commit");
+	private Response sendRequest(WebTarget target, M data) {
 		Response response = target.request().accept(MediaType.APPLICATION_JSON)
-				.acceptEncoding("UTF-8").post(Entity.json(m.json()));
+				.acceptEncoding("UTF-8").post(Entity.json(data.json()));
 		if (response.getStatus() != 200) {
 			throw new IllegalStateException("error.response: " + response.getStatusInfo());
 		}
@@ -84,11 +78,29 @@ public class RestfulNeoAccessor implements NeoAccessor {
 						break;
 					sb.append(line);
 				} catch (IOException e) {
+					Activator.console.println(e);
 					break;
 				}
 			}
 			Activator.console.println(">>> " + sb.toString());
 		}
+		return response;
+	}
+
+	/**
+	 * Overrider method execute.
+	 * 
+	 * @author manbaum
+	 * @since Oct 18, 2014
+	 * @param statement
+	 * @see com.dnw.neo.NeoAccessor#execute(java.lang.String)
+	 */
+	@Override
+	public void execute(String statement) {
+		M s = M.m().a("statement", statement);
+		M m = M.m().a("statements", L.l().a(s));
+		WebTarget target = rootTarget.path("transaction/commit");
+		sendRequest(target, m);
 	}
 
 	/**
@@ -104,29 +116,8 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	public void execute(String statement, M params) {
 		M s = M.m().a("statement", statement).a("parameters", params);
 		M m = M.m().a("statements", L.l().a(s));
-		//Client client = ClientBuilder.newBuilder().build();
 		WebTarget target = rootTarget.path("transaction/commit");
-		Response response = target.request().accept(MediaType.APPLICATION_JSON)
-				.acceptEncoding("utf-8").post(Entity.json(m.json()));
-		if (response.getStatus() != 200) {
-			throw new IllegalStateException("error.response: " + response.getStatusInfo());
-		}
-		InputStream is = (InputStream)response.getEntity();
-		if (is != null) {
-			StringBuffer sb = new StringBuffer();
-			BufferedReader r = new BufferedReader(new InputStreamReader(is));
-			while (true) {
-				try {
-					String line = r.readLine();
-					if (line == null)
-						break;
-					sb.append(line);
-				} catch (IOException e) {
-					break;
-				}
-			}
-			Activator.console.println(">>> " + sb.toString());
-		}
+		sendRequest(target, m);
 	}
 
 	/**
