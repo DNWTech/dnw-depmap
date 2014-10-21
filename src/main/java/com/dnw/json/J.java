@@ -267,9 +267,9 @@ public final class J {
 	 * @param text the string to append.
 	 */
 	public final static void emitString(final StringBuffer sb, final CharSequence text) {
-		sb.append('\'');
+		sb.append('\"');
 		sb.append(J.escape(text));
-		sb.append('\'');
+		sb.append('\"');
 	}
 
 	/**
@@ -313,9 +313,9 @@ public final class J {
 			} else {
 				sb.append(',');
 			}
-			sb.append('\'');
+			sb.append('\"');
 			J.emitName(sb, String.valueOf(e.getKey()));
-			sb.append("\':");
+			sb.append("\":");
 			J.emit(sb, e.getValue());
 		}
 		sb.append('}');
@@ -374,9 +374,9 @@ public final class J {
 	 * @param unknown the object to be append.
 	 */
 	public final static void emitUnknown(final StringBuffer sb, final Object unknown) {
-		sb.append("\'[Object ");
+		sb.append("\"[Object ");
 		sb.append(unknown.getClass().getName());
-		sb.append("]\'");
+		sb.append("]\"");
 	}
 
 	/**
