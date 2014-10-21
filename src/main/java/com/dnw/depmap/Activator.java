@@ -29,8 +29,8 @@ import com.dnw.depmap.resource.JavaFileVisitor;
 import com.dnw.matcher.RegexMatcher;
 import com.dnw.matcher.StringMatcher;
 import com.dnw.matcher.WhiteList;
-import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
+import com.dnw.neo.RestfulNeoAccessor;
 import com.dnw.plugin.ast.GeneralVisitorRegistry;
 import com.dnw.plugin.ast.IVisitorDelegator;
 import com.dnw.plugin.ast.IVisitorRegistry;
@@ -115,7 +115,8 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		accessor = new EmbeddedNeoAccessor(DBPATH);
+		// accessor = new EmbeddedNeoAccessor(DBPATH);
+		accessor = new RestfulNeoAccessor("http://macretina:7474/db/data");
 		neo = new NeoDao(new NeoWriter(accessor), filter);
 	}
 
