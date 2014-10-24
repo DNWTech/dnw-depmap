@@ -100,7 +100,7 @@ public class RestfulNeoAccessor implements NeoAccessor {
 		M s = M.m().a("statement", statement);
 		M m = M.m().a("statements", L.l().a(s));
 		WebTarget target = rootTarget.path("transaction/commit");
-		sendRequest(target, m.json());
+		sendRequest(target, m.toJson());
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class RestfulNeoAccessor implements NeoAccessor {
 		M s = M.m().a("statement", statement).a("parameters", params);
 		M m = M.m().a("statements", L.l().a(s));
 		WebTarget target = rootTarget.path("transaction/commit");
-		sendRequest(target, m.json());
+		sendRequest(target, m.toJson());
 	}
 
 	/**

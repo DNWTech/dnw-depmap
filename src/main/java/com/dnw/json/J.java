@@ -21,6 +21,7 @@ import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import com.dnw.plugin.util.WeakCache;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -33,10 +34,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
  */
 public final class J {
 
+	// using a cache to improve the performance.
+	private final static WeakCache<Class<?>, K<?>> cache = new WeakCache<Class<?>, K<?>>();
 	private final static Map<Class<?>, K<?>> map = new HashMap<Class<?>, K<?>>();
 	private static K<Object> defaultConverter;
 
 	private final static ObjectMapper mapper = new ObjectMapper();
+
+	private final static Pattern NAMEPATTERN = Pattern.compile("^[\\x21-\\x7e]+$");
 
 	/**
 	 * Registers a default type converter. Pass in a <code>null</code> to unregister.
@@ -129,31 +134,40 @@ public final class J {
 		map.clear();
 	}
 
-	// TODO: using a cache to improve the performance.
 	/**
-	 * Method findConverter.
+	 * Finds the corresponding type converter.
 	 * 
 	 * @author manbaum
 	 * @since Oct 14, 2014
-	 * @param type
-	 * @return
+	 * @param type the given type.
+	 * @return the corresponding type converter.
 	 */
 	private final static K<?> findConverter(Class<?> type) {
-		K<?> k = map.get(type);
+		K<?> k = cache.get(type);
 		if (k != null)
 			return k;
+
+		k = map.get(type);
+		if (k != null) {
+			cache.put(type, k);
+			return k;
+		}
 
 		Class<?> s = type.getSuperclass();
 		if (s != null) {
 			k = findConverter(s);
-			if (k != null)
+			if (k != null) {
+				cache.put(type, k);
 				return k;
+			}
 		}
 
 		for (Class<?> i : type.getInterfaces()) {
 			k = findConverter(i);
-			if (k != null)
+			if (k != null) {
+				cache.put(type, k);
 				return k;
+			}
 		}
 		return null;
 	}
@@ -178,7 +192,8 @@ public final class J {
 	}
 
 	/**
-	 * Tries to convert the given value to a JSON compatible value.
+	 * Tries to convert the given value to a JSON compatible value. A global internal cache will be
+	 * used to improve the performance.
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
@@ -203,7 +218,15 @@ public final class J {
 			return tryConverter(value);
 	}
 
-	private final static Pattern NAMEPATTERN = Pattern.compile("^[\\x21-\\x7e]+$");
+	/**
+	 * Clears the global internal converter cache, i.e. after modified the converter registry.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 */
+	public final static void clearConverterCache() {
+		cache.clear();
+	}
 
 	/**
 	 * Appends the given name to the string buffer, a name usually used as an object key.
@@ -446,6 +469,20 @@ public final class J {
 		} else {
 			J.emitUnknown(sb, value);
 		}
+	}
+
+	/**
+	 * Returns a corresponding JSON string of the given Java object.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 * @param value the given Java object.
+	 * @return a JSON string.
+	 */
+	public final static String make(Object value) {
+		StringBuffer sb = new StringBuffer();
+		emit(sb, value);
+		return sb.toString();
 	}
 
 	/**

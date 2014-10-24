@@ -84,7 +84,7 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 		Transaction tx = gdb.beginTx();
 		try {
 			Activator.console.println(" -> executing: " + statement);
-			Activator.console.println(" ->   " + params.json());
+			Activator.console.println(" ->   " + params.toJson());
 			engine.execute(statement, params.map());
 			tx.success();
 		} finally {

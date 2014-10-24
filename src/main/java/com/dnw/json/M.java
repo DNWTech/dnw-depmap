@@ -26,10 +26,10 @@ import java.util.Map;
  * 
  * <pre>
  *   {
- *     'query': 'merge (:Object {name:{name}}) on create set refs={refs}',
- *     'params': {
- *       'name': 'new-object',
- *       'refs': [2, 3, 5]
+ *     "query": "merge (:Object {name:{name}}) on create set refs={refs}",
+ *     "params": {
+ *       "name": "new-object",
+ *       "refs": [2, 3, 5]
  *     } 
  *   } 
  * </pre>
@@ -92,10 +92,8 @@ public final class M {
 	 * @since Oct 11, 2014
 	 * @return a JSON format string represents the object.
 	 */
-	public final String json() {
-		StringBuffer sb = new StringBuffer();
-		J.emit(sb, this);
-		return sb.toString();
+	public final String toJson() {
+		return J.make(this);
 	}
 
 	/**
