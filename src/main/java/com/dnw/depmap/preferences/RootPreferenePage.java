@@ -166,7 +166,7 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 				dburl.setEnabled(value, gf1.getGroupControl(p));
 			} else if (f.getPreferenceName().equals(PrefKeys.P_USEEMBEDDED)) {
 				boolean value = (Boolean)event.getNewValue();
-				dbdir.setEnabled(!value, gf1.getGroupControl(p));
+				dbdir.setEnabled(value, gf1.getGroupControl(p));
 			} else if (f.getPreferenceName().equals(PrefKeys.P_USEWHITE)) {
 				boolean value = (Boolean)event.getNewValue();
 				whitelist.setEnabled(value, gf2.getGroupControl(p));
