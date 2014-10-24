@@ -137,8 +137,10 @@ public final class AnalyzeDependencyJob extends Job {
 			// starts up the Neo4j database.
 			Activator.getDefault().accessor.startup();
 			// cleans up the database if required.
-			if (Activator.clearDatabase) {
-				Activator.neo().clear();
+			if (Activator.preExec) {
+				for (String s : Activator.statements) {
+					Activator.getDefault().accessor.execute(s);
+				}
 			}
 			// clears the binding cache.
 			BindingCache.clear();
@@ -151,5 +153,4 @@ public final class AnalyzeDependencyJob extends Job {
 		}
 		return Status.OK_STATUS;
 	}
-
 }

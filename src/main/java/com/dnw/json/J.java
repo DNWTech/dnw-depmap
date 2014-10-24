@@ -13,11 +13,17 @@
  */
 package com.dnw.json;
 
+import java.io.IOException;
 import java.lang.reflect.Array;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
  * An utility class to make JSON format string.
@@ -29,6 +35,8 @@ public final class J {
 
 	private final static Map<Class<?>, K<?>> map = new HashMap<Class<?>, K<?>>();
 	private static K<Object> defaultConverter;
+
+	private final static ObjectMapper mapper = new ObjectMapper();
 
 	/**
 	 * Registers a default type converter. Pass in a <code>null</code> to unregister.
@@ -437,6 +445,85 @@ public final class J {
 			J.emitArray(sb, value);
 		} else {
 			J.emitUnknown(sb, value);
+		}
+	}
+
+	/**
+	 * Method parseObject.
+	 * 
+	 * @author manbaum
+	 * @since Oct 22, 2014
+	 * @param node
+	 * @return
+	 */
+	private final static M parseObject(JsonNode node) {
+		M m = M.m();
+		Iterator<String> i = node.fieldNames();
+		while (i.hasNext()) {
+			String key = i.next();
+			m.a(key, parse(node.get(key)));
+		}
+		return m;
+	}
+
+	/**
+	 * Method parseArray.
+	 * 
+	 * @author manbaum
+	 * @since Oct 22, 2014
+	 * @param node
+	 * @return
+	 */
+	private final static L parseArray(JsonNode node) {
+		L l = L.l();
+		Iterator<JsonNode> i = node.elements();
+		while (i.hasNext()) {
+			l.a(parse(i.next()));
+		}
+		return l;
+	}
+
+	/**
+	 * Method parse.
+	 * 
+	 * @author manbaum
+	 * @since Oct 22, 2014
+	 * @param node
+	 * @return
+	 */
+	private final static Object parse(JsonNode node) {
+		if (node.isNull()) {
+			return null;
+		} else if (node.isTextual()) {
+			return node.asText();
+		} else if (node.isIntegralNumber()) {
+			return node.asLong();
+		} else if (node.isDouble()) {
+			return node.asDouble();
+		} else if (node.isObject()) {
+			return parseObject(node);
+		} else if (node.isArray()) {
+			return parseArray(node);
+		}
+		return null;
+	}
+
+	/**
+	 * Method parse.
+	 * 
+	 * @author manbaum
+	 * @since Oct 22, 2014
+	 * @param jsonData
+	 * @return
+	 */
+	public final static Object parse(String jsonData) {
+		try {
+			JsonNode node = mapper.readTree(jsonData);
+			return parse(node);
+		} catch (JsonProcessingException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
 		}
 	}
 }

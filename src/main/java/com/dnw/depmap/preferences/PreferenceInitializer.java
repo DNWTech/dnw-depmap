@@ -36,9 +36,17 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 	 */
 	public void initializeDefaultPreferences() {
 		IPreferenceStore store = Activator.getDefault().getPreferenceStore();
-		store.setDefault(PrefKeys.P_BOOLEAN, true);
-		store.setDefault(PrefKeys.P_CHOICE, "choice2");
-		store.setDefault(PrefKeys.P_STRING, "Default value");
+		store.setDefault(PrefKeys.P_USESTANDALONE, true);
+		store.setDefault(PrefKeys.P_DBURL, "http://localhost:7474/db/data");
+		store.setDefault(PrefKeys.P_USEEMBEDDED, false);
+		store.setDefault(PrefKeys.P_DBDIR, "./neo4j-community-2.1.5/data/graph.db");
+		store.setDefault(PrefKeys.P_USEWHITE, true);
+		store.setDefault(PrefKeys.P_WHITELIST,
+				"@java.lang.Object; org\\.eclipse\\.jdt\\.core\\.dom\\..*; com\\.dnw\\..*");
+		store.setDefault(PrefKeys.P_USEBLACK, false);
+		store.setDefault(PrefKeys.P_BLACKLIST, "");
+		store.setDefault(PrefKeys.P_PREFERWHITE, true);
+		store.setDefault(PrefKeys.P_USEPREEXEC, false);
+		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r; match (n) delete n");
 	}
-
 }

@@ -46,13 +46,14 @@ public class NeoDao {
 	}
 
 	/**
-	 * Method clear.
+	 * Getter of the field w.
 	 * 
 	 * @author manbaum
-	 * @since Oct 18, 2014
+	 * @since Oct 24, 2014
+	 * @return value of the field w.
 	 */
-	public void clear() {
-		w.clear();
+	public NeoWriter w() {
+		return w;
 	}
 
 	/**

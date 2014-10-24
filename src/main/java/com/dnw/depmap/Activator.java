@@ -16,7 +16,10 @@ package com.dnw.depmap;
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
+import org.eclipse.jface.preference.IPreferenceStore;
 import org.eclipse.jface.resource.ImageDescriptor;
+import org.eclipse.jface.util.IPropertyChangeListener;
+import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.ui.plugin.AbstractUIPlugin;
 import org.osgi.framework.BundleContext;
 
@@ -25,10 +28,12 @@ import com.dnw.depmap.ast.MethodInvocationVisitor;
 import com.dnw.depmap.ast.TypeDeclarationVisitor;
 import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
+import com.dnw.depmap.preferences.PrefKeys;
 import com.dnw.depmap.resource.JavaFileVisitor;
+import com.dnw.matcher.CompositeList;
 import com.dnw.matcher.RegexMatcher;
 import com.dnw.matcher.StringMatcher;
-import com.dnw.matcher.WhiteList;
+import com.dnw.neo.EmbeddedNeoAccessor;
 import com.dnw.neo.NeoAccessor;
 import com.dnw.neo.RestfulNeoAccessor;
 import com.dnw.plugin.ast.GeneralVisitorRegistry;
@@ -51,6 +56,8 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "com.dnw.depmap";
 	// The directory locates the Neo4j database store.
 	private static String DBPATH = "/Users/manbaum/workspace/neo4j-community-2.1.5/data/graph.db";
+	private static String DBURL = "http://localhost:7474/db/data";
+	private static boolean useEmbedded = false;
 
 	// The shared instance.
 	private static Activator plugin;
@@ -61,7 +68,7 @@ public class Activator extends AbstractUIPlugin {
 	// For now, we only support .java files.
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
 	// The white list to limit what packages or classes should be focused.
-	public static final WhiteList<String> filter = new WhiteList<String>();
+	public static final CompositeList<String> filter = new CompositeList<String>();
 
 	// The AST node type set defines a stop set. (not used now)
 	// All nodes with its type in this set will be ignored, do not traverse it to improve the performance.
@@ -77,9 +84,9 @@ public class Activator extends AbstractUIPlugin {
 		factory.registerVisitor("java", JavaFileVisitor.class);
 		// factory.registerVisitor("xml", XmlFileVisitor.class);
 
-		filter.addMatcher(new StringMatcher("java.lang.Object"));
-		filter.addMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
-		filter.addMatcher(new RegexMatcher("com\\.dnw\\..*"));
+		// filter.addAllowMatcher(new StringMatcher("java.lang.Object"));
+		// filter.addAllowMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
+		// filter.addAllowMatcher(new RegexMatcher("com\\.dnw\\..*"));
 
 		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
 		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());
@@ -91,7 +98,10 @@ public class Activator extends AbstractUIPlugin {
 	// Call Neo4j accessor to generate all AST nodes and its relations.
 	public NeoDao neo;
 	// If it's true, the database will be cleaned before AST traverse. 
-	public static final boolean clearDatabase = true;
+	public static boolean preExec = false;
+	public static String[] statements = new String[0];
+
+	public IPropertyChangeListener listener;
 
 	/**
 	 * Constructor of Activator.
@@ -100,6 +110,75 @@ public class Activator extends AbstractUIPlugin {
 	 * @since Sep 29, 2014
 	 */
 	public Activator() {
+		listener = new IPropertyChangeListener() {
+
+			@Override
+			public void propertyChange(PropertyChangeEvent event) {
+				loadPerference();
+			}
+		};
+	}
+
+	private void loadPerference() {
+		IPreferenceStore store = super.getPreferenceStore();
+		if (store.getBoolean(PrefKeys.P_USESTANDALONE)) {
+			useEmbedded = false;
+			DBURL = store.getString(PrefKeys.P_DBURL);
+		} else if (store.getBoolean(PrefKeys.P_USEEMBEDDED)) {
+			useEmbedded = true;
+			DBPATH = store.getString(PrefKeys.P_DBDIR);
+		} else {
+			useEmbedded = false;
+			DBURL = "http://localhost:7474/db/data";
+			store.setValue(PrefKeys.P_USESTANDALONE, true);
+			store.setValue(PrefKeys.P_DBURL, DBURL);
+		}
+
+		filter.clearAllows();
+		if (store.getBoolean(PrefKeys.P_USEWHITE)) {
+			String white = store.getString(PrefKeys.P_WHITELIST);
+			if (white != null) {
+				String[] list = white.split("\\s*;\\s*");
+				for (String s : list) {
+					console.println("allow: \"" + s + "\"");
+					if (s.startsWith("@"))
+						filter.addAllowMatcher(new StringMatcher(s.substring(1)));
+					else
+						filter.addAllowMatcher(new RegexMatcher(s));
+				}
+			}
+		}
+
+		filter.clearBlocks();
+		if (store.getBoolean(PrefKeys.P_USEBLACK)) {
+			String black = store.getString(PrefKeys.P_BLACKLIST);
+			if (black != null) {
+				String[] list = black.split("\\s*;\\s*");
+				for (String s : list) {
+					console.println("block: \"" + s + "\"");
+					if (s.startsWith("@"))
+						filter.addBlockMatcher(new StringMatcher(s.substring(1)));
+					else
+						filter.addBlockMatcher(new RegexMatcher(s));
+				}
+			}
+		}
+
+		preExec = store.getBoolean(PrefKeys.P_USEPREEXEC);
+		if (preExec) {
+			String ss = store.getString(PrefKeys.P_PREEXEC);
+			if (ss != null) {
+				statements = ss.split("\\s*;\\s*");
+				for (String s : statements) {
+					console.println("statement: \"" + s + "\"");
+				}
+			} else {
+				preExec = false;
+			}
+		}
+
+		accessor = useEmbedded ? new EmbeddedNeoAccessor(DBPATH) : new RestfulNeoAccessor(DBURL);
+		neo = new NeoDao(new NeoWriter(accessor), filter);
 	}
 
 	/**
@@ -115,9 +194,8 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		// accessor = new EmbeddedNeoAccessor(DBPATH);
-		accessor = new RestfulNeoAccessor("http://macretina:7474/db/data");
-		neo = new NeoDao(new NeoWriter(accessor), filter);
+		loadPerference();
+		super.getPreferenceStore().addPropertyChangeListener(listener);
 	}
 
 	/**
@@ -134,6 +212,7 @@ public class Activator extends AbstractUIPlugin {
 		accessor.shutdown();
 		plugin = null;
 		super.stop(context);
+		super.getPreferenceStore().addPropertyChangeListener(listener);
 	}
 
 	/**

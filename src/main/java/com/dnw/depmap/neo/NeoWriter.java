@@ -44,7 +44,6 @@ public class NeoWriter {
 		this.accessor = accessor;
 	}
 
-	public static final String CLEARDATA = "match ()-[r]-() match (n) delete r, n";
 	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) on create set t.caption={caption}, t.implements={implements}, t.extends={extends}";
 	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) on create set t.caption={caption}, t.extends={extends}";
 	public static final String CREATEIMPLEMENTS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Implements]->(b)";
@@ -57,16 +56,6 @@ public class NeoWriter {
 	static {
 		J.register(ITypeBinding.class, new TypeBindingConverter());
 		J.register(IMethodBinding.class, new MethodBindingConverter());
-	}
-
-	/**
-	 * Method clear.
-	 * 
-	 * @author manbaum
-	 * @since Oct 18, 2014
-	 */
-	public void clear() {
-		accessor.execute(CLEARDATA);
 	}
 
 	/**

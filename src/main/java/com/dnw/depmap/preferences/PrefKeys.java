@@ -21,12 +21,25 @@ package com.dnw.depmap.preferences;
  */
 public class PrefKeys {
 
-	public static final String P_PATH = "pathPreference";
+	public static final String P_USEEMBEDDED = "com.dnw.depmap.useEmbedded";
 
-	public static final String P_BOOLEAN = "booleanPreference";
+	public static final String P_DBDIR = "com.dnw.depmap.databaseDirectory";
 
-	public static final String P_CHOICE = "choicePreference";
+	public static final String P_USESTANDALONE = "com.dnw.depmap.useStandalone";
 
-	public static final String P_STRING = "stringPreference";
+	public static final String P_DBURL = "com.dnw.depmap.databaseRootUrl";
 
+	public static final String P_USEWHITE = "com.dnw.depmap.useWhiteList";
+
+	public static final String P_WHITELIST = "com.dnw.depmap.whiteList";
+
+	public static final String P_USEBLACK = "com.dnw.depmap.useBlackList";
+
+	public static final String P_BLACKLIST = "com.dnw.depmap.blackList";
+
+	public static final String P_PREFERWHITE = "com.dnw.depmap.preferWhite";
+
+	public static final String P_USEPREEXEC = "com.dnw.depmap.usePreExecution";
+
+	public static final String P_PREEXEC = "com.dnw.depmap.preExecution";
 }

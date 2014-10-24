@@ -61,9 +61,9 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	 * @param data
 	 * @return
 	 */
-	private Response sendRequest(WebTarget target, M data) {
+	private Response sendRequest(WebTarget target, String jsonData) {
 		Response response = target.request().accept(MediaType.APPLICATION_JSON)
-				.acceptEncoding("UTF-8").post(Entity.json(data.json()));
+				.acceptEncoding("UTF-8").post(Entity.json(jsonData));
 		if (response.getStatus() != 200) {
 			throw new IllegalStateException("error.response: " + response.getStatusInfo());
 		}
@@ -100,7 +100,7 @@ public class RestfulNeoAccessor implements NeoAccessor {
 		M s = M.m().a("statement", statement);
 		M m = M.m().a("statements", L.l().a(s));
 		WebTarget target = rootTarget.path("transaction/commit");
-		sendRequest(target, m);
+		sendRequest(target, m.json());
 	}
 
 	/**
@@ -117,7 +117,7 @@ public class RestfulNeoAccessor implements NeoAccessor {
 		M s = M.m().a("statement", statement).a("parameters", params);
 		M m = M.m().a("statements", L.l().a(s));
 		WebTarget target = rootTarget.path("transaction/commit");
-		sendRequest(target, m);
+		sendRequest(target, m.json());
 	}
 
 	/**
