@@ -209,10 +209,10 @@ public class Activator extends AbstractUIPlugin {
 	 */
 	@Override
 	public void stop(BundleContext context) throws Exception {
+		super.getPreferenceStore().removePropertyChangeListener(listener);
 		accessor.shutdown();
 		plugin = null;
 		super.stop(context);
-		super.getPreferenceStore().addPropertyChangeListener(listener);
 	}
 
 	/**
