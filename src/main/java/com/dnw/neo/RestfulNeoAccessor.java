@@ -13,10 +13,7 @@
  */
 package com.dnw.neo;
 
-import java.io.BufferedReader;
-import java.io.IOException;
 import java.io.InputStream;
-import java.io.InputStreamReader;
 
 import javax.ws.rs.client.Client;
 import javax.ws.rs.client.ClientBuilder;
@@ -26,6 +23,7 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 
 import com.dnw.depmap.Activator;
+import com.dnw.json.J;
 import com.dnw.json.L;
 import com.dnw.json.M;
 
@@ -67,23 +65,9 @@ public class RestfulNeoAccessor implements NeoAccessor {
 		if (response.getStatus() != 200) {
 			throw new IllegalStateException("error.response: " + response.getStatusInfo());
 		}
-		InputStream is = (InputStream)response.getEntity();
-		if (is != null) {
-			StringBuffer sb = new StringBuffer();
-			BufferedReader r = new BufferedReader(new InputStreamReader(is));
-			while (true) {
-				try {
-					String line = r.readLine();
-					if (line == null)
-						break;
-					sb.append(line);
-				} catch (IOException e) {
-					Activator.console.println(e);
-					break;
-				}
-			}
-			Activator.console.println(">>> " + sb.toString());
-		}
+		M m = (M)J.parse((InputStream)response.getEntity());
+		Activator.console.println(">>> Request: " + jsonData);
+		Activator.console.println(">>>  Result: " + String.valueOf(m));
 		return response;
 	}
 

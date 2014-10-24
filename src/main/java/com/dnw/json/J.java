@@ -14,6 +14,7 @@
 package com.dnw.json;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -513,7 +514,7 @@ public final class J {
 	 * @param node the given <code>JsonNode</code>.
 	 * @return the corresponding Java object.
 	 */
-	private final static Object resolve(JsonNode node) {
+	public final static Object resolve(JsonNode node) {
 		if (node.isNull()) {
 			return null;
 		} else if (node.isTextual()) {
@@ -566,6 +567,25 @@ public final class J {
 	public final static Object parse(String jsonData) {
 		try {
 			JsonNode node = mapper.readTree(jsonData);
+			return resolve(node);
+		} catch (JsonProcessingException e) {
+			return null;
+		} catch (IOException e) {
+			return null;
+		}
+	}
+
+	/**
+	 * Method parse.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 * @param stream
+	 * @return
+	 */
+	public final static Object parse(InputStream stream) {
+		try {
+			JsonNode node = mapper.readTree(stream);
 			return resolve(node);
 		} catch (JsonProcessingException e) {
 			return null;

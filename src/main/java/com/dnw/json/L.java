@@ -374,4 +374,17 @@ public final class L implements Iterable<Object> {
 	public Iterator<Object> iterator() {
 		return list.iterator();
 	}
+
+	/**
+	 * Overrider method toString.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 * @return
+	 * @see java.lang.Object#toString()
+	 */
+	@Override
+	public String toString() {
+		return J.make(this);
+	}
 }
