@@ -26,7 +26,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 
 /**
- * An utility class to make JSON format string.
+ * An utility class to make and parse JSON format string.
  * 
  * @author manbaum
  * @since Oct 11, 2014
@@ -393,7 +393,6 @@ public final class J {
 	 * </p>
 	 * <p>
 	 * This method can correctly recognize the following values:
-	 * </p>
 	 * <ul>
 	 * <li>Value of <code>null</code>, denoted as JavaScript literal <code>null</code>.</li>
 	 * <li>Values in class <code>boolean</code>, <code>java.lang.Boolean</code>, denoted as
@@ -411,6 +410,7 @@ public final class J {
 	 * <code>java.lang.Iterable</code>, denoted as JavaScript array literal.</li>
 	 * <li>Values of array with elements in any class, denoted as JavaScript array literal.</li>
 	 * </ul>
+	 * </p>
 	 * <p>
 	 * All values in other types, which are not listed above, are denoted as JavaScript string
 	 * literal <code>'[Object &lt;qualified type name&gt;]'</code>, e.g.
@@ -449,49 +449,51 @@ public final class J {
 	}
 
 	/**
-	 * Method parseObject.
+	 * Resolves an object <code>JsonNode</code>, returns a <code>com.dnw.json.M</code> object. For
+	 * each value of key-value pair, recursively calls <code>parse(JsonNode)</code> to resolve it.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param node
-	 * @return
+	 * @param node the given <code>JsonNode</code>.
+	 * @return a <code>com.dnw.json.M</code> object.
 	 */
-	private final static M parseObject(JsonNode node) {
+	private final static M resolveObject(JsonNode node) {
 		M m = M.m();
 		Iterator<String> i = node.fieldNames();
 		while (i.hasNext()) {
 			String key = i.next();
-			m.a(key, parse(node.get(key)));
+			m.a(key, resolve(node.get(key)));
 		}
 		return m;
 	}
 
 	/**
-	 * Method parseArray.
+	 * Resolves an array <code>JsonNode</code>, returns a <code>com.dnw.json.L</code> object. For
+	 * each element in this array, recursively calls <code>parse(JsonNode)</code> to resolve it.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param node
-	 * @return
+	 * @param node the given <code>JsonNode</code>.
+	 * @return a <code>com.dnw.json.L</code> object.
 	 */
-	private final static L parseArray(JsonNode node) {
+	private final static L resolveArray(JsonNode node) {
 		L l = L.l();
 		Iterator<JsonNode> i = node.elements();
 		while (i.hasNext()) {
-			l.a(parse(i.next()));
+			l.a(resolve(i.next()));
 		}
 		return l;
 	}
 
 	/**
-	 * Method parse.
+	 * Resolves a JsonNode, returns the corresponding Java object.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param node
-	 * @return
+	 * @param node the given <code>JsonNode</code>.
+	 * @return the corresponding Java object.
 	 */
-	private final static Object parse(JsonNode node) {
+	private final static Object resolve(JsonNode node) {
 		if (node.isNull()) {
 			return null;
 		} else if (node.isTextual()) {
@@ -500,26 +502,51 @@ public final class J {
 			return node.asLong();
 		} else if (node.isDouble()) {
 			return node.asDouble();
+		} else if (node.isBoolean()) {
+			return node.asBoolean();
 		} else if (node.isObject()) {
-			return parseObject(node);
+			return resolveObject(node);
 		} else if (node.isArray()) {
-			return parseArray(node);
+			return resolveArray(node);
 		}
 		return null;
 	}
 
 	/**
-	 * Method parse.
+	 * <p>
+	 * Parses a JSON string, returns a Java object to represent the data.
+	 * </p>
+	 * <p>
+	 * <ul>
+	 * <li>For JavaScript literal <code>null</code>, returns a <code>null</code>.</li>
+	 * <li>For JavaScript literal string, returns a corresponding <code>java.lang.String</code>
+	 * object.</li>
+	 * <li>For JavaScript literal integral number, returns a corresponding
+	 * <code>java.lang.Long</code> object.</li>
+	 * <li>For JavaScript literal decimal number, returns a corresponding
+	 * <code>java.lang.Double</code> object.</li>
+	 * <li>For JavaScript literal boolean value, returns a corresponding
+	 * <code>java.lang.Boolean</code> object.</li>
+	 * <li>For JavaScript literal object, returns a corresponding <code>com.dnw.json.M</code>
+	 * object.</li>
+	 * <li>For JavaScript literal array, returns a corresponding <code>com.dnw.json.L</code> object.
+	 * </li>
+	 * </ul>
+	 * </p>
+	 * <p>
+	 * N.B. The method catches all checked exceptions happened during parsing, and returns a
+	 * <code>null</code>.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param jsonData
-	 * @return
+	 * @param jsonData a string represented JSON data.
+	 * @return an object represents the JSON data.
 	 */
 	public final static Object parse(String jsonData) {
 		try {
 			JsonNode node = mapper.readTree(jsonData);
-			return parse(node);
+			return resolve(node);
 		} catch (JsonProcessingException e) {
 			return null;
 		} catch (IOException e) {
