@@ -13,9 +13,11 @@
  */
 package com.dnw.json;
 
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * <p>
@@ -233,7 +235,7 @@ public final class M {
 		else if (value instanceof Map) {
 			return new M((Map<String, ?>)value);
 		}
-		throw new IllegalStateException("not.a.map");
+		throw new IllegalStateException("not.map");
 	}
 
 	/**
@@ -253,6 +255,30 @@ public final class M {
 		else if (value instanceof List) {
 			return new L((List<?>)value);
 		}
-		throw new IllegalStateException("not.an.list");
+		throw new IllegalStateException("not.list");
+	}
+
+	/**
+	 * Returns a <code>Set</code> view of the keys contained in this map.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 * @return a set view of the keys contained in this map.
+	 * @see java.util.Map#keySet()
+	 */
+	public Set<String> keys() {
+		return map.keySet();
+	}
+
+	/**
+	 * Returns a <code>Collection</code> view of the values contained in this map.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 * @return a collection view of the values contained in this map.
+	 * @see java.util.Map#values()
+	 */
+	public Collection<Object> values() {
+		return map.values();
 	}
 }

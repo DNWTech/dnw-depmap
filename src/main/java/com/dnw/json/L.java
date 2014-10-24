@@ -16,6 +16,7 @@ package com.dnw.json;
 import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -50,7 +51,7 @@ import java.util.Map;
  * @author manbaum
  * @since Oct 12, 2014
  */
-public final class L {
+public final class L implements Iterable<Object> {
 
 	final List<Object> list;
 
@@ -145,7 +146,7 @@ public final class L {
 	 * @return the array itself.
 	 * @throws IllegalArgumentException if the source is neither an array nor an iterable object.
 	 */
-	public final L sc(Object src, int... indexes) {
+	public final L cp(Object src, int... indexes) {
 		if (src != null) {
 			if (src.getClass().isArray()) {
 				if (indexes.length > 0) {
@@ -158,12 +159,10 @@ public final class L {
 						list.add(J.convert(Array.get(src, i)));
 					}
 				}
-			} else if (src instanceof L) {
-				return sc((L)src, indexes);
 			} else if (src instanceof Iterable) {
-				return sc((List<?>)src, indexes);
+				return cp((Iterable<?>)src, indexes);
 			} else
-				throw new IllegalArgumentException("neither.an.array.nor.an.iterable object");
+				throw new IllegalArgumentException("neither.array.nor.iterable");
 		}
 		return this;
 	}
@@ -179,40 +178,29 @@ public final class L {
 	 * @return the array itself.
 	 * @throws IllegalArgumentException if the indexes is given but the source is not a list.
 	 */
-	public final L sc(Iterable<?> src, int... indexes) {
+	public final L cp(Iterable<?> src, int... indexes) {
 		if (indexes.length > 0) {
-			if (src instanceof List) {
+			if (src instanceof L) {
+				List<?> l = ((L)src).list;
+				for (int i : indexes) {
+					list.add(l.get(i));
+				}
+			} else if (src instanceof List) {
 				List<?> l = (List<?>)src;
 				for (int i : indexes) {
 					list.add(J.convert(l.get(i)));
 				}
 			} else {
-				throw new IllegalArgumentException("not.a.list");
+				throw new IllegalArgumentException("not.list");
 			}
 		} else {
-			for (Object v : src) {
-				list.add(J.convert(v));
+			if (src instanceof L) {
+				list.addAll(((L)src).list);
+			} else {
+				for (Object v : src) {
+					list.add(J.convert(v));
+				}
 			}
-		}
-		return this;
-	}
-
-	/**
-	 * Selective copy a set of values contained in the source array to the array.
-	 * 
-	 * @author manbaum
-	 * @since Oct 13, 2014
-	 * @param src the source array.
-	 * @param indexes the selected indexes to copy, if missing, all values will be copied.
-	 * @return the array itself.
-	 */
-	public final L sc(L src, int... indexes) {
-		if (indexes.length > 0) {
-			for (int i : indexes) {
-				list.add(src.list.get(i));
-			}
-		} else {
-			list.addAll(src.list);
 		}
 		return this;
 	}
@@ -228,18 +216,18 @@ public final class L {
 	 * @return the array itself.
 	 * @throws IllegalArgumentException if the source is neither an array nor a list.
 	 */
-	public final L rc(Object src, int start, int len) {
+	public final L sl(Object src, int start, int len) {
 		if (src != null) {
 			if (src.getClass().isArray()) {
 				for (int i = start; i < len; i++) {
 					list.add(J.convert(Array.get(src, i)));
 				}
 			} else if (src instanceof L) {
-				return rc((L)src, start, len);
+				return sl((L)src, start, len);
 			} else if (src instanceof List) {
-				return rc((List<?>)src, start, len);
+				return sl((List<?>)src, start, len);
 			} else
-				throw new IllegalArgumentException("neither.an.array.nor.a.list");
+				throw new IllegalArgumentException("neither.array.nor.list");
 		}
 		return this;
 	}
@@ -254,7 +242,7 @@ public final class L {
 	 * @param len the number of elements to copy.
 	 * @return the array itself.
 	 */
-	public final L rc(List<?> src, int start, int len) {
+	public final L sl(List<?> src, int start, int len) {
 		for (int i = start; i < len; i++) {
 			list.add(J.convert(src.get(i)));
 		}
@@ -271,7 +259,7 @@ public final class L {
 	 * @param len the number of elements to copy.
 	 * @return the array itself.
 	 */
-	public final L rc(L src, int start, int len) {
+	public final L sl(L src, int start, int len) {
 		for (int i = start; i < len; i++) {
 			list.add(src.list.get(i));
 		}
@@ -288,7 +276,9 @@ public final class L {
 	 */
 	public final L rm(int... indexes) {
 		int length = indexes.length;
-		if (length > 0) {
+		if (length == 1)
+			list.remove(indexes[0]);
+		else if (length > 1) {
 			Arrays.sort(indexes);
 			for (int i = length - 1; i >= 0; i--) {
 				list.remove(i);
@@ -350,7 +340,7 @@ public final class L {
 		else if (value instanceof Map) {
 			return new M((Map<String, ?>)value);
 		}
-		throw new IllegalStateException("not.a.map");
+		throw new IllegalStateException("not.map");
 	}
 
 	/**
@@ -369,6 +359,19 @@ public final class L {
 		else if (value instanceof List) {
 			return new L((List<?>)value);
 		}
-		throw new IllegalStateException("not.a.list");
+		throw new IllegalStateException("not.list");
+	}
+
+	/**
+	 * Overrider method iterator.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 * @return
+	 * @see java.lang.Iterable#iterator()
+	 */
+	@Override
+	public Iterator<Object> iterator() {
+		return list.iterator();
 	}
 }

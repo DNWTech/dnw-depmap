@@ -15,8 +15,10 @@ package com.dnw.json;
 
 import java.io.IOException;
 import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -156,18 +158,14 @@ public final class J {
 		Class<?> s = type.getSuperclass();
 		if (s != null) {
 			k = findConverter(s);
-			if (k != null) {
-				cache.put(type, k);
+			if (k != null)
 				return k;
-			}
 		}
 
 		for (Class<?> i : type.getInterfaces()) {
 			k = findConverter(i);
-			if (k != null) {
-				cache.put(type, k);
+			if (k != null)
 				return k;
-			}
 		}
 		return null;
 	}
@@ -201,20 +199,43 @@ public final class J {
 	 * @return the result value.
 	 */
 	public final static Object convert(Object value) {
-		if (value == null || value instanceof CharSequence || value instanceof Number
-				|| value instanceof Boolean)
+		if (value == null)
+			return value;
+		else if (value instanceof CharSequence)
+			return ((CharSequence)value).toString();
+		else if (value instanceof Character)
+			return value.toString();
+		else if (value instanceof Number)
+			return value;
+		else if (value instanceof Boolean)
 			return value;
 		else if (value instanceof M)
 			return ((M)value).map;
-		else if (value instanceof Map)
-			return M.m().cp((Map<?, ?>)value).map;
-		else if (value instanceof L)
+		else if (value instanceof Map) {
+			Map<?, ?> src = (Map<?, ?>)value;
+			Map<String, Object> map = new HashMap<String, Object>();
+			for (Map.Entry<?, ?> e : src.entrySet()) {
+				String key = String.valueOf(e.getKey());
+				map.put(key, convert(e.getValue()));
+			}
+			return map;
+		} else if (value instanceof L)
 			return ((L)value).list;
-		else if (value instanceof Iterable)
-			return L.l().sc((Iterable<?>)value).list;
-		else if (value.getClass().isArray())
-			return L.l().sc(value).list;
-		else
+		else if (value instanceof Iterable) {
+			Iterable<?> src = (List<?>)value;
+			List<Object> list = new ArrayList<Object>();
+			for (Object v : src) {
+				list.add(convert(v));
+			}
+			return list;
+		} else if (value.getClass().isArray()) {
+			List<Object> list = new ArrayList<Object>();
+			int length = Array.getLength(value);
+			for (int i = 0; i < length; i++) {
+				list.add(convert(Array.get(value, i)));
+			}
+			return list;
+		} else
 			return tryConverter(value);
 	}
 
@@ -237,7 +258,7 @@ public final class J {
 	 * @param name the name to append.
 	 * @throws IllegalArgumentException if it's not a valid name.
 	 */
-	public final static void emitName(final StringBuffer sb, final String name) {
+	private final static void emitName(final StringBuffer sb, final String name) {
 		Matcher m = NAMEPATTERN.matcher(name);
 		if (!m.matches())
 			throw new IllegalArgumentException("not.a.valid.name");
@@ -252,7 +273,7 @@ public final class J {
 	 * @param text a string to have all characters to be escaped.
 	 * @return the escaped string.
 	 */
-	public final static String escape(final CharSequence text) {
+	private final static String escape(final CharSequence text) {
 		final StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < text.length(); i++) {
 			char ch = text.charAt(i);
@@ -297,34 +318,10 @@ public final class J {
 	 * @param sb the string buffer.
 	 * @param text the string to append.
 	 */
-	public final static void emitString(final StringBuffer sb, final CharSequence text) {
+	private final static void emitString(final StringBuffer sb, final CharSequence text) {
 		sb.append('\"');
 		sb.append(J.escape(text));
 		sb.append('\"');
-	}
-
-	/**
-	 * Appends the given number to the string buffer.
-	 * 
-	 * @author manbaum
-	 * @since Oct 11, 2014
-	 * @param sb the string buffer.
-	 * @param number the number to append.
-	 */
-	public final static void emitNumber(final StringBuffer sb, final Number number) {
-		sb.append(String.valueOf(number));
-	}
-
-	/**
-	 * Appends the given boolean value to the string buffer.
-	 * 
-	 * @author manbaum
-	 * @since Oct 13, 2014
-	 * @param sb the string buffer.
-	 * @param flag the boolean value to append.
-	 */
-	public final static void emitBoolean(final StringBuffer sb, final Boolean flag) {
-		sb.append(String.valueOf(flag));
 	}
 
 	/**
@@ -335,7 +332,7 @@ public final class J {
 	 * @param sb the string buffer.
 	 * @param map the map to append.
 	 */
-	public final static void emitMap(final StringBuffer sb, final Map<?, ?> map) {
+	private final static void emitMap(final StringBuffer sb, final Map<?, ?> map) {
 		sb.append('{');
 		boolean first = true;
 		for (Map.Entry<?, ?> e : map.entrySet()) {
@@ -360,7 +357,7 @@ public final class J {
 	 * @param sb the string buffer.
 	 * @param collection the iterable collection to append.
 	 */
-	public final static void emitIterable(final StringBuffer sb, final Iterable<?> collection) {
+	private final static void emitIterable(final StringBuffer sb, final Iterable<?> collection) {
 		sb.append('[');
 		boolean first = true;
 		for (Object v : collection) {
@@ -382,7 +379,7 @@ public final class J {
 	 * @param sb the string buffer.
 	 * @param array the array to append.
 	 */
-	public final static void emitArray(final StringBuffer sb, final Object array) {
+	private final static void emitArray(final StringBuffer sb, final Object array) {
 		sb.append('[');
 		int length = Array.getLength(array);
 		for (int i = 0; i < length; i++) {
@@ -392,22 +389,6 @@ public final class J {
 			J.emit(sb, Array.get(array, i));
 		}
 		sb.append(']');
-	}
-
-	/**
-	 * Appends the given object of unknown type to the string buffer. Unknown type objects are
-	 * denoted as string <code>'[Object &lt;qualified type name&gt;]'</code>, e.g.
-	 * <code>'[Object java.lang.Object]'</code>.
-	 * 
-	 * @author manbaum
-	 * @since Oct 11, 2014
-	 * @param sb the string buffer.
-	 * @param unknown the object to be append.
-	 */
-	public final static void emitUnknown(final StringBuffer sb, final Object unknown) {
-		sb.append("\"[Object ");
-		sb.append(unknown.getClass().getName());
-		sb.append("]\"");
 	}
 
 	/**
@@ -453,9 +434,9 @@ public final class J {
 		} else if (value instanceof Character) {
 			J.emitString(sb, String.valueOf(value));
 		} else if (value instanceof Number) {
-			J.emitNumber(sb, (Number)value);
+			sb.append(String.valueOf(value));
 		} else if (value instanceof Boolean) {
-			J.emitBoolean(sb, (Boolean)value);
+			sb.append(String.valueOf(value));
 		} else if (value instanceof M) {
 			J.emitMap(sb, ((M)value).map);
 		} else if (value instanceof Map) {
@@ -467,7 +448,9 @@ public final class J {
 		} else if (value.getClass().isArray()) {
 			J.emitArray(sb, value);
 		} else {
-			J.emitUnknown(sb, value);
+			sb.append("\"[Object ");
+			sb.append(value.getClass().getName());
+			sb.append("]\"");
 		}
 	}
 
