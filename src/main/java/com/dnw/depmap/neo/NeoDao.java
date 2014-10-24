@@ -191,10 +191,11 @@ public class NeoDao {
 				}
 			}
 			ITypeBinding t = type.getSuperclass();
-			if (createType(t)) {
-				ITypeBinding d = t.getTypeDeclaration();
-				w.createExtends(declaration, d);
-			}
+			if (t != null)
+				if (createType(t)) {
+					ITypeBinding d = t.getTypeDeclaration();
+					w.createExtends(declaration, d);
+				}
 		}
 		return true;
 	}
@@ -242,13 +243,14 @@ public class NeoDao {
 				}
 			}
 			ITypeBinding t = type.getSuperclass();
-			for (IMethodBinding m : t.getDeclaredMethods()) {
-				if (method.overrides(m)) {
-					IMethodBinding d = m.getMethodDeclaration();
-					if (createMethod(m))
-						w.createOverride(declaration, d);
+			if (t != null)
+				for (IMethodBinding m : t.getDeclaredMethods()) {
+					if (method.overrides(m)) {
+						IMethodBinding d = m.getMethodDeclaration();
+						if (createMethod(m))
+							w.createOverride(declaration, d);
+					}
 				}
-			}
 		}
 		return true;
 	}
