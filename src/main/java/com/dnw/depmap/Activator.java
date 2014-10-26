@@ -59,10 +59,10 @@ public class Activator extends AbstractUIPlugin {
 	public static final String PLUGIN_ID = "com.dnw.depmap";
 
 	// The Neo4j database settings.
-	// These 3 settings can be set in preference page.
+	// These 3 settings will be set in preference page.
 	private static boolean useEmbedded = false;
-	private static String DBURL = "http://localhost:7474/db/data";
-	private static String DBPATH = "/Users/manbaum/workspace/neo4j-community-2.1.5/data/graph.db";
+	private static String DBURL;
+	private static String DBPATH;
 
 	// The shared instance.
 	private static Activator plugin;
@@ -73,7 +73,7 @@ public class Activator extends AbstractUIPlugin {
 	// For now, we only support .java files.
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
 	// The white list to limit what packages or classes should be focused.
-	// This setting can be set in preference page.
+	// The content of the filter list will be set in preference page.
 	public static final CommonFilter<String> filter = new CommonFilter<String>();
 
 	// The AST node type set defines a stop set. (not used now)
@@ -101,7 +101,7 @@ public class Activator extends AbstractUIPlugin {
 	// Neo4j accessor to generate all AST nodes and its relations.
 	public NeoDao neo;
 	// If true, a set of Cypher statements will be executed before AST traverse. 
-	// These 2 settings can be set in preference page.
+	// These 2 settings will be set in preference page.
 	public static boolean preExec = false;
 	public static List<String> statements = new ArrayList<String>();
 
@@ -155,7 +155,7 @@ public class Activator extends AbstractUIPlugin {
 			String[] list = white.split("\\s*\\n\\s*");
 			for (String s : list) {
 				s = s.trim();
-				if (!s.isEmpty()) {
+				if (!s.isEmpty() && !s.startsWith("#")) {
 					console.println("allow: \"" + s + "\"");
 					if (s.startsWith("@"))
 						filter.addAllowMatcher(new StringMatcher(s.substring(1)));
@@ -169,7 +169,7 @@ public class Activator extends AbstractUIPlugin {
 			String[] list = black.split("\\s*\\n\\s*");
 			for (String s : list) {
 				s = s.trim();
-				if (!s.isEmpty()) {
+				if (!s.isEmpty() && !s.startsWith("#")) {
 					console.println("block: \"" + s + "\"");
 					if (s.startsWith("@"))
 						filter.addBlockMatcher(new StringMatcher(s.substring(1)));
@@ -188,7 +188,7 @@ public class Activator extends AbstractUIPlugin {
 				String[] array = ss.split("\\s*\\n\\s*");
 				for (String s : array) {
 					s = s.trim();
-					if (!s.isEmpty()) {
+					if (!s.isEmpty() && !s.startsWith("#")) {
 						console.println("statement: \"" + s + "\"");
 						statements.add(s);
 					}

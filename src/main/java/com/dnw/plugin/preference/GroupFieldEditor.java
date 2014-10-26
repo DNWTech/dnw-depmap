@@ -27,7 +27,8 @@ import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Group;
 
 /**
- * Class/Interface GroupFieldEditor.
+ * Group field editor is a container to host a number of other editors, and use a <code>Group</code>
+ * widget to hold all these editors.
  * 
  * @author manbaum
  * @since Oct 22, 2014
@@ -51,20 +52,19 @@ public class GroupFieldEditor extends FieldEditor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param name
-	 * @param labelText
-	 * @param parent
+	 * @param labelText the label text of the <code>Group</code> widget.
+	 * @param parent the parent of the field editor's control.
 	 */
 	public GroupFieldEditor(String labelText, Composite parent) {
 		super("", labelText, parent);
 	}
 
 	/**
-	 * Method addField.
+	 * Adds the given field editor to this group.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param field
+	 * @param field the field editor.
 	 */
 	public void addField(FieldEditor field) {
 		if (fields == null) {
@@ -74,11 +74,15 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Method getGroupControl.
+	 * Returns this field editor's group control.
+	 * <p>
+	 * The control is created if it does not yet exist.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @return
+	 * @param parent the parent.
+	 * @return the group control.
 	 */
 	public Group getGroupControl(Composite parent) {
 		if (groupControl == null) {
@@ -91,11 +95,11 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method adjustForNumColumns.
+	 * Adjusts the horizontal span of this field editor's basic controls.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param numColumns
+	 * @param numColumns the number of columns.
 	 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
 	 */
 	@Override
@@ -119,16 +123,16 @@ public class GroupFieldEditor extends FieldEditor {
 			}
 		}
 		layout.marginWidth = layout.marginHeight = 8;
-
 	}
 
 	/**
-	 * Overrider method doFillIntoGrid.
+	 * Fills this field editor's basic controls into the given parent.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param parent
-	 * @param numColumns
+	 * @param parent the composite used as a parent for the basic controls; the parent's layout must
+	 *            be a <code>GridLayout</code>.
+	 * @param numColumns the number of columns.
 	 * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
 	 *      int)
 	 */
@@ -140,7 +144,7 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method doLoad.
+	 * Initializes this field editor with the preference value from the preference store.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
@@ -156,7 +160,7 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method doLoadDefault.
+	 * Initializes this field editor with the default preference value from the preference store.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
@@ -172,7 +176,7 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method doStore.
+	 * Stores the preference value from this field editor into the preference store.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
@@ -188,11 +192,11 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method getNumberOfControls.
+	 * Returns the number of basic controls this field editor consists of.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @return
+	 * @return the number of controls.
 	 * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
 	 */
 	@Override
@@ -201,11 +205,11 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method setPage.
+	 * Set the page to be the receiver.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param dialogPage
+	 * @param dialogPage the dialog page.
 	 * @see org.eclipse.jface.preference.FieldEditor#setPage(org.eclipse.jface.dialogs.DialogPage)
 	 */
 	@Override
@@ -219,11 +223,11 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method setPreferenceStore.
+	 * Sets the preference store used by this field editor.
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param store
+	 * @param store the preference store, or <code>null</code> if none.
 	 * @see org.eclipse.jface.preference.FieldEditor#setPreferenceStore(org.eclipse.jface.preference.IPreferenceStore)
 	 */
 	@Override
@@ -237,11 +241,16 @@ public class GroupFieldEditor extends FieldEditor {
 	}
 
 	/**
-	 * Overrider method setPropertyChangeListener.
+	 * <p>
+	 * Sets or removes the property change listener for this field editor.
+	 * </p>
+	 * <p>
+	 * Note that field editors can support only a single listener.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @param listener
+	 * @param listener a property change listener, or <code>null</code> to remove.
 	 * @see org.eclipse.jface.preference.FieldEditor#setPropertyChangeListener(org.eclipse.jface.util.IPropertyChangeListener)
 	 */
 	@Override
@@ -259,7 +268,7 @@ public class GroupFieldEditor extends FieldEditor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 22, 2014
-	 * @return the number of columns
+	 * @return the number of columns.
 	 */
 	private int calcNumberOfColumns() {
 		int result = 0;

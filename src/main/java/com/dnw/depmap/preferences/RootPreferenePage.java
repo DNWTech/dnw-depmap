@@ -25,6 +25,7 @@ import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.dnw.depmap.Activator;
 import com.dnw.plugin.preference.GroupFieldEditor;
+import com.dnw.plugin.preference.TextFieldEditor;
 
 /**
  * <p>
@@ -37,6 +38,9 @@ import com.dnw.plugin.preference.GroupFieldEditor;
  * belongs to the main plug-in class. That way, preferences can be accessed directly via the
  * preference store.
  * </p>
+ * 
+ * @author manbaum
+ * @since Oct 20, 2014
  */
 public class RootPreferenePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
@@ -78,27 +82,28 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	public void createFieldEditors() {
 		final Composite p = getFieldEditorParent();
 
-		gf1 = new GroupFieldEditor("Neo4j database settings", p);
+		gf1 = new GroupFieldEditor("Neo4j graph database", p);
 		flagurl = new BooleanFieldEditor(PrefKeys.P_USESTANDALONE, "&Standalone database",
 				gf1.getGroupControl(p));
-		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "Url:", gf1.getGroupControl(p));
+		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "&Url:", gf1.getGroupControl(p));
 		flagdir = new BooleanFieldEditor(PrefKeys.P_USEEMBEDDED, "&Embedded database",
 				gf1.getGroupControl(p));
-		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "Store:", gf1.getGroupControl(p));
+		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "S&tore:", gf1.getGroupControl(p));
 
 		gf2 = new GroupFieldEditor(
 				"Class/Method name filter (a regexp or a string prefix with '@', one item each line)",
 				p);
 		flagprefer = new BooleanFieldEditor(PrefKeys.P_PREFERWHITE, "P&refer white list",
 				gf2.getGroupControl(p));
-		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "Whitelist:", gf2.getGroupControl(p));
-		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "Blacklist:", gf2.getGroupControl(p));
+		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "&Whitelist:", gf2.getGroupControl(p));
+		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "&Blacklist:", gf2.getGroupControl(p));
 
 		gf3 = new GroupFieldEditor(
 				"Cypher statements executed before generating (one statement each line)", p);
 		flagexec = new BooleanFieldEditor(PrefKeys.P_USEPREEXEC, "Enable e&xecuting statements",
 				gf3.getGroupControl(p));
-		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "Statements:", gf3.getGroupControl(p));
+		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "", gf3.getGroupControl(p));
+		statements.setDisplaySize(50, 6);
 
 		gf1.addField(flagurl);
 		gf1.addField(dburl);
@@ -117,7 +122,7 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	}
 
 	/**
-	 * Overrider method initialize.
+	 * Initializes all field editors.
 	 * 
 	 * @author manbaum
 	 * @since Oct 24, 2014
@@ -136,11 +141,13 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	}
 
 	/**
-	 * Overrider method propertyChange.
+	 * The field editor preference page implementation of this <code>IPreferencePage</code> (and
+	 * <code>IPropertyChangeListener</code>) method intercepts <code>IS_VALID</code> events but
+	 * passes other events on to its superclass.
 	 * 
 	 * @author manbaum
 	 * @since Oct 23, 2014
-	 * @param event
+	 * @param event the property change event object describing which property changed and how.
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#propertyChange(org.eclipse.jface.util.PropertyChangeEvent)
 	 */
 	@Override
@@ -163,19 +170,12 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	}
 
 	/**
-	 * Overrider method checkState.
-	 * 
-	 * @author manbaum
-	 * @since Oct 24, 2014
-	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#checkState()
-	 */
-	@Override
-	protected void checkState() {
-		super.checkState();
-	}
-
-	/**
-	 * Overrider method init.
+	 * <p>
+	 * Initializes this preference page for the given workbench. This method is called automatically
+	 * </p>
+	 * <p>
+	 * as the preference page is being created and initialized. Clients must not call this method.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Oct 20, 2014

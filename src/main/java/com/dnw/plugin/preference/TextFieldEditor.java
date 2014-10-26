@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Oct 26, 2014.
  */
-package com.dnw.depmap.preferences;
+package com.dnw.plugin.preference;
 
 import org.eclipse.core.runtime.Assert;
 import org.eclipse.jface.preference.FieldEditor;
@@ -31,7 +31,7 @@ import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
 
 /**
- * A field editor for a string type preference.
+ * A field editor for a multiline string type preference.
  * <p>
  * This class may be used as is, or subclassed as required.
  * </p>
@@ -104,8 +104,16 @@ public class TextFieldEditor extends FieldEditor {
 	 */
 	private int validateStrategy = VALIDATE_ON_KEY_STROKE;
 
+	// For calculating TextBox width: number of chars to display.
+	private int displayChars = 50;
+	// For calculating TextBox height: number of lines to display.
+	private int displayLines = 4;
+
 	/**
-	 * Creates a new string field editor
+	 * Creates a new string field editor.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
 	 */
 	protected TextFieldEditor() {
 	}
@@ -113,15 +121,16 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Creates a string field editor. Use the method <code>setTextLimit</code> to limit the text.
 	 * 
-	 * @param name the name of the preference this field editor works on
-	 * @param labelText the label text of the field editor
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param name the name of the preference this field editor works on.
+	 * @param labelText the label text of the field editor.
 	 * @param width the width of the text input field in characters, or <code>UNLIMITED</code> for
-	 *            no limit
+	 *            no limit.
 	 * @param strategy either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the fly checking
 	 *            (the default), or <code>VALIDATE_ON_FOCUS_LOST</code> to perform validation only
-	 *            after the text has been typed in
-	 * @param parent the parent of the field editor's control
-	 * @since 2.0
+	 *            after the text has been typed in.
+	 * @param parent the parent of the field editor's control.
 	 */
 	public TextFieldEditor(String name, String labelText, int width, int strategy, Composite parent) {
 		init(name, labelText);
@@ -135,11 +144,13 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Creates a string field editor. Use the method <code>setTextLimit</code> to limit the text.
 	 * 
-	 * @param name the name of the preference this field editor works on
-	 * @param labelText the label text of the field editor
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param name the name of the preference this field editor works on.
+	 * @param labelText the label text of the field editor.
 	 * @param width the width of the text input field in characters, or <code>UNLIMITED</code> for
-	 *            no limit
-	 * @param parent the parent of the field editor's control
+	 *            no limit.
+	 * @param parent the parent of the field editor's control.
 	 */
 	public TextFieldEditor(String name, String labelText, int width, Composite parent) {
 		this(name, labelText, width, VALIDATE_ON_KEY_STROKE, parent);
@@ -149,16 +160,49 @@ public class TextFieldEditor extends FieldEditor {
 	 * Creates a string field editor of unlimited width. Use the method <code>setTextLimit</code> to
 	 * limit the text.
 	 * 
-	 * @param name the name of the preference this field editor works on
-	 * @param labelText the label text of the field editor
-	 * @param parent the parent of the field editor's control
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param name the name of the preference this field editor works on.
+	 * @param labelText the label text of the field editor.
+	 * @param parent the parent of the field editor's control.
 	 */
 	public TextFieldEditor(String name, String labelText, Composite parent) {
 		this(name, labelText, UNLIMITED, parent);
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Sets number of chars and lines to display, for calculating the initial size of this Text
+	 * control.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param displayChars number of chars to display.
+	 * @param displayLines number of lines to display.
+	 */
+	public void setDisplaySize(int displayChars, int displayLines) {
+		if (displayChars >= 5)
+			this.displayChars = displayChars;
+		if (displayLines >= 2)
+			this.displayLines = displayLines;
+	}
+
+	/**
+	 * <p>
+	 * Adjusts the horizontal span of this field editor's basic controls.
+	 * </p>
+	 * <p>
+	 * Subclasses must implement this method to adjust the horizontal span of controls so they
+	 * appear correct in the given number of columns.
+	 * </p>
+	 * <p>
+	 * The number of columns will always be equal to or greater than the value returned by this
+	 * editor's <code>getNumberOfControls</code> method.
+	 * </p>
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param numColumns the number of columns.
+	 * @see org.eclipse.jface.preference.FieldEditor#adjustForNumColumns(int)
 	 */
 	protected void adjustForNumColumns(int numColumns) {
 		GridData gd = (GridData)textField.getLayoutData();
@@ -172,31 +216,29 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Checks whether the text input field contains a valid value or not.
 	 * 
-	 * @return <code>true</code> if the field value is valid, and <code>false</code> if invalid
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @return <code>true</code> if the field value is valid, and <code>false</code> if invalid.
 	 */
 	protected boolean checkState() {
 		boolean result = false;
 		if (emptyStringAllowed) {
 			result = true;
 		}
-
 		if (textField == null) {
 			result = false;
 		}
 
 		String txt = textField.getText();
-
 		result = (txt.trim().length() > 0) || emptyStringAllowed;
 
 		// call hook for subclasses
 		result = result && doCheckState();
-
 		if (result) {
 			clearErrorMessage();
 		} else {
 			showErrorMessage(errorMessage);
 		}
-
 		return result;
 	}
 
@@ -207,7 +249,9 @@ public class TextFieldEditor extends FieldEditor {
 	 * <code>true</code>. Subclasses should override this method to specific state checks.
 	 * </p>
 	 * 
-	 * @return <code>true</code> if the field value is valid, and <code>false</code> if invalid
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @return <code>true</code> if the field value is valid, and <code>false</code> if invalid.
 	 */
 	protected boolean doCheckState() {
 		return true;
@@ -219,6 +263,14 @@ public class TextFieldEditor extends FieldEditor {
 	 * The string field implementation of this <code>FieldEditor</code> framework method contributes
 	 * the text field. Subclasses may override but must call <code>super.doFillIntoGrid</code>.
 	 * </p>
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param parent the composite used as a parent for the basic controls; the parent's layout must
+	 *            be a <code>GridLayout</code>.
+	 * @param numColumns the number of columns.
+	 * @see org.eclipse.jface.preference.FieldEditor#doFillIntoGrid(org.eclipse.swt.widgets.Composite,
+	 *      int)
 	 */
 	protected void doFillIntoGrid(Composite parent, int numColumns) {
 		Label l = getLabelControl(parent);
@@ -242,8 +294,12 @@ public class TextFieldEditor extends FieldEditor {
 		textField.setLayoutData(gd);
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Initializes this field editor with the preference value from the preference store.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @see org.eclipse.jface.preference.FieldEditor#doLoad()
 	 */
 	protected void doLoad() {
 		if (textField != null) {
@@ -253,8 +309,12 @@ public class TextFieldEditor extends FieldEditor {
 		}
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Initializes this field editor with the default preference value from the preference store.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @see org.eclipse.jface.preference.FieldEditor#doLoadDefault()
 	 */
 	protected void doLoadDefault() {
 		if (textField != null) {
@@ -264,8 +324,12 @@ public class TextFieldEditor extends FieldEditor {
 		valueChanged();
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Stores the preference value from this field editor into the preference store.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @see org.eclipse.jface.preference.FieldEditor#doStore()
 	 */
 	protected void doStore() {
 		getPreferenceStore().setValue(getPreferenceName(), textField.getText());
@@ -274,14 +338,21 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Returns the error message that will be displayed when and if an error occurs.
 	 * 
-	 * @return the error message, or <code>null</code> if none
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @return the error message, or <code>null</code> if none.
 	 */
 	public String getErrorMessage() {
 		return errorMessage;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Returns the number of basic controls this field editor consists of.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @return the number of controls.
+	 * @see org.eclipse.jface.preference.FieldEditor#getNumberOfControls()
 	 */
 	public int getNumberOfControls() {
 		return 2;
@@ -290,20 +361,23 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Returns the field editor's value.
 	 * 
-	 * @return the current value
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @return the current value.
 	 */
 	public String getStringValue() {
 		if (textField != null) {
 			return textField.getText();
 		}
-
 		return getPreferenceStore().getString(getPreferenceName());
 	}
 
 	/**
 	 * Returns this field editor's text control.
 	 * 
-	 * @return the text control, or <code>null</code> if no text field is created yet
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @return the text control, or <code>null</code> if no text field is created yet.
 	 */
 	protected Text getTextControl() {
 		return textField;
@@ -312,11 +386,13 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Returns this field editor's text control.
 	 * <p>
-	 * The control is created if it does not yet exist
+	 * The control is created if it does not yet exist.
 	 * </p>
 	 * 
-	 * @param parent the parent
-	 * @return the text control
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param parent the parent.
+	 * @return the text control.
 	 */
 	public Text getTextControl(Composite parent) {
 		if (textField == null) {
@@ -326,11 +402,13 @@ public class TextFieldEditor extends FieldEditor {
 				public Point computeSize(int wHint, int hHint, boolean changed) {
 					GC gc = new GC(textField);
 					Point extent = gc.textExtent("X");//$NON-NLS-1$
-					return super.computeSize(extent.x * 50 + 4, extent.y * 4 + 4, changed);
+					return super.computeSize(extent.x * displayChars + 4, extent.y * displayLines
+							+ 4, changed);
 				}
 
 				@Override
 				protected void checkSubclass() {
+					// must override to avoid super.checkSubclass() throws exception.
 				}
 			};
 			textField.setFont(parent.getFont());
@@ -338,12 +416,6 @@ public class TextFieldEditor extends FieldEditor {
 			case VALIDATE_ON_KEY_STROKE:
 				textField.addKeyListener(new KeyAdapter() {
 
-					/*
-					 * (non-Javadoc)
-					 * @see
-					 * org.eclipse.swt.events.KeyAdapter#keyReleased(org.eclipse.swt.events.KeyEvent
-					 * )
-					 */
 					public void keyReleased(KeyEvent e) {
 						valueChanged();
 					}
@@ -399,23 +471,35 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Returns whether an empty string is a valid value.
 	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
 	 * @return <code>true</code> if an empty string is a valid value, and <code>false</code> if an
-	 *         empty string is invalid
+	 *         empty string is invalid.
 	 * @see #setEmptyStringAllowed
 	 */
 	public boolean isEmptyStringAllowed() {
 		return emptyStringAllowed;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Returns whether this field editor contains a valid value.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @return <code>true</code> if the field value is valid, and <code>false</code> if invalid.
+	 * @see org.eclipse.jface.preference.FieldEditor#isValid()
 	 */
 	public boolean isValid() {
 		return isValid;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Refreshes this field editor's valid state after a value change and fires an IS_VALID property
+	 * change event if warranted.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @see org.eclipse.jface.preference.FieldEditor#refreshValidState()
 	 */
 	protected void refreshValidState() {
 		isValid = checkState();
@@ -424,24 +508,32 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Sets whether the empty string is a valid value or not.
 	 * 
-	 * @param b <code>true</code> if the empty string is allowed, and <code>false</code> if it is
-	 *            considered invalid
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param flag <code>true</code> if the empty string is allowed, and <code>false</code> if it is
+	 *            considered invalid.
 	 */
-	public void setEmptyStringAllowed(boolean b) {
-		emptyStringAllowed = b;
+	public void setEmptyStringAllowed(boolean flag) {
+		emptyStringAllowed = flag;
 	}
 
 	/**
 	 * Sets the error message that will be displayed when and if an error occurs.
 	 * 
-	 * @param message the error message
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param message the error message.
 	 */
 	public void setErrorMessage(String message) {
 		errorMessage = message;
 	}
 
-	/*
-	 * (non-Javadoc) Method declared on FieldEditor.
+	/**
+	 * Sets the focus to this field editor.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @see org.eclipse.jface.preference.FieldEditor#setFocus()
 	 */
 	public void setFocus() {
 		if (textField != null) {
@@ -452,7 +544,9 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Sets this field editor's value.
 	 * 
-	 * @param value the new value, or <code>null</code> meaning the empty string
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param value the new value, or <code>null</code> meaning the empty string.
 	 */
 	public void setStringValue(String value) {
 		if (textField != null) {
@@ -470,8 +564,10 @@ public class TextFieldEditor extends FieldEditor {
 	/**
 	 * Sets this text field's text limit.
 	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
 	 * @param limit the limit on the number of character in the text input field, or
-	 *            <code>UNLIMITED</code> for no limit
+	 *            <code>UNLIMITED</code> for no limit.
 	 */
 	public void setTextLimit(int limit) {
 		textLimit = limit;
@@ -488,9 +584,11 @@ public class TextFieldEditor extends FieldEditor {
 	 * public visibility for backward compatibility.
 	 * </p>
 	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
 	 * @param value either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the fly checking (the
 	 *            default), or <code>VALIDATE_ON_FOCUS_LOST</code> to perform validation only after
-	 *            the text has been typed in
+	 *            the text has been typed in.
 	 */
 	public void setValidateStrategy(int value) {
 		Assert.isTrue(value == VALIDATE_ON_FOCUS_LOST || value == VALIDATE_ON_KEY_STROKE);
@@ -499,6 +597,9 @@ public class TextFieldEditor extends FieldEditor {
 
 	/**
 	 * Shows the error message set via <code>setErrorMessage</code>.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
 	 */
 	public void showErrorMessage() {
 		showErrorMessage(errorMessage);
@@ -511,6 +612,9 @@ public class TextFieldEditor extends FieldEditor {
 	 * This hook is <em>not</em> called when the text is initialized (or reset to the default value)
 	 * from the preference store.
 	 * </p>
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
 	 */
 	protected void valueChanged() {
 		setPresentsDefaultValue(false);
@@ -528,8 +632,16 @@ public class TextFieldEditor extends FieldEditor {
 		}
 	}
 
-	/*
-	 * @see FieldEditor.setEnabled(boolean,Composite).
+	/**
+	 * Set whether or not the controls in the field editor are enabled.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param enabled the enabled state.
+	 * @param parent the parent of the controls in the group. Used to create the controls if
+	 *            required.
+	 * @see org.eclipse.jface.preference.FieldEditor#setEnabled(boolean,
+	 *      org.eclipse.swt.widgets.Composite)
 	 */
 	public void setEnabled(boolean enabled, Composite parent) {
 		super.setEnabled(enabled, parent);
