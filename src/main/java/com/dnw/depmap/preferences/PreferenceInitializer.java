@@ -40,11 +40,15 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PrefKeys.P_DBURL, "http://localhost:7474/db/data");
 		store.setDefault(PrefKeys.P_USEEMBEDDED, false);
 		store.setDefault(PrefKeys.P_DBDIR, "./neo4j-community-2.1.5/data/graph.db");
-		store.setDefault(PrefKeys.P_WHITELIST,
-				"@java.lang.Object; org\\.eclipse\\.jdt\\.core\\.dom\\..*; com\\.dnw\\..*");
+		store.setDefault(PrefKeys.P_WHITELIST, "com\\.dnw\\..*\n@java.lang.Object");
 		store.setDefault(PrefKeys.P_BLACKLIST, "");
 		store.setDefault(PrefKeys.P_PREFERWHITE, true);
 		store.setDefault(PrefKeys.P_USEPREEXEC, false);
-		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r; match (n) delete n");
+		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r\n" // delete all relations
+				+ "match (n) delete n\n" // delete all nodes
+				+ "drop constraint on (t:Type) ASSERT t.name is unique\n" // delete unique constraint on type names
+				+ "drop constraint on (m:Method) ASSERT m.name is unique\n" // delete unique constraint on method names
+				+ "create constraint on (t:Type) ASSERT t.name is unique\n" // create unique constraint on type names
+				+ "create constraint on (m:Method) ASSERT m.name is unique"); // create unique constraint on method names
 	}
 }

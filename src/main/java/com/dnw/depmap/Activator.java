@@ -13,6 +13,9 @@
  */
 package com.dnw.depmap;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.MethodDeclaration;
 import org.eclipse.jdt.core.dom.MethodInvocation;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
@@ -100,7 +103,7 @@ public class Activator extends AbstractUIPlugin {
 	// If true, a set of Cypher statements will be executed before AST traverse. 
 	// These 2 settings can be set in preference page.
 	public static boolean preExec = false;
-	public static String[] statements = new String[0];
+	public static List<String> statements = new ArrayList<String>();
 
 	// When the settings in preference page change, we should re-load them, this listener works for that.
 	private final IPropertyChangeListener listener;
@@ -149,35 +152,46 @@ public class Activator extends AbstractUIPlugin {
 		filter.setPreferWhite(store.getBoolean(PrefKeys.P_PREFERWHITE));
 		String white = store.getString(PrefKeys.P_WHITELIST);
 		if (white != null) {
-			String[] list = white.split("\\s*;\\s*");
+			String[] list = white.split("\\s*\\n\\s*");
 			for (String s : list) {
-				console.println("allow: \"" + s + "\"");
-				if (s.startsWith("@"))
-					filter.addAllowMatcher(new StringMatcher(s.substring(1)));
-				else
-					filter.addAllowMatcher(new RegexMatcher(s));
+				s = s.trim();
+				if (!s.isEmpty()) {
+					console.println("allow: \"" + s + "\"");
+					if (s.startsWith("@"))
+						filter.addAllowMatcher(new StringMatcher(s.substring(1)));
+					else
+						filter.addAllowMatcher(new RegexMatcher(s));
+				}
 			}
 		}
 		String black = store.getString(PrefKeys.P_BLACKLIST);
 		if (black != null) {
-			String[] list = black.split("\\s*;\\s*");
+			String[] list = black.split("\\s*\\n\\s*");
 			for (String s : list) {
-				console.println("block: \"" + s + "\"");
-				if (s.startsWith("@"))
-					filter.addBlockMatcher(new StringMatcher(s.substring(1)));
-				else
-					filter.addBlockMatcher(new RegexMatcher(s));
+				s = s.trim();
+				if (!s.isEmpty()) {
+					console.println("block: \"" + s + "\"");
+					if (s.startsWith("@"))
+						filter.addBlockMatcher(new StringMatcher(s.substring(1)));
+					else
+						filter.addBlockMatcher(new RegexMatcher(s));
+				}
 			}
 		}
 
 		// loads pre-executing Cypher statements setting.
 		preExec = store.getBoolean(PrefKeys.P_USEPREEXEC);
+		statements.clear();
 		if (preExec) {
 			String ss = store.getString(PrefKeys.P_PREEXEC);
 			if (ss != null) {
-				statements = ss.split("\\s*;\\s*");
-				for (String s : statements) {
-					console.println("statement: \"" + s + "\"");
+				String[] array = ss.split("\\s*\\n\\s*");
+				for (String s : array) {
+					s = s.trim();
+					if (!s.isEmpty()) {
+						console.println("statement: \"" + s + "\"");
+						statements.add(s);
+					}
 				}
 			} else {
 				preExec = false;

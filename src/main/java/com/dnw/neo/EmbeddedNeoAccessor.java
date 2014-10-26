@@ -43,6 +43,24 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 	 */
 	public EmbeddedNeoAccessor(String dbpath) {
 		this.dbpath = dbpath;
+		configAutoShutdown();
+	}
+
+	/**
+	 * Adds a hook to JVM, shutdown the embedded database server when the JVM shutdown.
+	 * 
+	 * @author manbaum
+	 * @since Oct 12, 2014
+	 * @see com.dnw.neo.NeoAccessor#configAutoShutdown()
+	 */
+	private void configAutoShutdown() {
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+
+			@Override
+			public void run() {
+				shutdown();
+			}
+		});
 	}
 
 	/**
@@ -125,23 +143,5 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 			gdb = null;
 			db.shutdown();
 		}
-	}
-
-	/**
-	 * Adds a hook to JVM, shutdown the embedded database server when the JVM shutdown.
-	 * 
-	 * @author manbaum
-	 * @since Oct 12, 2014
-	 * @see com.dnw.neo.NeoAccessor#configAutoShutdown()
-	 */
-	@Override
-	public void configAutoShutdown() {
-		Runtime.getRuntime().addShutdownHook(new Thread() {
-
-			@Override
-			public void run() {
-				shutdown();
-			}
-		});
 	}
 }

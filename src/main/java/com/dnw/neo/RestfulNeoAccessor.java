@@ -125,15 +125,4 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	@Override
 	public void shutdown() {
 	}
-
-	/**
-	 * Adds a hook to JVM, shutdown the embedded database server when the JVM shutdown.
-	 * 
-	 * @author manbaum
-	 * @since Oct 12, 2014
-	 * @see com.dnw.neo.NeoAccessor#configAutoShutdown()
-	 */
-	@Override
-	public void configAutoShutdown() {
-	}
 }

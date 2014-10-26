@@ -60,11 +60,11 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	private DirectoryFieldEditor dbdir;
 	private GroupFieldEditor gf2;
 	private BooleanFieldEditor flagprefer;
-	private StringFieldEditor whitelist;
-	private StringFieldEditor blacklist;
+	private TextFieldEditor whitelist;
+	private TextFieldEditor blacklist;
 	private GroupFieldEditor gf3;
 	private BooleanFieldEditor flagexec;
-	private StringFieldEditor statements;
+	private TextFieldEditor statements;
 
 	/**
 	 * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to
@@ -76,29 +76,29 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	 * @see org.eclipse.jface.preference.FieldEditorPreferencePage#createFieldEditors()
 	 */
 	public void createFieldEditors() {
-		Composite p = getFieldEditorParent();
+		final Composite p = getFieldEditorParent();
 
 		gf1 = new GroupFieldEditor("Neo4j database settings", p);
-		flagurl = new BooleanFieldEditor(PrefKeys.P_USESTANDALONE,
-				"Use &standalone database (Rest API):", gf1.getGroupControl(p));
-		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "", gf1.getGroupControl(p));
-		flagdir = new BooleanFieldEditor(PrefKeys.P_USEEMBEDDED, "Use &embedded database store:",
+		flagurl = new BooleanFieldEditor(PrefKeys.P_USESTANDALONE, "&Standalone database",
 				gf1.getGroupControl(p));
-		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "", gf1.getGroupControl(p));
+		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "Url:", gf1.getGroupControl(p));
+		flagdir = new BooleanFieldEditor(PrefKeys.P_USEEMBEDDED, "&Embedded database",
+				gf1.getGroupControl(p));
+		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "Store:", gf1.getGroupControl(p));
 
-		gf2 = new GroupFieldEditor("Class/Method filter list (colon ';' seperated)", p);
+		gf2 = new GroupFieldEditor(
+				"Class/Method name filter (a regexp or a string prefix with '@', one item each line)",
+				p);
 		flagprefer = new BooleanFieldEditor(PrefKeys.P_PREFERWHITE, "P&refer white list",
 				gf2.getGroupControl(p));
-		whitelist = new StringFieldEditor(PrefKeys.P_WHITELIST, "Whitelist:",
-				gf2.getGroupControl(p));
-		blacklist = new StringFieldEditor(PrefKeys.P_BLACKLIST, "Blacklist:",
-				gf2.getGroupControl(p));
+		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "Whitelist:", gf2.getGroupControl(p));
+		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "Blacklist:", gf2.getGroupControl(p));
 
-		gf3 = new GroupFieldEditor("Executing Cypher statements before generating", p);
+		gf3 = new GroupFieldEditor(
+				"Cypher statements executed before generating (one statement each line)", p);
 		flagexec = new BooleanFieldEditor(PrefKeys.P_USEPREEXEC, "Enable e&xecuting statements",
 				gf3.getGroupControl(p));
-		statements = new StringFieldEditor(PrefKeys.P_PREEXEC, "Statements:",
-				gf3.getGroupControl(p));
+		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "Statements:", gf3.getGroupControl(p));
 
 		gf1.addField(flagurl);
 		gf1.addField(dburl);
