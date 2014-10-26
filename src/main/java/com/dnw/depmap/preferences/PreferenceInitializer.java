@@ -46,8 +46,12 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PrefKeys.P_USEPREEXEC, false);
 		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r\n" // delete all relations
 				+ "match (n) delete n\n" // delete all nodes
+				+ "drop index on :Type(caption)\n"
+				+ "drop index on :Method(caption)\n"
 				+ "drop constraint on (t:Type) ASSERT t.name is unique\n" // delete unique constraint on type names
 				+ "drop constraint on (m:Method) ASSERT m.name is unique\n" // delete unique constraint on method names
+				+ "create index on :Type(caption)\n"
+				+ "create index on :Method(caption)\n"
 				+ "create constraint on (t:Type) ASSERT t.name is unique\n" // create unique constraint on type names
 				+ "create constraint on (m:Method) ASSERT m.name is unique"); // create unique constraint on method names
 	}
