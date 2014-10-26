@@ -30,7 +30,7 @@ import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
 import com.dnw.depmap.preferences.PrefKeys;
 import com.dnw.depmap.resource.JavaFileVisitor;
-import com.dnw.matcher.CompositeList;
+import com.dnw.matcher.CommonFilter;
 import com.dnw.matcher.RegexMatcher;
 import com.dnw.matcher.StringMatcher;
 import com.dnw.neo.EmbeddedNeoAccessor;
@@ -54,10 +54,12 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.dnw.depmap";
-	// The directory locates the Neo4j database store.
-	private static String DBPATH = "/Users/manbaum/workspace/neo4j-community-2.1.5/data/graph.db";
-	private static String DBURL = "http://localhost:7474/db/data";
+
+	// The Neo4j database settings.
+	// These 3 settings can be set in preference page.
 	private static boolean useEmbedded = false;
+	private static String DBURL = "http://localhost:7474/db/data";
+	private static String DBPATH = "/Users/manbaum/workspace/neo4j-community-2.1.5/data/graph.db";
 
 	// The shared instance.
 	private static Activator plugin;
@@ -68,7 +70,8 @@ public class Activator extends AbstractUIPlugin {
 	// For now, we only support .java files.
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
 	// The white list to limit what packages or classes should be focused.
-	public static final CompositeList<String> filter = new CompositeList<String>();
+	// This setting can be set in preference page.
+	public static final CommonFilter<String> filter = new CommonFilter<String>();
 
 	// The AST node type set defines a stop set. (not used now)
 	// All nodes with its type in this set will be ignored, do not traverse it to improve the performance.
@@ -79,15 +82,12 @@ public class Activator extends AbstractUIPlugin {
 	public static final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry,
 			stopSet);
 
-	// TODO: the following setting should be put in a Eclipse preference page.
 	static {
+		// For now, we only examine the .java files.
 		factory.registerVisitor("java", JavaFileVisitor.class);
 		// factory.registerVisitor("xml", XmlFileVisitor.class);
 
-		// filter.addAllowMatcher(new StringMatcher("java.lang.Object"));
-		// filter.addAllowMatcher(new RegexMatcher("org\\.eclipse\\.jdt\\.core\\.dom\\..*"));
-		// filter.addAllowMatcher(new RegexMatcher("com\\.dnw\\..*"));
-
+		// Those AST nodes should be carefully handled.
 		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
 		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());
 		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
@@ -95,13 +95,15 @@ public class Activator extends AbstractUIPlugin {
 
 	// Neo4j database Cypher language executor.
 	public NeoAccessor accessor;
-	// Call Neo4j accessor to generate all AST nodes and its relations.
+	// Neo4j accessor to generate all AST nodes and its relations.
 	public NeoDao neo;
-	// If it's true, the database will be cleaned before AST traverse. 
+	// If true, a set of Cypher statements will be executed before AST traverse. 
+	// These 2 settings can be set in preference page.
 	public static boolean preExec = false;
 	public static String[] statements = new String[0];
 
-	public IPropertyChangeListener listener;
+	// When the settings in preference page change, we should re-load them, this listener works for that.
+	private final IPropertyChangeListener listener;
 
 	/**
 	 * Constructor of Activator.
@@ -114,12 +116,19 @@ public class Activator extends AbstractUIPlugin {
 
 			@Override
 			public void propertyChange(PropertyChangeEvent event) {
-				loadPerference();
+				loadPreference();
 			}
 		};
 	}
 
-	private void loadPerference() {
+	/**
+	 * Loads preference settings from preference store.
+	 * 
+	 * @author manbaum
+	 * @since Oct 24, 2014
+	 */
+	private void loadPreference() {
+		// loads Neo4j database settings.
 		IPreferenceStore store = super.getPreferenceStore();
 		if (store.getBoolean(PrefKeys.P_USESTANDALONE)) {
 			useEmbedded = false;
@@ -134,36 +143,34 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(PrefKeys.P_DBURL, DBURL);
 		}
 
+		// loads class/package filter settings.
 		filter.clearAllows();
-		if (store.getBoolean(PrefKeys.P_USEWHITE)) {
-			String white = store.getString(PrefKeys.P_WHITELIST);
-			if (white != null) {
-				String[] list = white.split("\\s*;\\s*");
-				for (String s : list) {
-					console.println("allow: \"" + s + "\"");
-					if (s.startsWith("@"))
-						filter.addAllowMatcher(new StringMatcher(s.substring(1)));
-					else
-						filter.addAllowMatcher(new RegexMatcher(s));
-				}
-			}
-		}
-
 		filter.clearBlocks();
-		if (store.getBoolean(PrefKeys.P_USEBLACK)) {
-			String black = store.getString(PrefKeys.P_BLACKLIST);
-			if (black != null) {
-				String[] list = black.split("\\s*;\\s*");
-				for (String s : list) {
-					console.println("block: \"" + s + "\"");
-					if (s.startsWith("@"))
-						filter.addBlockMatcher(new StringMatcher(s.substring(1)));
-					else
-						filter.addBlockMatcher(new RegexMatcher(s));
-				}
+		filter.setPreferWhite(store.getBoolean(PrefKeys.P_PREFERWHITE));
+		String white = store.getString(PrefKeys.P_WHITELIST);
+		if (white != null) {
+			String[] list = white.split("\\s*;\\s*");
+			for (String s : list) {
+				console.println("allow: \"" + s + "\"");
+				if (s.startsWith("@"))
+					filter.addAllowMatcher(new StringMatcher(s.substring(1)));
+				else
+					filter.addAllowMatcher(new RegexMatcher(s));
+			}
+		}
+		String black = store.getString(PrefKeys.P_BLACKLIST);
+		if (black != null) {
+			String[] list = black.split("\\s*;\\s*");
+			for (String s : list) {
+				console.println("block: \"" + s + "\"");
+				if (s.startsWith("@"))
+					filter.addBlockMatcher(new StringMatcher(s.substring(1)));
+				else
+					filter.addBlockMatcher(new RegexMatcher(s));
 			}
 		}
 
+		// loads pre-executing Cypher statements setting.
 		preExec = store.getBoolean(PrefKeys.P_USEPREEXEC);
 		if (preExec) {
 			String ss = store.getString(PrefKeys.P_PREEXEC);
@@ -177,6 +184,7 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 
+		// re-creates something according to the new settings.
 		accessor = useEmbedded ? new EmbeddedNeoAccessor(DBPATH) : new RestfulNeoAccessor(DBURL);
 		neo = new NeoDao(new NeoWriter(accessor), filter);
 	}
@@ -194,7 +202,7 @@ public class Activator extends AbstractUIPlugin {
 	public void start(BundleContext context) throws Exception {
 		super.start(context);
 		plugin = this;
-		loadPerference();
+		loadPreference();
 		super.getPreferenceStore().addPropertyChangeListener(listener);
 	}
 

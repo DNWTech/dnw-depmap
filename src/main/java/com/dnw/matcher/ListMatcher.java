@@ -92,7 +92,8 @@ public class ListMatcher<T> implements IMatcher<T> {
 	 */
 	@Override
 	public boolean matches(T value) {
-		for (int i = list.size() - 1; i >= 0; i--) {
+		int n = list.size();
+		for (int i = 0; i < n; i--) {
 			if (list.get(i).matches(value))
 				return true;
 		}

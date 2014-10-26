@@ -59,8 +59,6 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	private BooleanFieldEditor flagdir;
 	private DirectoryFieldEditor dbdir;
 	private GroupFieldEditor gf2;
-	private BooleanFieldEditor flagwhite;
-	private BooleanFieldEditor flagblack;
 	private BooleanFieldEditor flagprefer;
 	private StringFieldEditor whitelist;
 	private StringFieldEditor blacklist;
@@ -89,10 +87,6 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "", gf1.getGroupControl(p));
 
 		gf2 = new GroupFieldEditor("Class/Method filter list (colon ';' seperated)", p);
-		flagwhite = new BooleanFieldEditor(PrefKeys.P_USEWHITE, "Use &white list",
-				gf2.getGroupControl(p));
-		flagblack = new BooleanFieldEditor(PrefKeys.P_USEBLACK, "Use &black list",
-				gf2.getGroupControl(p));
 		flagprefer = new BooleanFieldEditor(PrefKeys.P_PREFERWHITE, "P&refer white list",
 				gf2.getGroupControl(p));
 		whitelist = new StringFieldEditor(PrefKeys.P_WHITELIST, "Whitelist:",
@@ -112,8 +106,6 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		gf1.addField(dbdir);
 		addField(gf1);
 
-		gf2.addField(flagwhite);
-		gf2.addField(flagblack);
 		gf2.addField(flagprefer);
 		gf2.addField(whitelist);
 		gf2.addField(blacklist);
@@ -139,10 +131,6 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		dburl.setEnabled(value1, gf1.getGroupControl(p));
 		boolean value2 = flagurl.getBooleanValue();
 		dbdir.setEnabled(!value2, gf1.getGroupControl(p));
-		boolean value3 = flagwhite.getBooleanValue();
-		whitelist.setEnabled(value3, gf2.getGroupControl(p));
-		boolean value4 = flagblack.getBooleanValue();
-		blacklist.setEnabled(value4, gf2.getGroupControl(p));
 		boolean value5 = flagexec.getBooleanValue();
 		statements.setEnabled(value5, gf3.getGroupControl(p));
 	}
@@ -167,12 +155,6 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 			} else if (f.getPreferenceName().equals(PrefKeys.P_USEEMBEDDED)) {
 				boolean value = (Boolean)event.getNewValue();
 				dbdir.setEnabled(value, gf1.getGroupControl(p));
-			} else if (f.getPreferenceName().equals(PrefKeys.P_USEWHITE)) {
-				boolean value = (Boolean)event.getNewValue();
-				whitelist.setEnabled(value, gf2.getGroupControl(p));
-			} else if (f.getPreferenceName().equals(PrefKeys.P_USEBLACK)) {
-				boolean value = (Boolean)event.getNewValue();
-				blacklist.setEnabled(value, gf2.getGroupControl(p));
 			} else if (f.getPreferenceName().equals(PrefKeys.P_USEPREEXEC)) {
 				boolean value = (Boolean)event.getNewValue();
 				statements.setEnabled(value, gf3.getGroupControl(p));

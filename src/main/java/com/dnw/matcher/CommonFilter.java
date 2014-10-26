@@ -1,5 +1,5 @@
 /**
- * !(#) CompositeList.java
+ * !(#) CommonFilter.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,12 +14,12 @@
 package com.dnw.matcher;
 
 /**
- * Class/Interface CompositeList.
+ * Class/Interface CommonFilter.
  * 
  * @author manbaum
  * @since Oct 17, 2014
  */
-public class CompositeList<T> implements IFilterService<T> {
+public class CommonFilter<T> implements IFilterService<T> {
 
 	private final ListMatcher<T> white = new ListMatcher<T>();
 	private final ListMatcher<T> black = new ListMatcher<T>();
@@ -28,7 +28,7 @@ public class CompositeList<T> implements IFilterService<T> {
 	// 正逻辑时白名单有才让过，白名单没有，则不让过。此时的黑名单优先，相当于临时把白名单里有的抠掉。
 	// 反逻辑时黑名单有就不让过，黑名单没有，则让过。此时的白名单优先，相当于临时把黑名单里有的抠掉。
 	// 正反逻辑最大区别在于，黑白名单都没有时是让过还是不让过：正逻辑是不让过，反逻辑是让过。
-	private final boolean preferWhite;
+	private boolean preferWhite;
 
 	/**
 	 * Constructor of CompositeList.
@@ -36,7 +36,7 @@ public class CompositeList<T> implements IFilterService<T> {
 	 * @author manbaum
 	 * @since Oct 17, 2014
 	 */
-	public CompositeList() {
+	public CommonFilter() {
 		preferWhite = true;
 	}
 
@@ -47,7 +47,18 @@ public class CompositeList<T> implements IFilterService<T> {
 	 * @since Oct 17, 2014
 	 * @param preferWhite
 	 */
-	public CompositeList(boolean preferWhite) {
+	public CommonFilter(boolean preferWhite) {
+		this.preferWhite = preferWhite;
+	}
+
+	/**
+	 * Setter of the field preferWhite.
+	 * 
+	 * @author manbaum
+	 * @since Oct 26, 2014
+	 * @param preferWhite value of the field preferWhite to set.
+	 */
+	public void setPreferWhite(boolean preferWhite) {
 		this.preferWhite = preferWhite;
 	}
 

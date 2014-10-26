@@ -29,11 +29,7 @@ public class PrefKeys {
 
 	public static final String P_DBURL = "com.dnw.depmap.databaseRootUrl";
 
-	public static final String P_USEWHITE = "com.dnw.depmap.useWhiteList";
-
 	public static final String P_WHITELIST = "com.dnw.depmap.whiteList";
-
-	public static final String P_USEBLACK = "com.dnw.depmap.useBlackList";
 
 	public static final String P_BLACKLIST = "com.dnw.depmap.blackList";
 

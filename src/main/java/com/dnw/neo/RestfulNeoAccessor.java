@@ -59,16 +59,16 @@ public class RestfulNeoAccessor implements NeoAccessor {
 	 * @param data
 	 * @return
 	 */
-	private Response sendRequest(WebTarget target, String jsonData) {
+	private M sendRequest(WebTarget target, String jsonData) {
 		Response response = target.request().accept(MediaType.APPLICATION_JSON)
 				.acceptEncoding("UTF-8").post(Entity.json(jsonData));
 		if (response.getStatus() != 200) {
 			throw new IllegalStateException("error.response: " + response.getStatusInfo());
 		}
 		M m = (M)J.parse((InputStream)response.getEntity());
-		Activator.console.println(">>> Request: " + jsonData);
-		Activator.console.println(">>>  Result: " + String.valueOf(m));
-		return response;
+		Activator.console.println(" >> Request: " + jsonData);
+		Activator.console.println("  >  Result: " + String.valueOf(m));
+		return m;
 	}
 
 	/**
