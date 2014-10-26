@@ -26,6 +26,7 @@ import org.eclipse.swt.events.KeyEvent;
 import org.eclipse.swt.graphics.GC;
 import org.eclipse.swt.graphics.Point;
 import org.eclipse.swt.layout.GridData;
+import org.eclipse.swt.layout.GridLayout;
 import org.eclipse.swt.widgets.Composite;
 import org.eclipse.swt.widgets.Label;
 import org.eclipse.swt.widgets.Text;
@@ -85,6 +86,11 @@ public class TextFieldEditor extends FieldEditor {
 	private int widthInChars = UNLIMITED;
 
 	/**
+	 * Height of text field in lines; initially unlimited.
+	 */
+	private int heightInLines = UNLIMITED;
+
+	/**
 	 * Text limit of text field in characters; initially unlimited.
 	 */
 	private int textLimit = UNLIMITED;
@@ -104,11 +110,6 @@ public class TextFieldEditor extends FieldEditor {
 	 */
 	private int validateStrategy = VALIDATE_ON_KEY_STROKE;
 
-	// For calculating TextBox width: number of chars to display.
-	private int displayChars = 50;
-	// For calculating TextBox height: number of lines to display.
-	private int displayLines = 4;
-
 	/**
 	 * Creates a new string field editor.
 	 * 
@@ -127,14 +128,18 @@ public class TextFieldEditor extends FieldEditor {
 	 * @param labelText the label text of the field editor.
 	 * @param width the width of the text input field in characters, or <code>UNLIMITED</code> for
 	 *            no limit.
+	 * @param height the height of the text input field in lines, or <code>UNLIMITED</code> for no
+	 *            limit.
 	 * @param strategy either <code>VALIDATE_ON_KEY_STROKE</code> to perform on the fly checking
 	 *            (the default), or <code>VALIDATE_ON_FOCUS_LOST</code> to perform validation only
 	 *            after the text has been typed in.
 	 * @param parent the parent of the field editor's control.
 	 */
-	public TextFieldEditor(String name, String labelText, int width, int strategy, Composite parent) {
+	public TextFieldEditor(String name, String labelText, int width, int height, int strategy,
+			Composite parent) {
 		init(name, labelText);
 		widthInChars = width;
+		heightInLines = height;
 		setValidateStrategy(strategy);
 		isValid = false;
 		errorMessage = JFaceResources.getString("StringFieldEditor.errorMessage");//$NON-NLS-1$
@@ -150,10 +155,12 @@ public class TextFieldEditor extends FieldEditor {
 	 * @param labelText the label text of the field editor.
 	 * @param width the width of the text input field in characters, or <code>UNLIMITED</code> for
 	 *            no limit.
+	 * @param height the height of the text input field in lines, or <code>UNLIMITED</code> for no
+	 *            limit.
 	 * @param parent the parent of the field editor's control.
 	 */
-	public TextFieldEditor(String name, String labelText, int width, Composite parent) {
-		this(name, labelText, width, VALIDATE_ON_KEY_STROKE, parent);
+	public TextFieldEditor(String name, String labelText, int width, int height, Composite parent) {
+		this(name, labelText, width, height, VALIDATE_ON_KEY_STROKE, parent);
 	}
 
 	/**
@@ -167,7 +174,7 @@ public class TextFieldEditor extends FieldEditor {
 	 * @param parent the parent of the field editor's control.
 	 */
 	public TextFieldEditor(String name, String labelText, Composite parent) {
-		this(name, labelText, UNLIMITED, parent);
+		this(name, labelText, UNLIMITED, UNLIMITED, parent);
 	}
 
 	/**
@@ -176,14 +183,19 @@ public class TextFieldEditor extends FieldEditor {
 	 * 
 	 * @author manbaum
 	 * @since Oct 26, 2014
-	 * @param displayChars number of chars to display.
-	 * @param displayLines number of lines to display.
+	 * @param width the width of the text input field in characters, or <code>UNLIMITED</code> for
+	 *            no limit.
+	 * @param height the height of the text input field in lines, or <code>UNLIMITED</code> for no
+	 *            limit.
 	 */
-	public void setDisplaySize(int displayChars, int displayLines) {
-		if (displayChars >= 5)
-			this.displayChars = displayChars;
-		if (displayLines >= 2)
-			this.displayLines = displayLines;
+	public void setDisplaySize(int width, int height) {
+		widthInChars = width;
+		heightInLines = height;
+		if (textField != null) {
+			Composite parent = textField.getParent();
+			GridLayout layout = (GridLayout)parent.getLayout();
+			fillIntoGrid(textField.getParent(), layout.numColumns);
+		}
 	}
 
 	/**
@@ -277,19 +289,18 @@ public class TextFieldEditor extends FieldEditor {
 		l.setLayoutData(new GridData(GridData.BEGINNING, GridData.BEGINNING, false, false));
 
 		textField = getTextControl(parent);
-		GridData gd = new GridData();
-		gd.horizontalSpan = numColumns - 1;
-		if (widthInChars != UNLIMITED) {
-			GC gc = new GC(textField);
-			try {
-				Point extent = gc.textExtent("X");//$NON-NLS-1$
-				gd.widthHint = widthInChars * extent.x;
-			} finally {
-				gc.dispose();
+		GridData gd = new GridData(SWT.FILL, SWT.FILL, true, true, numColumns - 1, 1);
+		GC gc = new GC(textField);
+		Point extent = gc.textExtent("X");
+		try {
+			if (widthInChars != UNLIMITED) {
+				gd.widthHint = widthInChars * extent.x + 2;
 			}
-		} else {
-			gd.horizontalAlignment = GridData.FILL;
-			gd.grabExcessHorizontalSpace = true;
+			if (heightInLines != UNLIMITED) {
+				gd.heightHint = heightInLines * extent.y + 2;
+			}
+		} finally {
+			gc.dispose();
 		}
 		textField.setLayoutData(gd);
 	}
@@ -396,21 +407,7 @@ public class TextFieldEditor extends FieldEditor {
 	 */
 	public Text getTextControl(Composite parent) {
 		if (textField == null) {
-			textField = new Text(parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL) {
-
-				@Override
-				public Point computeSize(int wHint, int hHint, boolean changed) {
-					GC gc = new GC(textField);
-					Point extent = gc.textExtent("X");//$NON-NLS-1$
-					return super.computeSize(extent.x * displayChars + 4, extent.y * displayLines
-							+ 4, changed);
-				}
-
-				@Override
-				protected void checkSubclass() {
-					// must override to avoid super.checkSubclass() throws exception.
-				}
-			};
+			textField = new Text(parent, SWT.MULTI | SWT.BORDER | SWT.V_SCROLL | SWT.H_SCROLL);
 			textField.setFont(parent.getFont());
 			switch (validateStrategy) {
 			case VALIDATE_ON_KEY_STROKE:

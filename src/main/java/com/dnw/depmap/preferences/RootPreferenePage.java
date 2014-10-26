@@ -83,11 +83,11 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		final Composite p = getFieldEditorParent();
 
 		gf1 = new GroupFieldEditor("Neo4j graph database", p);
-		flagurl = new BooleanFieldEditor(PrefKeys.P_USESTANDALONE, "&Standalone database",
-				gf1.getGroupControl(p));
+		flagurl = new BooleanFieldEditor(PrefKeys.P_USESTANDALONE,
+				"&Standalone database server (access thru Rest API)", gf1.getGroupControl(p));
 		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "&Url:", gf1.getGroupControl(p));
-		flagdir = new BooleanFieldEditor(PrefKeys.P_USEEMBEDDED, "&Embedded database",
-				gf1.getGroupControl(p));
+		flagdir = new BooleanFieldEditor(PrefKeys.P_USEEMBEDDED,
+				"&Embedded database server (access thru Java API)", gf1.getGroupControl(p));
 		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "S&tore:", gf1.getGroupControl(p));
 
 		gf2 = new GroupFieldEditor(
@@ -95,15 +95,16 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 				p);
 		flagprefer = new BooleanFieldEditor(PrefKeys.P_PREFERWHITE, "P&refer white list",
 				gf2.getGroupControl(p));
-		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "&Whitelist:", gf2.getGroupControl(p));
-		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "&Blacklist:", gf2.getGroupControl(p));
+		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "&Whitelist:", 50, 2,
+				gf2.getGroupControl(p));
+		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "&Blacklist:", 50, 2,
+				gf2.getGroupControl(p));
 
 		gf3 = new GroupFieldEditor(
 				"Cypher statements executed before generating (one statement each line)", p);
 		flagexec = new BooleanFieldEditor(PrefKeys.P_USEPREEXEC, "Enable e&xecuting statements",
 				gf3.getGroupControl(p));
-		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "", gf3.getGroupControl(p));
-		statements.setDisplaySize(50, 6);
+		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "", 56, 6, gf3.getGroupControl(p));
 
 		gf1.addField(flagurl);
 		gf1.addField(dburl);
