@@ -47,7 +47,8 @@ public class MethodDeclarationVisitor implements IVisitor<MethodDeclaration> {
 		IMethodBinding method = node.resolveBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, method));
 		// call DAO to generate the method node and its related relationships.
-		Activator.neo().createMethod(method);
+		Activator.neo().createMethod(method, context.file.getFullPath().toPortableString(),
+				context.lineOf(node));
 	}
 
 	/**

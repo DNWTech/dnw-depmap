@@ -70,7 +70,7 @@ public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 		IMethodBinding to = node.resolveMethodBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, to));
 		// call DAO to generate the method node and its related relationships.
-		Activator.neo().createInvocation(from, to, args(node.arguments()));
+		Activator.neo().createInvocation(from, to);
 	}
 
 	/**

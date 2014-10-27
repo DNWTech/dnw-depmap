@@ -13,8 +13,6 @@
  */
 package com.dnw.depmap.neo;
 
-import java.util.List;
-
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
@@ -44,14 +42,26 @@ public class NeoWriter {
 		this.accessor = accessor;
 	}
 
-	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) on create set t.caption={caption}, t.implements={implements}, t.extends={extends}";
-	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) on create set t.caption={caption}, t.extends={extends}";
-	public static final String CREATEIMPLEMENTS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Implements]->(b)";
-	public static final String CREATEEXTENDS = "match (t:Type {name:{name}}) match (b:Type {name:{nameb}}) merge (t)-[:Extends]->(b)";
-	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) on create set m.caption={caption}";
-	public static final String CREATEDECLARE = "match (t:Type {name:{tname}})  match(m:Method {name:{mname}}) merge (t)-[:Declares]->(m)";
-	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) match (t:Method {name:{namet}}) merge (f)-[:Invokes {args:{args}}]->(t)";
-	public static final String CREATEOVERRIDE = "match (m:Method {name:{name}}) match (b:Method {name:{bname}}) merge (m)-[:Overrides]-(b)";
+	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) "
+			+ "on create set t.caption={caption}, t.implements={implements}, t.extends={extends} ";
+	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) "
+			+ "on create set t.caption={caption}, t.extends={extends} ";
+	public static final String ADDTYPEFILE = "merge (t:Type {name:{name}}) "
+			+ "on match set t.file={file}, t.linenumber={linenumber}";
+	public static final String CREATEIMPLEMENTS = "match (t:Type {name:{name}}) "
+			+ "match (b:Type {name:{nameb}}) " + "merge (t)-[:Implements]->(b)";
+	public static final String CREATEEXTENDS = "match (t:Type {name:{name}}) "
+			+ "match (b:Type {name:{nameb}}) " + "merge (t)-[:Extends]->(b)";
+	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) "
+			+ "on create set m.caption={caption} ";
+	public static final String ADDMETHODFILE = "merge (m:Method {name:{name}}) "
+			+ "on match set m.file={file}, m.linenumber={linenumber}";
+	public static final String CREATEDECLARE = "match (t:Type {name:{tname}}) "
+			+ "match(m:Method {name:{mname}}) " + "merge (t)-[:Declares]->(m)";
+	public static final String CREATEINVOKE = "match (f:Method {name:{namef}}) "
+			+ "match (t:Method {name:{namet}}) " + "merge (f)-[:Invokes]->(t)";
+	public static final String CREATEOVERRIDE = "match (m:Method {name:{name}}) "
+			+ "match (b:Method {name:{bname}}) " + "merge (m)-[:Overrides]-(b)";
 
 	static {
 		J.register(ITypeBinding.class, new TypeBindingConverter());
@@ -65,7 +75,7 @@ public class NeoWriter {
 	 * @since Oct 10, 2014
 	 * @param type
 	 */
-	public void createType(ITypeBinding type) {
+	public void createType(ITypeBinding type, String filepath, int linenumber) {
 		M p = M.m().a("name", type).a("caption", AstUtil.captionOf(type));
 		if (type.isInterface()) {
 			p.a("extends", type.getInterfaces());
@@ -74,6 +84,24 @@ public class NeoWriter {
 			p.a("implements", type.getInterfaces()).a("extends", type.getSuperclass());
 			accessor.execute(CREATECLASS, p);
 		}
+		if (!filepath.isEmpty()) {
+			p.a("file", filepath).a("linenumber", linenumber);
+			accessor.execute(ADDTYPEFILE, p);
+		}
+	}
+
+	/**
+	 * Method addFileInfo.
+	 * 
+	 * @author manbaum
+	 * @since Oct 27, 2014
+	 * @param type
+	 * @param filepath
+	 * @param linenumber
+	 */
+	public void addFileInfo(ITypeBinding type, String filepath, int linenumber) {
+		M p = M.m().a("name", type).a("file", filepath).a("linenumber", linenumber);
+		accessor.execute(ADDTYPEFILE, p);
 	}
 
 	/**
@@ -109,9 +137,27 @@ public class NeoWriter {
 	 * @since Oct 10, 2014
 	 * @param method
 	 */
-	public void createMethod(IMethodBinding method) {
+	public void createMethod(IMethodBinding method, String filepath, int linenumber) {
 		M p = M.m().a("name", method).a("caption", AstUtil.captionOf(method));
 		accessor.execute(CREATEMETHOD, p);
+		if (!filepath.isEmpty()) {
+			p.a("file", filepath).a("linenumber", linenumber);
+			accessor.execute(ADDMETHODFILE, p);
+		}
+	}
+
+	/**
+	 * Method addFileInfo.
+	 * 
+	 * @author manbaum
+	 * @since Oct 27, 2014
+	 * @param method
+	 * @param filepath
+	 * @param linenumber
+	 */
+	public void addFileInfo(IMethodBinding method, String filepath, int linenumber) {
+		M p = M.m().a("name", method).a("file", filepath).a("linenumber", linenumber);
+		accessor.execute(ADDMETHODFILE, p);
 	}
 
 	/**
@@ -137,8 +183,8 @@ public class NeoWriter {
 	 * @param to
 	 * @param args
 	 */
-	public void createInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
-		M p = M.m().a("namef", from).a("namet", to).a("args", args);
+	public void createInvocation(IMethodBinding from, IMethodBinding to) {
+		M p = M.m().a("namef", from).a("namet", to);
 		accessor.execute(CREATEINVOKE, p);
 	}
 

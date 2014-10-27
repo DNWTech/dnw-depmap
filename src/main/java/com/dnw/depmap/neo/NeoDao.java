@@ -13,8 +13,6 @@
  */
 package com.dnw.depmap.neo;
 
-import java.util.List;
-
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -29,6 +27,9 @@ import com.dnw.plugin.ast.AstUtil;
  * @since Oct 14, 2014
  */
 public class NeoDao {
+
+	private final static String UNKNOWN_FILE = "";
+	private final static int UNKNOWN_LINE = -1;
 
 	private final NeoWriter w;
 	private final IFilterService<String> filter;
@@ -99,17 +100,20 @@ public class NeoDao {
 	 * @since Oct 10, 2014
 	 * @param type
 	 */
-	public boolean createBareType(ITypeBinding type) {
+	public boolean createBareType(ITypeBinding type, String filepath, int linenumber) {
 		if (type == null)
 			return false;
 		if (isBlocked(type))
 			return false;
 		ITypeBinding declaration = type.getTypeDeclaration();
-		if (isCached(declaration))
+		if (isCached(declaration)) {
+			if (!filepath.isEmpty()) {
+				w.addFileInfo(type, filepath, linenumber);
+			}
 			return true;
-		String name = AstUtil.nameOf(declaration);
-		BindingCache.put(declaration, name);
-		w.createType(declaration);
+		}
+		BindingCache.put(declaration, AstUtil.nameOf(declaration));
+		w.createType(declaration, filepath, linenumber);
 		return true;
 	}
 
@@ -121,19 +125,23 @@ public class NeoDao {
 	 * @param method
 	 * @return
 	 */
-	public boolean createBareMethod(IMethodBinding method) {
+	public boolean createBareMethod(IMethodBinding method, String filepath, int linenumber) {
 		if (method == null)
 			return false;
 		if (isBlocked(method))
 			return false;
 		ITypeBinding type = method.getDeclaringClass();
-		if (!createBareType(type))
+		if (!createBareType(type, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding declaration = method.getMethodDeclaration();
-		if (isCached(declaration))
+		if (isCached(declaration)) {
+			if (!filepath.isEmpty()) {
+				w.addFileInfo(method, filepath, linenumber);
+			}
 			return true;
+		}
 		BindingCache.put(declaration, AstUtil.nameOf(declaration));
-		w.createMethod(declaration);
+		w.createMethod(declaration, filepath, linenumber);
 		w.createDeclare(declaration);
 		return true;
 	}
@@ -148,14 +156,14 @@ public class NeoDao {
 	 * @param args
 	 * @return
 	 */
-	public boolean createBareInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
-		if (!createBareMethod(from))
+	public boolean createBareInvocation(IMethodBinding from, IMethodBinding to) {
+		if (!createBareMethod(from, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
-		if (!createBareMethod(to))
+		if (!createBareMethod(to, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding df = from.getMethodDeclaration();
 		IMethodBinding dt = to.getMethodDeclaration();
-		w.createInvocation(df, dt, args);
+		w.createInvocation(df, dt);
 		return true;
 	}
 
@@ -165,34 +173,37 @@ public class NeoDao {
 	 * @author manbaum
 	 * @since Oct 14, 2014
 	 */
-	public boolean createType(ITypeBinding type) {
+	public boolean createType(ITypeBinding type, String filepath, int linenumber) {
 		if (type == null)
 			return false;
 		if (isBlocked(type))
 			return false;
 		ITypeBinding declaration = type.getTypeDeclaration();
-		if (isCached(declaration))
+		if (isCached(declaration)) {
+			if (!filepath.isEmpty()) {
+				w.addFileInfo(type, filepath, linenumber);
+			}
 			return true;
-		String name = AstUtil.nameOf(declaration);
-		BindingCache.put(declaration, name);
-		w.createType(declaration);
+		}
+		BindingCache.put(declaration, AstUtil.nameOf(declaration));
+		w.createType(declaration, filepath, linenumber);
 		if (type.isInterface()) {
 			for (ITypeBinding t : type.getInterfaces()) {
-				if (createType(t)) {
+				if (createType(t, UNKNOWN_FILE, UNKNOWN_LINE)) {
 					ITypeBinding d = t.getTypeDeclaration();
 					w.createExtends(declaration, d);
 				}
 			}
 		} else {
 			for (ITypeBinding t : type.getInterfaces()) {
-				if (createType(t)) {
+				if (createType(t, UNKNOWN_FILE, UNKNOWN_LINE)) {
 					ITypeBinding d = t.getTypeDeclaration();
-					w.createExtends(declaration, d);
+					w.createImplements(declaration, d);
 				}
 			}
 			ITypeBinding t = type.getSuperclass();
 			if (t != null)
-				if (createType(t)) {
+				if (createType(t, UNKNOWN_FILE, UNKNOWN_LINE)) {
 					ITypeBinding d = t.getTypeDeclaration();
 					w.createExtends(declaration, d);
 				}
@@ -208,26 +219,30 @@ public class NeoDao {
 	 * @param method
 	 * @return
 	 */
-	public boolean createMethod(IMethodBinding method) {
+	public boolean createMethod(IMethodBinding method, String filepath, int linenumber) {
 		if (method == null)
 			return false;
 		if (isBlocked(method))
 			return false;
 		ITypeBinding type = method.getDeclaringClass();
-		if (!createType(type))
+		if (!createType(type, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding declaration = method.getMethodDeclaration();
-		if (isCached(declaration))
+		if (isCached(declaration)) {
+			if (!filepath.isEmpty()) {
+				w.addFileInfo(method, filepath, linenumber);
+			}
 			return true;
+		}
 		BindingCache.put(declaration, AstUtil.nameOf(declaration));
-		w.createMethod(declaration);
+		w.createMethod(declaration, filepath, linenumber);
 		w.createDeclare(declaration);
 		if (type.isInterface()) {
 			for (ITypeBinding t : type.getInterfaces()) {
 				for (IMethodBinding m : t.getDeclaredMethods()) {
 					if (method.overrides(m)) {
 						IMethodBinding d = m.getMethodDeclaration();
-						if (createMethod(m))
+						if (createMethod(m, UNKNOWN_FILE, UNKNOWN_LINE))
 							w.createOverride(declaration, d);
 					}
 				}
@@ -237,7 +252,7 @@ public class NeoDao {
 				for (IMethodBinding m : t.getDeclaredMethods()) {
 					if (method.overrides(m)) {
 						IMethodBinding d = m.getMethodDeclaration();
-						if (createMethod(m))
+						if (createMethod(m, UNKNOWN_FILE, UNKNOWN_LINE))
 							w.createOverride(declaration, d);
 					}
 				}
@@ -247,7 +262,7 @@ public class NeoDao {
 				for (IMethodBinding m : t.getDeclaredMethods()) {
 					if (method.overrides(m)) {
 						IMethodBinding d = m.getMethodDeclaration();
-						if (createMethod(m))
+						if (createMethod(m, UNKNOWN_FILE, UNKNOWN_LINE))
 							w.createOverride(declaration, d);
 					}
 				}
@@ -264,14 +279,14 @@ public class NeoDao {
 	 * @param to
 	 * @param args
 	 */
-	public boolean createInvocation(IMethodBinding from, IMethodBinding to, List<?> args) {
-		if (!createMethod(from))
+	public boolean createInvocation(IMethodBinding from, IMethodBinding to) {
+		if (!createMethod(from, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
-		if (!createMethod(to))
+		if (!createMethod(to, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding df = from.getMethodDeclaration();
 		IMethodBinding dt = to.getMethodDeclaration();
-		w.createInvocation(df, dt, args);
+		w.createInvocation(df, dt);
 		return true;
 	}
 }

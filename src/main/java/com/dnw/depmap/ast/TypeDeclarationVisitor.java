@@ -46,6 +46,7 @@ public class TypeDeclarationVisitor implements IVisitor<TypeDeclaration> {
 		ITypeBinding type = node.resolveBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, type));
 		// call DAO to generate the method node and its related relationships.
-		Activator.neo().createType(type);
+		Activator.neo().createType(type, context.file.getFullPath().toPortableString(),
+				context.lineOf(node));
 	}
 }
