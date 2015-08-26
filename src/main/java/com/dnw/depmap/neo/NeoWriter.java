@@ -61,7 +61,7 @@ public class NeoWriter {
 	public static final String CREATEDECLARE = "match (t:Type {name:{tname}}) "
 			+ "match(m:Method {name:{mname}}) " + "merge (t)-[:Declares]->(m) ";
 	public static final String CREATEINVOKE = "match (f:Method {name:{fname}}) "
-			+ "match (t:Method {name:{tname}}) " + "merge (f)-[:Invokes {args:{args}}]->(t) ";
+			+ "match (t:Method {name:{tname}}) " + "merge (f)-[:Invokes {arguments:{args}}]->(t) ";
 	public static final String CREATEOVERRIDE = "match (f:Method {name:{fname}}) "
 			+ "match (t:Method {name:{tname}}) " + "merge (f)-[:Overrides]-(t) ";
 	public static final String CREATEANNOTATION = "merge (a:Annotation {name:{name}}) "
