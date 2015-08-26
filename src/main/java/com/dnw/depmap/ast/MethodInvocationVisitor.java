@@ -69,7 +69,7 @@ public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 		Activator.console.println(AstUtil.infoOf(context, decl, from));
 		IMethodBinding to = node.resolveMethodBinding();
 		Activator.console.println(AstUtil.infoOf(context, node, to));
-		String expr = node.getExpression().toString();
+		String expr = node.getExpression() != null ? node.getExpression().toString() : "";
 		List<String> args = arguments(node.arguments());
 		// call DAO to generate the method node and its related relationships.
 		Activator.neo().createInvocation(from, to, expr, args);
