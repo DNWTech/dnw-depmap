@@ -25,7 +25,15 @@ import com.dnw.plugin.util.WeakCache;
  */
 public final class BindingCache {
 
-	public static final WeakCache<IBinding, String> cache = new WeakCache<IBinding, String>();
+	/**
+	 * According to document of <tt>ASTParser.setResolveBindings()</tt>:<br/>
+	 * <blockquote>It is very important to not retain any of these objectes longer than absolutely
+	 * necessary.</blockquote>
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 */
+	public static final WeakCache<String, String> cache = new WeakCache<String, String>();
 
 	/**
 	 * Method put.
@@ -36,7 +44,7 @@ public final class BindingCache {
 	 * @param value
 	 */
 	public static final void put(IBinding key, String value) {
-		cache.put(key, value);
+		cache.put(key.getKey(), value);
 	}
 
 	/**
@@ -47,7 +55,7 @@ public final class BindingCache {
 	 * @param key
 	 */
 	public static final void remove(IBinding key) {
-		cache.remove(key);
+		cache.remove(key.getKey());
 	}
 
 	/**
@@ -59,7 +67,7 @@ public final class BindingCache {
 	 * @return
 	 */
 	public static final boolean contains(IBinding key) {
-		return cache.contains(key);
+		return cache.contains(key.getKey());
 	}
 
 	/**
@@ -71,7 +79,7 @@ public final class BindingCache {
 	 * @return
 	 */
 	public static final String get(IBinding key) {
-		return cache.get(key);
+		return cache.get(key.getKey());
 	}
 
 	/**
