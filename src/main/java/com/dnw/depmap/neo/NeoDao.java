@@ -155,17 +155,19 @@ public class NeoDao {
 	 * @since Oct 18, 2014
 	 * @param from
 	 * @param to
+	 * @param expr
 	 * @param args
 	 * @return
 	 */
-	public boolean createBareInvocation(IMethodBinding from, IMethodBinding to, List<String> args) {
+	public boolean createBareInvocation(IMethodBinding from, IMethodBinding to, String expr,
+			List<String> args) {
 		if (!createBareMethod(from, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		if (!createBareMethod(to, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding df = from.getMethodDeclaration();
 		IMethodBinding dt = to.getMethodDeclaration();
-		w.createInvocation(df, dt, args);
+		w.createInvocation(df, dt, expr, args);
 		return true;
 	}
 
@@ -279,16 +281,18 @@ public class NeoDao {
 	 * @since Oct 10, 2014
 	 * @param from
 	 * @param to
+	 * @param expr
 	 * @param args
 	 */
-	public boolean createInvocation(IMethodBinding from, IMethodBinding to, List<String> args) {
+	public boolean createInvocation(IMethodBinding from, IMethodBinding to, String expr,
+			List<String> args) {
 		if (!createMethod(from, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		if (!createMethod(to, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding df = from.getMethodDeclaration();
 		IMethodBinding dt = to.getMethodDeclaration();
-		w.createInvocation(df, dt, args);
+		w.createInvocation(df, dt, expr, args);
 		return true;
 	}
 

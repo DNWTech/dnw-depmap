@@ -61,7 +61,8 @@ public class NeoWriter {
 	public static final String CREATEDECLARE = "match (t:Type {name:{tname}}) "
 			+ "match(m:Method {name:{mname}}) " + "merge (t)-[:Declares]->(m) ";
 	public static final String CREATEINVOKE = "match (f:Method {name:{fname}}) "
-			+ "match (t:Method {name:{tname}}) " + "merge (f)-[:Invokes {arguments:{args}}]->(t) ";
+			+ "match (t:Method {name:{tname}}) "
+			+ "merge (f)-[:Invokes {expression:{expr}, arguments:{args}}]->(t) ";
 	public static final String CREATEOVERRIDE = "match (f:Method {name:{fname}}) "
 			+ "match (t:Method {name:{tname}}) " + "merge (f)-[:Overrides]-(t) ";
 	public static final String CREATEANNOTATION = "merge (a:Annotation {name:{name}}) "
@@ -191,10 +192,12 @@ public class NeoWriter {
 	 * @since Oct 10, 2014
 	 * @param from
 	 * @param to
+	 * @param expr
 	 * @param args
 	 */
-	public void createInvocation(IMethodBinding from, IMethodBinding to, List<String> args) {
-		M p = M.m().a("fname", from).a("tname", to).a("args", args);
+	public void createInvocation(IMethodBinding from, IMethodBinding to, String expr,
+			List<String> args) {
+		M p = M.m().a("fname", from).a("tname", to).a("expression", expr).a("args", args);
 		accessor.execute(CREATEINVOKE, p);
 	}
 
