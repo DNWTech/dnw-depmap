@@ -198,6 +198,12 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 
+		// loads logging setting.
+		boolean verbose = store.getBoolean(PrefKeys.P_LOGVERBOSE);
+		console.setVerbose(verbose);
+		console.forceprint(verbose ? "Enable" : "Disable");
+		console.forceprintln(" verbose logging.");
+
 		// re-creates something according to the new settings.
 		accessor = useEmbedded ? new EmbeddedNeoAccessor(DBPATH) : new RestfulNeoAccessor(DBURL);
 		neo = new NeoDao(new NeoWriter(accessor), filter);

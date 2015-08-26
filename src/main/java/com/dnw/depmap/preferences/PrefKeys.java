@@ -38,4 +38,6 @@ public class PrefKeys {
 	public static final String P_USEPREEXEC = "com.dnw.depmap.usePreExecution";
 
 	public static final String P_PREEXEC = "com.dnw.depmap.preExecution";
+
+	public static final String P_LOGVERBOSE = "com.dnw.depmap.logVerbose";
 }

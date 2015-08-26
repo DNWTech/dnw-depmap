@@ -58,5 +58,6 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				+ "create index on :Method(caption)\n" // create index on method captions.
 				+ "create index on :Annotation(caption)" // create index on annotation captions.
 		);
+		store.setDefault(PrefKeys.P_LOGVERBOSE, false);
 	}
 }

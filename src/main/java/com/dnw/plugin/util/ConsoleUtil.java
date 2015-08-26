@@ -153,6 +153,56 @@ public class ConsoleUtil {
 	}
 
 	/**
+	 * Getter of the field verbose.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @return value of the field verbose.
+	 */
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	/**
+	 * Setter of the field verbose.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param verbose value of the field verbose to set.
+	 */
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	/**
+	 * Method forceprint.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param message
+	 */
+	public void forceprint(String message) {
+		if (console != null) {
+			console.newMessageStream().print(message);
+		}
+	}
+
+	/**
+	 * Method forceprintln.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param message
+	 */
+	public void forceprintln(String message) {
+		if (console != null) {
+			console.newMessageStream().println(message);
+		}
+	}
+
+	/**
 	 * Method print.
 	 * 
 	 * @author manbaum
@@ -205,6 +255,36 @@ public class ConsoleUtil {
 	public void println(Throwable e) {
 		if (console != null) {
 			console.newMessageStream().println(messageOfThrowable(e));
+		}
+	}
+
+	/**
+	 * Method forceformat.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param pattern
+	 * @param arguments
+	 */
+	public void forceformat(String pattern, Object... arguments) {
+		if (console != null) {
+			console.newMessageStream().print(MessageFormat.format(pattern, arguments));
+		}
+	}
+
+	/**
+	 * Method forceformatln.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param pattern
+	 * @param arguments
+	 */
+	public void forceformatln(String pattern, Object... arguments) {
+		if (console != null) {
+			console.newMessageStream().println(MessageFormat.format(pattern, arguments));
 		}
 	}
 
