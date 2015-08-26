@@ -29,6 +29,7 @@ import org.eclipse.ui.console.MessageConsole;
 public class ConsoleUtil {
 
 	private final MessageConsole console;
+	private boolean verbose = false;
 
 	/**
 	 * Constructor of ConsoleUtil.
@@ -152,6 +153,56 @@ public class ConsoleUtil {
 	}
 
 	/**
+	 * Getter of the field verbose.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @return value of the field verbose.
+	 */
+	public boolean isVerbose() {
+		return verbose;
+	}
+
+	/**
+	 * Setter of the field verbose.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param verbose value of the field verbose to set.
+	 */
+	public void setVerbose(boolean verbose) {
+		this.verbose = verbose;
+	}
+
+	/**
+	 * Method forceprint.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param message
+	 */
+	public void forceprint(String message) {
+		if (console != null) {
+			console.newMessageStream().print(message);
+		}
+	}
+
+	/**
+	 * Method forceprintln.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param message
+	 */
+	public void forceprintln(String message) {
+		if (console != null) {
+			console.newMessageStream().println(message);
+		}
+	}
+
+	/**
 	 * Method print.
 	 * 
 	 * @author manbaum
@@ -160,7 +211,7 @@ public class ConsoleUtil {
 	 * @param message
 	 */
 	public void print(String message) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().print(message);
 		}
 	}
@@ -174,7 +225,7 @@ public class ConsoleUtil {
 	 * @param message
 	 */
 	public void println(String message) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().println(message);
 		}
 	}
@@ -208,6 +259,36 @@ public class ConsoleUtil {
 	}
 
 	/**
+	 * Method forceformat.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param pattern
+	 * @param arguments
+	 */
+	public void forceformat(String pattern, Object... arguments) {
+		if (console != null) {
+			console.newMessageStream().print(MessageFormat.format(pattern, arguments));
+		}
+	}
+
+	/**
+	 * Method forceformatln.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param console
+	 * @param pattern
+	 * @param arguments
+	 */
+	public void forceformatln(String pattern, Object... arguments) {
+		if (console != null) {
+			console.newMessageStream().println(MessageFormat.format(pattern, arguments));
+		}
+	}
+
+	/**
 	 * Method format.
 	 * 
 	 * @author manbaum
@@ -217,7 +298,7 @@ public class ConsoleUtil {
 	 * @param arguments
 	 */
 	public void format(String pattern, Object... arguments) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().print(MessageFormat.format(pattern, arguments));
 		}
 	}
@@ -232,7 +313,7 @@ public class ConsoleUtil {
 	 * @param arguments
 	 */
 	public void formatln(String pattern, Object... arguments) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().println(MessageFormat.format(pattern, arguments));
 		}
 	}

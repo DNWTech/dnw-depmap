@@ -13,6 +13,10 @@
  */
 package com.dnw.depmap.ast;
 
+import java.util.List;
+
+import org.eclipse.jdt.core.dom.Annotation;
+import org.eclipse.jdt.core.dom.IExtendedModifier;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 import org.eclipse.jdt.core.dom.TypeDeclaration;
 
@@ -48,5 +52,16 @@ public class TypeDeclarationVisitor implements IVisitor<TypeDeclaration> {
 		// call DAO to generate the method node and its related relationships.
 		Activator.neo().createType(type, context.file.getFullPath().toPortableString(),
 				context.lineOf(node));
+
+		@SuppressWarnings("unchecked") List<IExtendedModifier> modifiers = node.modifiers();
+		for (IExtendedModifier m : modifiers) {
+			if (m.isAnnotation()) {
+				Annotation a = (Annotation)m;
+				Activator.console.println(" -- Annotation Found: " + a.toString());
+				// to generate the annotation node and its relationship.
+				Activator.neo().createTypeAnnotation(type, a.resolveTypeBinding(),
+						context.file.getFullPath().toPortableString(), context.lineOf(a));
+			}
+		}
 	}
 }

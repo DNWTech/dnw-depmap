@@ -40,6 +40,7 @@ import com.dnw.plugin.resource.IResourceFinder;
 public final class AnalyzeDependencyJob extends Job {
 
 	private final IStructuredSelection selection;
+	private volatile boolean isCanceled = false;
 
 	/**
 	 * Constructor of AnalyzeDependencyJob.
@@ -70,6 +71,10 @@ public final class AnalyzeDependencyJob extends Job {
 		try {
 			monitor.beginTask("Finding files...", selection.size());
 			for (@SuppressWarnings("rawtypes") Iterator it = selection.iterator(); it.hasNext();) {
+				if (isCanceled) {
+					Activator.console.forceprintln("*** File finding has been canceled.");
+					break;
+				}
 				Object element = it.next();
 				try {
 					if (element instanceof IResource) {
@@ -91,6 +96,19 @@ public final class AnalyzeDependencyJob extends Job {
 	}
 
 	/**
+	 * Overrider method canceling.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @see org.eclipse.core.runtime.jobs.Job#canceling()
+	 */
+	@Override
+	protected void canceling() {
+		super.canceling();
+		isCanceled = true;
+	}
+
+	/**
 	 * Analyzes each file in the given list to generate the dependency map.
 	 * 
 	 * @author manbaum
@@ -99,10 +117,17 @@ public final class AnalyzeDependencyJob extends Job {
 	 * @param sub the progress monitor.
 	 */
 	private final void visitAllResources(List<IResource> resources, SubMonitor sub) {
+		int count = 0;
 		for (IResource resource : resources) {
+			if (isCanceled) {
+				Activator.console.forceprintln("*** Analyzation has been canceled, " + count
+						+ " file(s) proessed.");
+				break;
+			}
 			IResourceVisitor visitor = Activator.factory.createVisitor(resource, sub.newChild(100));
 			if (visitor != null) {
 				try {
+					++count;
 					resource.accept(visitor);
 				} catch (CoreException e) {
 					Activator.console.println(e);
@@ -123,14 +148,18 @@ public final class AnalyzeDependencyJob extends Job {
 	 */
 	@Override
 	protected IStatus run(IProgressMonitor monitor) {
+		long beginTime = System.currentTimeMillis();
 		monitor.beginTask("AnalyzeDependency", 100);
 		try {
 			// divides the whole progress into 100 ticks.
 			SubMonitor sub = SubMonitor.convert(monitor, 100);
 			// finding known resources will use 3 ticks.
 			IResourceFinder finder = filterSupportedResource(selection, sub.newChild(3));
-			Activator.console.println("*** Total " + finder.getSupportedList().size()
+			Activator.console.forceprintln("*** Total " + finder.getSupportedList().size()
 					+ " file(s) found.");
+			if (isCanceled) {
+				return Status.CANCEL_STATUS;
+			}
 			// re-divides the remaining progress according to the number of files.
 			// each file can use 100 ticks. 1 more tick used as a guard.
 			sub.setWorkRemaining(finder.getSupportedList().size() * 100 + 1);
@@ -144,13 +173,108 @@ public final class AnalyzeDependencyJob extends Job {
 			}
 			// clears the binding cache.
 			BindingCache.clear();
-			// visit all resources to generate dependency map. 
+			// visit all resources to generate dependency map.
 			visitAllResources(finder.getSupportedList(), sub);
 			// shuts down the database after generating.
 			Activator.getDefault().accessor.shutdown();
 		} finally {
 			monitor.done();
+			long duration = System.currentTimeMillis() - beginTime;
+			Activator.console.forceprintln("*** Analyzation finished, total "
+					+ tellDuration(duration) + " elapsed.");
 		}
-		return Status.OK_STATUS;
+		return isCanceled ? Status.CANCEL_STATUS : Status.OK_STATUS;
+	}
+
+	private final static long F_SECOND = 1000L;
+	private final static long F_MINUTE = F_SECOND * 60L;
+	private final static long F_HOUR = F_MINUTE * 60L;
+	private final static long F_DAY = F_HOUR * 24L;
+	private final static long F_MONTH = F_DAY * 30L;
+	private final static long F_YEAR = F_DAY * 365L;
+
+	/**
+	 * Method tellDuration.
+	 * 
+	 * @author manbaum
+	 * @since Aug 26, 2015
+	 * @param duration
+	 * @return
+	 */
+	private final static String tellDuration(long duration) {
+		StringBuffer sb = new StringBuffer();
+		long rest = duration;
+		int highest = 0;
+
+		long year = rest / F_YEAR;
+		rest -= year * F_YEAR;
+		if (year > 0) {
+			sb.append(year);
+			sb.append("Y");
+			if (highest < 6)
+				highest = 6;
+		}
+
+		long month = rest / F_MONTH;
+		rest -= month * F_MONTH;
+		if (month > 0) {
+			sb.append(month);
+			sb.append("M");
+			if (highest < 5)
+				highest = 5;
+		} else if (highest > 5) {
+			sb.append("0M");
+		}
+
+		long day = rest / F_DAY;
+		rest -= day * F_DAY;
+		if (day > 0) {
+			sb.append(day);
+			sb.append("D");
+			if (highest < 4)
+				highest = 4;
+		} else if (highest > 4) {
+			sb.append("0D");
+		}
+
+		long hour = rest / F_HOUR;
+		rest -= hour * F_HOUR;
+		if (hour > 0) {
+			sb.append(hour);
+			sb.append("h");
+			if (highest < 3)
+				highest = 3;
+		} else if (highest > 3) {
+			sb.append("0h");
+		}
+
+		long minute = rest / F_MINUTE;
+		rest -= minute * F_MINUTE;
+		if (minute > 0) {
+			sb.append(minute);
+			sb.append("m");
+			if (highest < 2)
+				highest = 2;
+		} else if (highest > 2) {
+			sb.append("0m");
+		}
+
+		long second = rest / F_SECOND;
+		rest -= second * F_SECOND;
+		if (second > 0) {
+			sb.append(second);
+			sb.append("s");
+			if (highest < 1)
+				highest = 1;
+		} else if (highest > 1) {
+			sb.append("0s");
+		}
+
+		if (highest < 2) {
+			sb.append(rest);
+			sb.append("ms");
+		}
+
+		return sb.toString();
 	}
 }

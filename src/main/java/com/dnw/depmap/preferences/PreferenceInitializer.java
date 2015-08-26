@@ -41,19 +41,23 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PrefKeys.P_USEEMBEDDED, false);
 		store.setDefault(PrefKeys.P_DBDIR, "./neo4j-community-2.1.5/data/graph.db");
 		store.setDefault(PrefKeys.P_WHITELIST, "com\\.dnw\\..*\n@java.lang.Object");
-		store.setDefault(PrefKeys.P_BLACKLIST, ".*");
-		store.setDefault(PrefKeys.P_PREFERWHITE, true);
-		store.setDefault(PrefKeys.P_USEPREEXEC, false);
-		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r\n" // delete all relations.
-				+ "match (n) delete n\n" // delete all nodes.
+		store.setDefault(PrefKeys.P_PREFERWHITE, false);
+		store.setDefault(PrefKeys.P_USEPREEXEC, true);
+		store.setDefault(PrefKeys.P_PREEXEC, "# match ()-[r]-() delete r\n" // delete all relations.
+				+ "# match (n) delete n\n" // delete all nodes.
 				+ "drop constraint on (t:Type) ASSERT t.name is unique\n" // delete unique constraint on type names.
 				+ "drop constraint on (m:Method) ASSERT m.name is unique\n" // delete unique constraint on method names.
+				+ "drop constraint on (a:Annotation) ASSERT m.name is unique\n" // delete unique constraint on annotation names.
 				+ "drop index on :Type(caption)\n" // delete index on type captions.
 				+ "drop index on :Method(caption)\n" // delete index on method captions.
+				+ "drop index on :Annotation(caption)\n" // delete index on annotation captions.
 				+ "create constraint on (t:Type) ASSERT t.name is unique\n" // create unique constraint on type names.
 				+ "create constraint on (m:Method) ASSERT m.name is unique\n" // create unique constraint on method names.
+				+ "create constraint on (a:Annotation) ASSERT m.name is unique\n" // create unique constraint on annotation names.
 				+ "create index on :Type(caption)\n" // create index on type captions.
-				+ "create index on :Method(caption)" // create index on method captions.
+				+ "create index on :Method(caption)\n" // create index on method captions.
+				+ "create index on :Annotation(caption)" // create index on annotation captions.
 		);
+		store.setDefault(PrefKeys.P_LOGVERBOSE, false);
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * !(#) XmlFileErrorHandler.java
+ * !(#) XmlFileHandler.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -24,25 +24,25 @@ import com.dnw.depmap.Activator;
 import com.dnw.plugin.util.MarkerUtil;
 
 /**
- * Class/Interface XmlFileErrorHandler.
+ * Class/Interface XmlFileHandler.
  * 
  * @author manbaum
  * @since Sep 30, 2014
  */
-public class XmlFileErrorHandler extends DefaultHandler {
+public class XmlFileHandler extends DefaultHandler {
 
 	private final IFile file;
 	private final String markerType;
 
 	/**
-	 * Constructor of XmlFileErrorHandler.
+	 * Constructor of XmlFileHandler.
 	 * 
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * @param file
 	 * @param markerType
 	 */
-	public XmlFileErrorHandler(IFile file, String markerType) {
+	public XmlFileHandler(IFile file, String markerType) {
 		this.file = file;
 		this.markerType = markerType;
 	}

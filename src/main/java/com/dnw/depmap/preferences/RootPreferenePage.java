@@ -69,6 +69,8 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	private GroupFieldEditor gf3;
 	private BooleanFieldEditor flagexec;
 	private TextFieldEditor statements;
+	private GroupFieldEditor gf4;
+	private BooleanFieldEditor flagverbose;
 
 	/**
 	 * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to
@@ -106,6 +108,10 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 				gf3.getGroupControl(p));
 		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "", 56, 6, gf3.getGroupControl(p));
 
+		gf4 = new GroupFieldEditor("Logging settings", p);
+		flagverbose = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSE,
+				"Output &verbose logging in console", gf4.getGroupControl(p));
+
 		gf1.addField(flagurl);
 		gf1.addField(dburl);
 		gf1.addField(flagdir);
@@ -120,6 +126,9 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		gf3.addField(flagexec);
 		gf3.addField(statements);
 		addField(gf3);
+
+		gf4.addField(flagverbose);
+		addField(gf4);
 	}
 
 	/**

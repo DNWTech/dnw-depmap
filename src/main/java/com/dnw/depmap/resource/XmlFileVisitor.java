@@ -16,6 +16,7 @@ package com.dnw.depmap.resource;
 import java.io.IOException;
 
 import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 import org.eclipse.core.resources.IFile;
@@ -61,9 +62,10 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 * @param file
 	 * @param reporter
 	 */
-	private void doParse(IFile file, XmlFileErrorHandler reporter) {
+	private void doParse(IFile file, XmlFileHandler reporter) {
 		try {
-			parserFactory.newSAXParser().parse(file.getContents(), reporter);
+			SAXParser p = parserFactory.newSAXParser();
+			p.parse(file.getContents(), reporter);
 		} catch (SAXException e) {
 			Activator.console.println(e);
 		} catch (IOException e) {
@@ -89,7 +91,7 @@ public class XmlFileVisitor implements IResourceVisitor {
 		try {
 			monitor.beginTask(file.getFullPath().toOSString(), 10);
 			MarkerUtil.deleteMarkers(file, MARKER_TYPE);
-			XmlFileErrorHandler reporter = new XmlFileErrorHandler(file, MARKER_TYPE);
+			XmlFileHandler reporter = new XmlFileHandler(file, MARKER_TYPE);
 			doParse(file, reporter);
 		} finally {
 			monitor.done();

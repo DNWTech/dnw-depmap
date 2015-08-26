@@ -13,6 +13,8 @@
  */
 package com.dnw.depmap.neo;
 
+import java.util.List;
+
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -108,7 +110,7 @@ public class NeoDao {
 		ITypeBinding declaration = type.getTypeDeclaration();
 		if (isCached(declaration)) {
 			if (!filepath.isEmpty()) {
-				w.addFileInfo(type, filepath, linenumber);
+				w.addTypeFileInfo(type, filepath, linenumber);
 			}
 			return true;
 		}
@@ -136,7 +138,7 @@ public class NeoDao {
 		IMethodBinding declaration = method.getMethodDeclaration();
 		if (isCached(declaration)) {
 			if (!filepath.isEmpty()) {
-				w.addFileInfo(method, filepath, linenumber);
+				w.addMethodFileInfo(method, filepath, linenumber);
 			}
 			return true;
 		}
@@ -153,17 +155,19 @@ public class NeoDao {
 	 * @since Oct 18, 2014
 	 * @param from
 	 * @param to
+	 * @param expr
 	 * @param args
 	 * @return
 	 */
-	public boolean createBareInvocation(IMethodBinding from, IMethodBinding to) {
+	public boolean createBareInvocation(IMethodBinding from, IMethodBinding to, String expr,
+			List<String> args) {
 		if (!createBareMethod(from, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		if (!createBareMethod(to, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding df = from.getMethodDeclaration();
 		IMethodBinding dt = to.getMethodDeclaration();
-		w.createInvocation(df, dt);
+		w.createInvocation(df, dt, expr, args);
 		return true;
 	}
 
@@ -181,7 +185,7 @@ public class NeoDao {
 		ITypeBinding declaration = type.getTypeDeclaration();
 		if (isCached(declaration)) {
 			if (!filepath.isEmpty()) {
-				w.addFileInfo(type, filepath, linenumber);
+				w.addTypeFileInfo(type, filepath, linenumber);
 			}
 			return true;
 		}
@@ -230,7 +234,7 @@ public class NeoDao {
 		IMethodBinding declaration = method.getMethodDeclaration();
 		if (isCached(declaration)) {
 			if (!filepath.isEmpty()) {
-				w.addFileInfo(method, filepath, linenumber);
+				w.addMethodFileInfo(method, filepath, linenumber);
 			}
 			return true;
 		}
@@ -277,16 +281,82 @@ public class NeoDao {
 	 * @since Oct 10, 2014
 	 * @param from
 	 * @param to
+	 * @param expr
 	 * @param args
 	 */
-	public boolean createInvocation(IMethodBinding from, IMethodBinding to) {
+	public boolean createInvocation(IMethodBinding from, IMethodBinding to, String expr,
+			List<String> args) {
 		if (!createMethod(from, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		if (!createMethod(to, UNKNOWN_FILE, UNKNOWN_LINE))
 			return false;
 		IMethodBinding df = from.getMethodDeclaration();
 		IMethodBinding dt = to.getMethodDeclaration();
-		w.createInvocation(df, dt);
+		w.createInvocation(df, dt, expr, args);
+		return true;
+	}
+
+	/**
+	 * Method createTypeAnnotation.
+	 * 
+	 * @author manbaum
+	 * @since Jan 22, 2015
+	 * @param type
+	 * @param annotation
+	 * @param filepath
+	 * @param linenumber
+	 * @return
+	 */
+	public boolean createTypeAnnotation(ITypeBinding type, ITypeBinding annotation,
+			String filepath, int linenumber) {
+		if (!createType(type, UNKNOWN_FILE, UNKNOWN_LINE))
+			return false;
+		if (annotation == null)
+			return false;
+		if (isBlocked(annotation))
+			return false;
+		ITypeBinding declaration = annotation.getTypeDeclaration();
+		if (isCached(declaration)) {
+			if (!filepath.isEmpty()) {
+				w.addAnnotationFileInfo(annotation, filepath, linenumber);
+			}
+			return true;
+		}
+		BindingCache.put(declaration, AstUtil.nameOf(declaration));
+		w.createAnnotation(declaration, filepath, linenumber);
+		w.createTypeHas(type, declaration);
+		return true;
+	}
+
+	/**
+	 * Method createMethodAnnotation.
+	 * 
+	 * @author manbaum
+	 * @since Jan 23, 2015
+	 * @param method
+	 * @param annotation
+	 * @param filepath
+	 * @param linenumber
+	 * @return
+	 */
+	public boolean createMethodAnnotation(IMethodBinding method, ITypeBinding annotation,
+			String filepath, int linenumber) {
+		if (!createMethod(method, UNKNOWN_FILE, UNKNOWN_LINE))
+			return false;
+		if (annotation == null)
+			return false;
+		if (isBlocked(annotation))
+			return false;
+		ITypeBinding declaration = annotation.getTypeDeclaration();
+		if (isCached(declaration)) {
+			if (!filepath.isEmpty()) {
+				w.addAnnotationFileInfo(annotation, filepath, linenumber);
+			}
+			return true;
+		}
+		BindingCache.put(declaration, AstUtil.nameOf(declaration));
+		w.createAnnotation(declaration, filepath, linenumber);
+		w.createMethodHas(method, declaration);
 		return true;
 	}
 }
