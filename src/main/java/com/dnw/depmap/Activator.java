@@ -72,7 +72,7 @@ public class Activator extends AbstractUIPlugin {
 	// This factory defines what kinds of files will be inspected in a project.
 	// For now, we only support .java files.
 	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
-	// The white list to limit what packages or classes should be focused.
+	// The white list limits what packages or classes should be focused.
 	// The content of the filter list will be set in preference page.
 	public static final CommonFilter<String> filter = new CommonFilter<String>();
 
