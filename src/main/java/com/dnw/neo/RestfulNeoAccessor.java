@@ -67,7 +67,7 @@ public class RestfulNeoAccessor implements NeoAccessor {
 		}
 		M m = (M)J.parse((InputStream)response.getEntity());
 		Activator.console.println(" >> Request: " + jsonData);
-		Activator.console.println("  >  Result: " + String.valueOf(m));
+		Activator.console.println("  <  Result: " + String.valueOf(m));
 		return m;
 	}
 
