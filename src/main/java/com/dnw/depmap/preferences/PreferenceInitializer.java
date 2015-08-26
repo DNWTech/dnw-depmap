@@ -42,9 +42,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PrefKeys.P_DBDIR, "./neo4j-community-2.1.5/data/graph.db");
 		store.setDefault(PrefKeys.P_WHITELIST, "com\\.dnw\\..*\n@java.lang.Object");
 		store.setDefault(PrefKeys.P_PREFERWHITE, false);
-		store.setDefault(PrefKeys.P_USEPREEXEC, false);
-		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r\n" // delete all relations.
-				+ "match (n) delete n\n" // delete all nodes.
+		store.setDefault(PrefKeys.P_USEPREEXEC, true);
+		store.setDefault(PrefKeys.P_PREEXEC, "# match ()-[r]-() delete r\n" // delete all relations.
+				+ "# match (n) delete n\n" // delete all nodes.
 				+ "drop constraint on (t:Type) ASSERT t.name is unique\n" // delete unique constraint on type names.
 				+ "drop constraint on (m:Method) ASSERT m.name is unique\n" // delete unique constraint on method names.
 				+ "drop constraint on (a:Annotation) ASSERT m.name is unique\n" // delete unique constraint on annotation names.
