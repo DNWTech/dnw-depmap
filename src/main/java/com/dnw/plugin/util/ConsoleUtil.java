@@ -29,6 +29,7 @@ import org.eclipse.ui.console.MessageConsole;
 public class ConsoleUtil {
 
 	private final MessageConsole console;
+	private boolean verbose = false;
 
 	/**
 	 * Constructor of ConsoleUtil.
@@ -160,7 +161,7 @@ public class ConsoleUtil {
 	 * @param message
 	 */
 	public void print(String message) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().print(message);
 		}
 	}
@@ -174,7 +175,7 @@ public class ConsoleUtil {
 	 * @param message
 	 */
 	public void println(String message) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().println(message);
 		}
 	}
@@ -217,7 +218,7 @@ public class ConsoleUtil {
 	 * @param arguments
 	 */
 	public void format(String pattern, Object... arguments) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().print(MessageFormat.format(pattern, arguments));
 		}
 	}
@@ -232,7 +233,7 @@ public class ConsoleUtil {
 	 * @param arguments
 	 */
 	public void formatln(String pattern, Object... arguments) {
-		if (console != null) {
+		if (verbose && console != null) {
 			console.newMessageStream().println(MessageFormat.format(pattern, arguments));
 		}
 	}
