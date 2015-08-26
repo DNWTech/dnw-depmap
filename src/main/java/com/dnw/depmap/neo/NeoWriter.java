@@ -197,7 +197,7 @@ public class NeoWriter {
 	 */
 	public void createInvocation(IMethodBinding from, IMethodBinding to, String expr,
 			List<String> args) {
-		M p = M.m().a("fname", from).a("tname", to).a("expression", expr).a("args", args);
+		M p = M.m().a("fname", from).a("tname", to).a("expr", expr).a("args", args);
 		accessor.execute(CREATEINVOKE, p);
 	}
 
