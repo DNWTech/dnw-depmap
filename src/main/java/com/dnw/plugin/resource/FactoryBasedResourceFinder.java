@@ -53,6 +53,6 @@ public class FactoryBasedResourceFinder extends AbstractResourceFinder {
 	 */
 	@Override
 	public boolean isSupported(IResource resource) {
-		return factory != null ? factory.support(resource) : true;
+		return factory != null ? factory.support(resource) : false;
 	}
 }

@@ -37,4 +37,18 @@ public class FileExtResourceVisitorFactory extends
 	protected String resolveKey(IResource resource) {
 		return resource.getFileExtension();
 	}
+
+	/**
+	 * Overrider method support.
+	 * 
+	 * @author manbaum
+	 * @since Aug 27, 2015
+	 * @param resource
+	 * @return
+	 * @see com.dnw.plugin.resource.AbstractTypeRegistryResourceVisitorFactory#support(org.eclipse.core.resources.IResource)
+	 */
+	@Override
+	public boolean support(IResource resource) {
+		return resource.getType() == IResource.FILE && super.support(resource);
+	}
 }
