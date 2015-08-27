@@ -17,6 +17,7 @@ import org.eclipse.jface.preference.BooleanFieldEditor;
 import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
+import org.eclipse.jface.preference.FileFieldEditor;
 import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
 import org.eclipse.swt.widgets.Composite;
@@ -70,7 +71,9 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	private BooleanFieldEditor flagexec;
 	private TextFieldEditor statements;
 	private GroupFieldEditor gf4;
-	private BooleanFieldEditor flagverbose;
+	private BooleanFieldEditor flagverbosetocon;
+	private BooleanFieldEditor flagverbosetofile;
+	private FileFieldEditor verbosefile;
 
 	/**
 	 * Creates the field editors. Field editors are abstractions of the common GUI blocks needed to
@@ -109,8 +112,12 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "", 56, 6, gf3.getGroupControl(p));
 
 		gf4 = new GroupFieldEditor("Logging settings", p);
-		flagverbose = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSE,
+		flagverbosetocon = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSETOCON,
 				"Output &verbose logging in console", gf4.getGroupControl(p));
+		flagverbosetofile = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSETOFILE,
+				"Output &verbose logging in file", gf4.getGroupControl(p));
+		verbosefile = new FileFieldEditor(PrefKeys.P_LOGVERBOSEFILE, "&File:",
+				gf4.getGroupControl(p));
 
 		gf1.addField(flagurl);
 		gf1.addField(dburl);
@@ -127,7 +134,9 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		gf3.addField(statements);
 		addField(gf3);
 
-		gf4.addField(flagverbose);
+		gf4.addField(flagverbosetocon);
+		gf4.addField(flagverbosetofile);
+		gf4.addField(verbosefile);
 		addField(gf4);
 	}
 

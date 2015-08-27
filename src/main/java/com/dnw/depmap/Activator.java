@@ -199,9 +199,15 @@ public class Activator extends AbstractUIPlugin {
 		}
 
 		// loads logging setting.
-		boolean verbose = store.getBoolean(PrefKeys.P_LOGVERBOSE);
-		console.setVerbose(verbose);
-		console.forceprintln("*** " + (verbose ? "Enable" : "Disable") + " verbose logging.");
+		boolean verboseToConsole = store.getBoolean(PrefKeys.P_LOGVERBOSETOCON);
+		console.setVerbose(verboseToConsole);
+		console.forceprintln("*** " + (verboseToConsole ? "Enable" : "Disable")
+				+ " verbose logging to console.");
+		boolean verboseToFile = store.getBoolean(PrefKeys.P_LOGVERBOSETOFILE);
+		String verboseFile = store.getString(PrefKeys.P_LOGVERBOSEFILE);
+		if (verboseToFile && !verboseFile.isEmpty()) {
+			console.forceprintln("*** Enable verbose logging to file: " + verboseFile);
+		}
 
 		// re-creates something according to the new settings.
 		accessor = useEmbedded ? new EmbeddedNeoAccessor(DBPATH) : new RestfulNeoAccessor(DBURL);

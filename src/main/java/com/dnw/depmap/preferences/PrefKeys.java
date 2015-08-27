@@ -39,5 +39,9 @@ public class PrefKeys {
 
 	public static final String P_PREEXEC = "com.dnw.depmap.preExecution";
 
-	public static final String P_LOGVERBOSE = "com.dnw.depmap.logVerbose";
+	public static final String P_LOGVERBOSETOCON = "com.dnw.depmap.logVerboseToConsole";
+
+	public static final String P_LOGVERBOSETOFILE = "com.dnw.depmap.logVerboseToFile";
+
+	public static final String P_LOGVERBOSEFILE = "com.dnw.depmap.logVerboseFile";
 }
