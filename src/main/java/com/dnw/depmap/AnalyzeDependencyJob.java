@@ -153,6 +153,8 @@ public final class AnalyzeDependencyJob extends Job {
 	protected IStatus run(IProgressMonitor monitor) {
 		long beginTime = System.currentTimeMillis();
 		monitor.beginTask("AnalyzeDependency", 100);
+		// clear binding cache.
+		BindingCache.clear();
 		try {
 			// divides the whole progress into 100 ticks.
 			SubMonitor sub = SubMonitor.convert(monitor, 100);
