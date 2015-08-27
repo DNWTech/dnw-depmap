@@ -47,13 +47,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				+ "# match (n) delete n\n" // delete all nodes.
 				+ "drop constraint on (t:Type) ASSERT t.name is unique\n" // delete unique constraint on type names.
 				+ "drop constraint on (m:Method) ASSERT m.name is unique\n" // delete unique constraint on method names.
-				+ "drop constraint on (a:Annotation) ASSERT m.name is unique\n" // delete unique constraint on annotation names.
+				+ "drop constraint on (a:Annotation) ASSERT a.name is unique\n" // delete unique constraint on annotation names.
 				+ "drop index on :Type(caption)\n" // delete index on type captions.
 				+ "drop index on :Method(caption)\n" // delete index on method captions.
 				+ "drop index on :Annotation(caption)\n" // delete index on annotation captions.
 				+ "create constraint on (t:Type) ASSERT t.name is unique\n" // create unique constraint on type names.
 				+ "create constraint on (m:Method) ASSERT m.name is unique\n" // create unique constraint on method names.
-				+ "create constraint on (a:Annotation) ASSERT m.name is unique\n" // create unique constraint on annotation names.
+				+ "create constraint on (a:Annotation) ASSERT a.name is unique\n" // create unique constraint on annotation names.
 				+ "create index on :Type(caption)\n" // create index on type captions.
 				+ "create index on :Method(caption)\n" // create index on method captions.
 				+ "create index on :Annotation(caption)" // create index on annotation captions.
