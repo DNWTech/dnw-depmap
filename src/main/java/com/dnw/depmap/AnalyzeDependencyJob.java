@@ -122,8 +122,9 @@ public final class AnalyzeDependencyJob extends Job {
 		int count = 0;
 		for (IResource resource : resources) {
 			if (isCanceled) {
-				Activator.getDefault().console.forceprintln("*** Analyzation has been canceled, "
-						+ count + " file(s) proessed.");
+				Activator.getDefault().console
+						.forceprintln("*** Analysis process has been canceled, " + count
+								+ " file(s) proessed.");
 				break;
 			}
 			IResourceVisitor visitor = Activator.getDefault().factory.createVisitor(resource,
@@ -185,7 +186,7 @@ public final class AnalyzeDependencyJob extends Job {
 		} finally {
 			monitor.done();
 			long duration = System.currentTimeMillis() - beginTime;
-			Activator.getDefault().console.forceprintln("*** Analyzation finished, total "
+			Activator.getDefault().console.forceprintln("*** Analysis process finished, total "
 					+ tellDuration(duration) + " elapsed.");
 		}
 		return isCanceled ? Status.CANCEL_STATUS : Status.OK_STATUS;
