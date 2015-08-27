@@ -74,7 +74,7 @@ public class JavaFileVisitor implements IResourceVisitor {
 			parser.setSource(unit);
 			CompilationUnit root = (CompilationUnit)parser.createAST(null);
 			VisitContext context = new VisitContext(file, parser, unit, root, monitor);
-			ASTVisitor visitor = new ASTVisitorAdapter(context, Activator.delegator);
+			ASTVisitor visitor = new ASTVisitorAdapter(context, Activator.getDefault().delegator);
 			root.accept(visitor);
 		} finally {
 			monitor.done();

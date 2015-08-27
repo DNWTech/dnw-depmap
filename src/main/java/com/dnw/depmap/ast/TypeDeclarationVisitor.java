@@ -46,9 +46,9 @@ public class TypeDeclarationVisitor implements IVisitor<TypeDeclaration> {
 	 */
 	@Override
 	public void visit(TypeDeclaration node, VisitContext context) {
-		Activator.console.println(" -- Visit TypeDeclaration: " + node.getName());
+		Activator.getDefault().console.println(" -- Visit TypeDeclaration: " + node.getName());
 		ITypeBinding type = node.resolveBinding();
-		Activator.console.println(AstUtil.infoOf(context, node, type));
+		Activator.getDefault().console.println(AstUtil.infoOf(context, node, type));
 		// call DAO to generate the method node and its related relationships.
 		Activator.neo().createType(type, context.file.getFullPath().toPortableString(),
 				context.lineOf(node));
@@ -57,7 +57,7 @@ public class TypeDeclarationVisitor implements IVisitor<TypeDeclaration> {
 		for (IExtendedModifier m : modifiers) {
 			if (m.isAnnotation()) {
 				Annotation a = (Annotation)m;
-				Activator.console.println(" -- Annotation Found: " + a.toString());
+				Activator.getDefault().console.println(" -- Annotation Found: " + a.toString());
 				// to generate the annotation node and its relationship.
 				Activator.neo().createTypeAnnotation(type, a.resolveTypeBinding(),
 						context.file.getFullPath().toPortableString(), context.lineOf(a));

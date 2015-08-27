@@ -13,6 +13,7 @@
  */
 package com.dnw.depmap;
 
+import java.text.DecimalFormat;
 import java.util.Iterator;
 import java.util.List;
 
@@ -66,13 +67,14 @@ public final class AnalyzeDependencyJob extends Job {
 	 */
 	private final IResourceFinder filterSupportedResource(IStructuredSelection selection,
 			IProgressMonitor monitor) {
-		FactoryBasedResourceFinder finder = new FactoryBasedResourceFinder(Activator.factory,
-				monitor);
+		FactoryBasedResourceFinder finder = new FactoryBasedResourceFinder(
+				Activator.getDefault().factory, monitor);
 		try {
 			monitor.beginTask("Finding files...", selection.size());
 			for (@SuppressWarnings("rawtypes") Iterator it = selection.iterator(); it.hasNext();) {
 				if (isCanceled) {
-					Activator.console.forceprintln("*** File finding has been canceled.");
+					Activator.getDefault().console
+							.forceprintln("*** File finding has been canceled.");
 					break;
 				}
 				Object element = it.next();
@@ -86,7 +88,7 @@ public final class AnalyzeDependencyJob extends Job {
 							resource.accept(finder);
 					}
 				} catch (CoreException e) {
-					Activator.console.println(e);
+					Activator.getDefault().console.println(e);
 				}
 			}
 		} finally {
@@ -120,17 +122,18 @@ public final class AnalyzeDependencyJob extends Job {
 		int count = 0;
 		for (IResource resource : resources) {
 			if (isCanceled) {
-				Activator.console.forceprintln("*** Analyzation has been canceled, " + count
-						+ " file(s) proessed.");
+				Activator.getDefault().console.forceprintln("*** Analyzation has been canceled, "
+						+ count + " file(s) proessed.");
 				break;
 			}
-			IResourceVisitor visitor = Activator.factory.createVisitor(resource, sub.newChild(100));
+			IResourceVisitor visitor = Activator.getDefault().factory.createVisitor(resource,
+					sub.newChild(100));
 			if (visitor != null) {
 				try {
 					++count;
 					resource.accept(visitor);
 				} catch (CoreException e) {
-					Activator.console.println(e);
+					Activator.getDefault().console.println(e);
 				}
 			}
 		}
@@ -155,8 +158,8 @@ public final class AnalyzeDependencyJob extends Job {
 			SubMonitor sub = SubMonitor.convert(monitor, 100);
 			// finding known resources will use 3 ticks.
 			IResourceFinder finder = filterSupportedResource(selection, sub.newChild(3));
-			Activator.console.forceprintln("*** Total " + finder.getSupportedList().size()
-					+ " file(s) found.");
+			Activator.getDefault().console.forceprintln("*** Total "
+					+ finder.getSupportedList().size() + " file(s) found.");
 			if (isCanceled) {
 				return Status.CANCEL_STATUS;
 			}
@@ -166,8 +169,8 @@ public final class AnalyzeDependencyJob extends Job {
 			// starts up the Neo4j database.
 			Activator.getDefault().accessor.startup();
 			// cleans up the database if required.
-			if (Activator.preExec) {
-				for (String s : Activator.statements) {
+			if (Activator.getDefault().preExec) {
+				for (String s : Activator.getDefault().statements) {
 					Activator.getDefault().accessor.execute(s);
 				}
 			}
@@ -180,7 +183,7 @@ public final class AnalyzeDependencyJob extends Job {
 		} finally {
 			monitor.done();
 			long duration = System.currentTimeMillis() - beginTime;
-			Activator.console.forceprintln("*** Analyzation finished, total "
+			Activator.getDefault().console.forceprintln("*** Analyzation finished, total "
 					+ tellDuration(duration) + " elapsed.");
 		}
 		return isCanceled ? Status.CANCEL_STATUS : Status.OK_STATUS;
@@ -203,25 +206,26 @@ public final class AnalyzeDependencyJob extends Job {
 	 */
 	private final static String tellDuration(long duration) {
 		StringBuffer sb = new StringBuffer();
+		DecimalFormat f = new DecimalFormat("'.'000");
 		long rest = duration;
 		int highest = 0;
 
 		long year = rest / F_YEAR;
 		rest -= year * F_YEAR;
 		if (year > 0) {
-			sb.append(year);
-			sb.append("Y");
 			if (highest < 6)
 				highest = 6;
+			sb.append(year);
+			sb.append('Y');
 		}
 
 		long month = rest / F_MONTH;
 		rest -= month * F_MONTH;
 		if (month > 0) {
-			sb.append(month);
-			sb.append("M");
 			if (highest < 5)
 				highest = 5;
+			sb.append(month);
+			sb.append('M');
 		} else if (highest > 5) {
 			sb.append("0M");
 		}
@@ -229,10 +233,10 @@ public final class AnalyzeDependencyJob extends Job {
 		long day = rest / F_DAY;
 		rest -= day * F_DAY;
 		if (day > 0) {
-			sb.append(day);
-			sb.append("D");
 			if (highest < 4)
 				highest = 4;
+			sb.append(day);
+			sb.append('D');
 		} else if (highest > 4) {
 			sb.append("0D");
 		}
@@ -240,10 +244,10 @@ public final class AnalyzeDependencyJob extends Job {
 		long hour = rest / F_HOUR;
 		rest -= hour * F_HOUR;
 		if (hour > 0) {
-			sb.append(hour);
-			sb.append("h");
 			if (highest < 3)
 				highest = 3;
+			sb.append(hour);
+			sb.append('h');
 		} else if (highest > 3) {
 			sb.append("0h");
 		}
@@ -251,10 +255,10 @@ public final class AnalyzeDependencyJob extends Job {
 		long minute = rest / F_MINUTE;
 		rest -= minute * F_MINUTE;
 		if (minute > 0) {
-			sb.append(minute);
-			sb.append("m");
 			if (highest < 2)
 				highest = 2;
+			sb.append(minute);
+			sb.append('m');
 		} else if (highest > 2) {
 			sb.append("0m");
 		}
@@ -262,17 +266,19 @@ public final class AnalyzeDependencyJob extends Job {
 		long second = rest / F_SECOND;
 		rest -= second * F_SECOND;
 		if (second > 0) {
-			sb.append(second);
-			sb.append("s");
 			if (highest < 1)
 				highest = 1;
-		} else if (highest > 1) {
-			sb.append("0s");
-		}
-
-		if (highest < 2) {
-			sb.append(rest);
-			sb.append("ms");
+			sb.append(second);
+			if (highest <= 2) {
+				sb.append(f.format(rest));
+			}
+			sb.append('s');
+		} else {
+			sb.append('0');
+			if (highest <= 2) {
+				sb.append(f.format(rest));
+			}
+			sb.append('s');
 		}
 
 		return sb.toString();

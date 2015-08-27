@@ -68,11 +68,11 @@ public class RestfulNeoAccessor implements NeoAccessor {
 		M m = (M)J.parse((InputStream)response.getEntity());
 		L errors = m.vl("errors");
 		if (errors.length() > 0) {
-			Activator.console.forceprintln(" >> Request: " + jsonData);
-			Activator.console.forceprintln("  <  Result: " + String.valueOf(m));
+			Activator.getDefault().console.forceprintln(" >> Request: " + jsonData);
+			Activator.getDefault().console.forceprintln("  <  Result: " + String.valueOf(m));
 		} else {
-			Activator.console.println(" >> Request: " + jsonData);
-			Activator.console.println("  <  Result: " + String.valueOf(m));
+			Activator.getDefault().console.println(" >> Request: " + jsonData);
+			Activator.getDefault().console.println("  <  Result: " + String.valueOf(m));
 		}
 		return m;
 	}

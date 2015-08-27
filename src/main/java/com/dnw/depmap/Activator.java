@@ -57,53 +57,39 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in ID
 	public static final String PLUGIN_ID = "com.dnw.depmap";
-
-	// The Neo4j database settings.
-	// These 3 settings will be set in preference page.
-	private static boolean useEmbedded = false;
-	private static String DBURL;
-	private static String DBPATH;
-
 	// The shared instance.
 	private static Activator plugin;
 
 	// The plug-in's console.
-	public static final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
+	public final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
 	// This factory defines what kinds of files will be inspected in a project.
 	// For now, we only support .java files.
-	public static final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
+	public final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
 	// The white list limits what packages or classes should be focused.
 	// The content of the filter list will be set in preference page.
-	public static final CommonFilter<String> filter = new CommonFilter<String>();
+	public final CommonFilter<String> filter = new CommonFilter<String>();
 
 	// The AST node type set defines a stop set. (not used now)
 	// All nodes with its type in this set will be ignored, do not traverse it to improve the performance.
-	public static final NodeTypeBitMapSet stopSet = new NodeTypeBitMapSet();
+	public final NodeTypeBitMapSet stopSet = new NodeTypeBitMapSet();
 	// Register the corresponding AST visitor to visit the AST.
-	public static final IVisitorRegistry registry = new GeneralVisitorRegistry();
+	public final IVisitorRegistry registry = new GeneralVisitorRegistry();
 	// Apply the stop set on the visitors.
-	public static final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry,
-			stopSet);
+	public final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry, stopSet);
 
-	static {
-		// For now, we only examine the .java files.
-		factory.registerVisitor("java", JavaFileVisitor.class);
-		// factory.registerVisitor("xml", XmlFileVisitor.class);
-
-		// Those AST nodes should be carefully handled.
-		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
-		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());
-		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
-	}
-
+	// The Neo4j database settings.
+	// These 3 settings will be set in preference page.
+	private boolean useEmbedded = false;
+	private String DBURL;
+	private String DBPATH;
 	// Neo4j database Cypher language executor.
 	public NeoAccessor accessor;
 	// Neo4j accessor to generate all AST nodes and its relations.
 	public NeoDao neo;
 	// If true, a set of Cypher statements will be executed before AST traverse. 
 	// These 2 settings will be set in preference page.
-	public static boolean preExec = false;
-	public static List<String> statements = new ArrayList<String>();
+	public boolean preExec = false;
+	public List<String> statements = new ArrayList<String>();
 
 	// When the settings in preference page change, we should re-load them, this listener works for that.
 	private final IPropertyChangeListener listener;
@@ -115,6 +101,16 @@ public class Activator extends AbstractUIPlugin {
 	 * @since Sep 29, 2014
 	 */
 	public Activator() {
+		// For now, we only examine the .java files.
+		factory.registerVisitor("java", JavaFileVisitor.class);
+		// factory.registerVisitor("xml", XmlFileVisitor.class);
+
+		// Those AST nodes should be carefully handled.
+		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());
+		registry.add(MethodDeclaration.class, new MethodDeclarationVisitor());
+		registry.add(MethodInvocation.class, new MethodInvocationVisitor());
+
+		// create preference page change listener.
 		listener = new IPropertyChangeListener() {
 
 			@Override

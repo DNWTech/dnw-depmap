@@ -49,7 +49,7 @@ public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 	 */
 	@Override
 	public void visit(MethodInvocation node, VisitContext context) {
-		Activator.console.println(" -- Visit MethodInvocation: " + node.toString());
+		Activator.getDefault().console.println(" -- Visit MethodInvocation: " + node.toString());
 		// find the containing method of this method invocation.
 		// TODO: what if a method invocation not happens in a method? i.e. during class initialization.
 		ASTNode p = node.getParent();
@@ -61,14 +61,14 @@ public class MethodInvocationVisitor implements IVisitor<MethodInvocation> {
 			}
 		}
 		MethodDeclaration decl = (MethodDeclaration)p;
-		Activator.console.println("  . Method is called from: " + make(decl));
+		Activator.getDefault().console.println("  . Method is called from: " + make(decl));
 		if (p == null)
 			return;
 
 		IMethodBinding from = decl.resolveBinding();
-		Activator.console.println(AstUtil.infoOf(context, decl, from));
+		Activator.getDefault().console.println(AstUtil.infoOf(context, decl, from));
 		IMethodBinding to = node.resolveMethodBinding();
-		Activator.console.println(AstUtil.infoOf(context, node, to));
+		Activator.getDefault().console.println(AstUtil.infoOf(context, node, to));
 		String expr = node.getExpression() != null ? node.getExpression().toString() : "";
 		List<String> args = arguments(node.arguments());
 		// call DAO to generate the method node and its related relationships.

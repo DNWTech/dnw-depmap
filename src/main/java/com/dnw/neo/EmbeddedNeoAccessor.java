@@ -14,6 +14,7 @@
 package com.dnw.neo;
 
 import org.neo4j.cypher.javacompat.ExecutionEngine;
+import org.neo4j.cypher.javacompat.ExecutionResult;
 import org.neo4j.graphdb.GraphDatabaseService;
 import org.neo4j.graphdb.Transaction;
 import org.neo4j.graphdb.factory.GraphDatabaseFactory;
@@ -77,8 +78,8 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 		}
 		Transaction tx = gdb.beginTx();
 		try {
-			Activator.console.println(" -> executing: " + statement);
-			engine.execute(statement);
+			Activator.getDefault().console.println(" -> executing: " + statement);
+			ExecutionResult r = engine.execute(statement);
 			tx.success();
 		} finally {
 			tx.close();
@@ -101,8 +102,8 @@ public class EmbeddedNeoAccessor implements NeoAccessor {
 		}
 		Transaction tx = gdb.beginTx();
 		try {
-			Activator.console.println(" >> executing: " + statement);
-			Activator.console.println("  >   " + params.toJson());
+			Activator.getDefault().console.println(" >> executing: " + statement);
+			Activator.getDefault().console.println("  >   " + params.toJson());
 			engine.execute(statement, params.map());
 			tx.success();
 		} finally {

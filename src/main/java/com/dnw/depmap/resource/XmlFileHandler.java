@@ -59,7 +59,7 @@ public class XmlFileHandler extends DefaultHandler {
 		try {
 			MarkerUtil.createMarker(file, markerType, severity, e.getMessage(), e.getLineNumber());
 		} catch (CoreException ex) {
-			Activator.console.println(ex);
+			Activator.getDefault().console.println(ex);
 		}
 	}
 

@@ -47,9 +47,9 @@ public class MethodDeclarationVisitor implements IVisitor<MethodDeclaration> {
 	 */
 	@Override
 	public void visit(MethodDeclaration node, VisitContext context) {
-		Activator.console.println(" -- Visit MethodDeclaration: " + make(node));
+		Activator.getDefault().console.println(" -- Visit MethodDeclaration: " + make(node));
 		IMethodBinding method = node.resolveBinding();
-		Activator.console.println(AstUtil.infoOf(context, node, method));
+		Activator.getDefault().console.println(AstUtil.infoOf(context, node, method));
 		// call DAO to generate the method node and its related relationships.
 		Activator.neo().createMethod(method, context.file.getFullPath().toPortableString(),
 				context.lineOf(node));
@@ -58,7 +58,7 @@ public class MethodDeclarationVisitor implements IVisitor<MethodDeclaration> {
 		for (IExtendedModifier m : modifiers) {
 			if (m.isAnnotation()) {
 				Annotation a = (Annotation)m;
-				Activator.console.println(" -- Annotation Found: " + a.toString());
+				Activator.getDefault().console.println(" -- Annotation Found: " + a.toString());
 				// to generate the annotation node and its relationship.
 				Activator.neo().createMethodAnnotation(method, a.resolveTypeBinding(),
 						context.file.getFullPath().toPortableString(), context.lineOf(a));

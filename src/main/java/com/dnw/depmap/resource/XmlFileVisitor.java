@@ -67,13 +67,13 @@ public class XmlFileVisitor implements IResourceVisitor {
 			SAXParser p = parserFactory.newSAXParser();
 			p.parse(file.getContents(), reporter);
 		} catch (SAXException e) {
-			Activator.console.println(e);
+			Activator.getDefault().console.println(e);
 		} catch (IOException e) {
-			Activator.console.println(e);
+			Activator.getDefault().console.println(e);
 		} catch (ParserConfigurationException e) {
-			Activator.console.println(e);
+			Activator.getDefault().console.println(e);
 		} catch (CoreException e) {
-			Activator.console.println(e);
+			Activator.getDefault().console.println(e);
 		}
 	}
 
