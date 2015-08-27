@@ -44,7 +44,6 @@ final class MethodBindingConverter implements K<IMethodBinding> {
 	 */
 	@Override
 	public Object convert(IMethodBinding value) {
-		String cached = BindingCache.get(value);
-		return cached != null ? cached : AstUtil.nameOf(value);
+		return BindingCache.contains(value) ? BindingCache.get(value) : AstUtil.nameOf(value);
 	}
 }

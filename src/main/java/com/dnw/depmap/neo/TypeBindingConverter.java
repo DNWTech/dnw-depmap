@@ -37,7 +37,6 @@ final class TypeBindingConverter implements K<ITypeBinding> {
 	 */
 	@Override
 	public Object convert(ITypeBinding value) {
-		String cached = BindingCache.get(value);
-		return cached != null ? cached : AstUtil.nameOf(value);
+		return BindingCache.contains(value) ? BindingCache.get(value) : AstUtil.nameOf(value);
 	}
 }

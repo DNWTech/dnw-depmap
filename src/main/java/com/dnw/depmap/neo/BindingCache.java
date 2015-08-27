@@ -40,11 +40,11 @@ public final class BindingCache {
 	 * 
 	 * @author manbaum
 	 * @since Oct 18, 2014
-	 * @param key
+	 * @param binding
 	 * @param value
 	 */
-	public static final void put(IBinding key, String value) {
-		cache.put(key.getKey(), value);
+	public static final void put(IBinding binding, String value) {
+		cache.put(binding.getKey(), value);
 	}
 
 	/**
@@ -52,10 +52,10 @@ public final class BindingCache {
 	 * 
 	 * @author manbaum
 	 * @since Oct 18, 2014
-	 * @param key
+	 * @param binding
 	 */
-	public static final void remove(IBinding key) {
-		cache.remove(key.getKey());
+	public static final void remove(IBinding binding) {
+		cache.remove(binding.getKey());
 	}
 
 	/**
@@ -63,11 +63,11 @@ public final class BindingCache {
 	 * 
 	 * @author manbaum
 	 * @since Oct 18, 2014
-	 * @param key
+	 * @param binding
 	 * @return
 	 */
-	public static final boolean contains(IBinding key) {
-		return cache.contains(key.getKey());
+	public static final boolean contains(IBinding binding) {
+		return cache.contains(binding.getKey());
 	}
 
 	/**
@@ -75,11 +75,11 @@ public final class BindingCache {
 	 * 
 	 * @author manbaum
 	 * @since Oct 18, 2014
-	 * @param key
+	 * @param binding
 	 * @return
 	 */
-	public static final String get(IBinding key) {
-		return cache.get(key.getKey());
+	public static final String get(IBinding binding) {
+		return cache.get(binding.getKey());
 	}
 
 	/**
