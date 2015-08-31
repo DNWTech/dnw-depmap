@@ -8,7 +8,7 @@
             adaptable="true"
             id="com.dnw.depmap.analyzedependency"
             nameFilter="*"
-            objectClass="org.eclipse.jdt.core.IJavaElement">
+            objectClass="org.eclipse.core.resources.IResource">
          <action
                class="com.dnw.depmap.AnalyzeDependencyAction"
                id="com.dnw.depmap.analyzedependencyaction"

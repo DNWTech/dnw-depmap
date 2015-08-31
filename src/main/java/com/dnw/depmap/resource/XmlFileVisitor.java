@@ -19,15 +19,23 @@ import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
+import org.eclipse.core.filebuffers.FileBuffers;
+import org.eclipse.core.filebuffers.ITextFileBuffer;
+import org.eclipse.core.filebuffers.ITextFileBufferManager;
+import org.eclipse.core.filebuffers.LocationKind;
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.resources.IResource;
 import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
+import org.eclipse.jface.text.IDocument;
 import org.xml.sax.SAXException;
+import org.xml.sax.helpers.DefaultHandler;
 
 import com.dnw.depmap.Activator;
-import com.dnw.plugin.util.MarkerUtil;
+import com.dnw.xml.AbortVisitException;
+import com.dnw.xml.DefaultXmlHandler;
+import com.dnw.xml.ElementVisitContext;
 
 /**
  * Class/Interface XmlFileVisitor.
@@ -60,12 +68,14 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 * @author manbaum
 	 * @since Sep 30, 2014
 	 * @param file
-	 * @param reporter
+	 * @param handler
 	 */
-	private void doParse(IFile file, XmlFileHandler reporter) {
+	private void doParse(IFile file, DefaultHandler handler) {
 		try {
 			SAXParser p = parserFactory.newSAXParser();
-			p.parse(file.getContents(), reporter);
+			p.parse(file.getContents(), handler);
+		} catch (AbortVisitException e) {
+			Activator.getDefault().console.forceprintln("*** XML Parsing canceled!");
 		} catch (SAXException e) {
 			Activator.getDefault().console.println(e);
 		} catch (IOException e) {
@@ -88,13 +98,21 @@ public class XmlFileVisitor implements IResourceVisitor {
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile)resource;
+		Activator.getDefault().console.forceprintln("*** File: " + file.getFullPath());
+		ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
+		manager.connect(file.getLocation(), LocationKind.LOCATION, null);
 		try {
+			ITextFileBuffer buffer = manager.getTextFileBuffer(file.getLocation(),
+					LocationKind.LOCATION);
+			IDocument document = buffer.getDocument();
 			monitor.beginTask(file.getFullPath().toOSString(), 10);
-			MarkerUtil.deleteMarkers(file, MARKER_TYPE);
-			XmlFileHandler reporter = new XmlFileHandler(file, MARKER_TYPE);
-			doParse(file, reporter);
+			ElementVisitContext context = new ElementVisitContext(file, document, monitor);
+			DefaultXmlHandler handler = new DefaultXmlHandler(context,
+					Activator.getDefault().xmlvisitor);
+			doParse(file, handler);
 		} finally {
 			monitor.done();
+			manager.disconnect(file.getLocation(), LocationKind.LOCATION, null);
 		}
 		return false;
 	}

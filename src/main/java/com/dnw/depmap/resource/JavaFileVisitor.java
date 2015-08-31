@@ -26,6 +26,7 @@ import org.eclipse.jdt.core.dom.ASTVisitor;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
 import com.dnw.depmap.Activator;
+import com.dnw.depmap.neo.BindingCache;
 import com.dnw.plugin.ast.ASTVisitorAdapter;
 import com.dnw.plugin.ast.VisitContext;
 
@@ -65,7 +66,9 @@ public class JavaFileVisitor implements IResourceVisitor {
 	 */
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile)resource;
+		Activator.getDefault().console.forceprintln("*** File: " + file.getFullPath());
 		try {
+			BindingCache.clear();
 			monitor.beginTask(file.getFullPath().toString(), 10);
 			ASTParser parser = ASTParser.newParser(AST.JLS3);
 			parser.setKind(ASTParser.K_COMPILATION_UNIT);
@@ -76,6 +79,9 @@ public class JavaFileVisitor implements IResourceVisitor {
 			VisitContext context = new VisitContext(file, parser, unit, root, monitor);
 			ASTVisitor visitor = new ASTVisitorAdapter(context, Activator.getDefault().delegator);
 			root.accept(visitor);
+			if (monitor.isCanceled()) {
+				Activator.getDefault().console.forceprintln("*** Java file parsing canceled!");
+			}
 		} finally {
 			monitor.done();
 		}
