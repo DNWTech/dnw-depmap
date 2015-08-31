@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Aug 28, 2015.
  */
-package com.dnw.xml;
+package com.dnw.plugin.xml;
 
 import org.eclipse.core.resources.IFile;
 import org.eclipse.core.runtime.IProgressMonitor;

@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Aug 31, 2015.
  */
-package com.dnw.xml;
+package com.dnw.plugin.xml;
 
 import org.xml.sax.SAXException;
 

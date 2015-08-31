@@ -48,7 +48,7 @@ import com.dnw.plugin.ast.NodeTypeBitMapSet;
 import com.dnw.plugin.ast.RegistryBasedVisitorDelegator;
 import com.dnw.plugin.resource.FileExtResourceVisitorFactory;
 import com.dnw.plugin.util.ConsoleUtil;
-import com.dnw.xml.IElementVisitor;
+import com.dnw.plugin.xml.IElementVisitor;
 
 /**
  * The activator class controls the plug-in life cycle.

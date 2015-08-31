@@ -33,9 +33,9 @@ import org.xml.sax.SAXException;
 import org.xml.sax.helpers.DefaultHandler;
 
 import com.dnw.depmap.Activator;
-import com.dnw.xml.AbortVisitException;
-import com.dnw.xml.DefaultXmlHandler;
-import com.dnw.xml.ElementVisitContext;
+import com.dnw.plugin.xml.AbortVisitException;
+import com.dnw.plugin.xml.DefaultXmlHandler;
+import com.dnw.plugin.xml.ElementVisitContext;
 
 /**
  * Class/Interface XmlFileVisitor.

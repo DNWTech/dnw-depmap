@@ -16,9 +16,9 @@ package com.dnw.depmap.xml;
 import java.util.List;
 
 import com.dnw.depmap.Activator;
-import com.dnw.xml.Element;
-import com.dnw.xml.ElementVisitContext;
-import com.dnw.xml.IElementVisitor;
+import com.dnw.plugin.xml.Element;
+import com.dnw.plugin.xml.ElementVisitContext;
+import com.dnw.plugin.xml.IElementVisitor;
 
 /**
  * Class/Interface DefaultVisitor.
@@ -35,8 +35,8 @@ public class DefaultElementVisitor implements IElementVisitor {
 	 * @since Aug 28, 2015
 	 * @param context
 	 * @param e
-	 * @see com.dnw.xml.IElementVisitor#beginElement(com.dnw.xml.Element,
-	 *      com.dnw.xml.ElementVisitContext)
+	 * @see com.dnw.plugin.xml.IElementVisitor#beginElement(com.dnw.plugin.xml.Element,
+	 *      com.dnw.plugin.xml.ElementVisitContext)
 	 */
 	@Override
 	public void beginElement(ElementVisitContext context, Element e) {
@@ -51,8 +51,8 @@ public class DefaultElementVisitor implements IElementVisitor {
 	 * @since Aug 28, 2015
 	 * @param context
 	 * @param e
-	 * @see com.dnw.xml.IElementVisitor#endElement(com.dnw.xml.Element,
-	 *      com.dnw.xml.ElementVisitContext)
+	 * @see com.dnw.plugin.xml.IElementVisitor#endElement(com.dnw.plugin.xml.Element,
+	 *      com.dnw.plugin.xml.ElementVisitContext)
 	 */
 	@Override
 	public void endElement(ElementVisitContext context, Element e) {

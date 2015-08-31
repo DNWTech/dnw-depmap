@@ -23,7 +23,7 @@ import com.dnw.json.J;
 import com.dnw.json.M;
 import com.dnw.neo.NeoAccessor;
 import com.dnw.plugin.ast.AstUtil;
-import com.dnw.xml.Element;
+import com.dnw.plugin.xml.Element;
 
 /**
  * Class/Interface NeoWriter.

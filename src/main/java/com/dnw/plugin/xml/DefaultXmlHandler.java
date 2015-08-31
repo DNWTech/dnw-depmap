@@ -11,7 +11,7 @@
  *
  * Create by manbaum since Sep 30, 2014.
  */
-package com.dnw.xml;
+package com.dnw.plugin.xml;
 
 import org.xml.sax.Attributes;
 import org.xml.sax.Locator;

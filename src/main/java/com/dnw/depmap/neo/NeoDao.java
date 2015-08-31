@@ -22,7 +22,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import com.dnw.matcher.IFilterService;
 import com.dnw.plugin.ast.AstUtil;
-import com.dnw.xml.Element;
+import com.dnw.plugin.xml.Element;
 
 /**
  * Class/Interface NeoDao.
