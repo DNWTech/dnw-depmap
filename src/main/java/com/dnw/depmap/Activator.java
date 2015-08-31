@@ -33,6 +33,8 @@ import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
 import com.dnw.depmap.preferences.PrefKeys;
 import com.dnw.depmap.resource.JavaFileVisitor;
+import com.dnw.depmap.resource.XmlFileVisitor;
+import com.dnw.depmap.xml.DefaultElementVisitor;
 import com.dnw.matcher.CommonFilter;
 import com.dnw.matcher.RegexMatcher;
 import com.dnw.matcher.StringMatcher;
@@ -46,6 +48,7 @@ import com.dnw.plugin.ast.NodeTypeBitMapSet;
 import com.dnw.plugin.ast.RegistryBasedVisitorDelegator;
 import com.dnw.plugin.resource.FileExtResourceVisitorFactory;
 import com.dnw.plugin.util.ConsoleUtil;
+import com.dnw.xml.IElementVisitor;
 
 /**
  * The activator class controls the plug-in life cycle.
@@ -77,6 +80,8 @@ public class Activator extends AbstractUIPlugin {
 	// Apply the stop set on the visitors.
 	public final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry, stopSet);
 
+	public final IElementVisitor xmlvisitor = new DefaultElementVisitor();
+
 	// The Neo4j database settings.
 	// These 3 settings will be set in preference page.
 	private boolean useEmbedded = false;
@@ -103,7 +108,7 @@ public class Activator extends AbstractUIPlugin {
 	public Activator() {
 		// For now, we only examine the .java files.
 		factory.registerVisitor("java", JavaFileVisitor.class);
-		// factory.registerVisitor("xml", XmlFileVisitor.class);
+		factory.registerVisitor("xml", XmlFileVisitor.class);
 
 		// Those AST nodes should be carefully handled.
 		registry.add(TypeDeclaration.class, new TypeDeclarationVisitor());

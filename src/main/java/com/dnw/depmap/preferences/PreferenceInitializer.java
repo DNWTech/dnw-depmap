@@ -42,21 +42,32 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PrefKeys.P_DBDIR, "./neo4j-community-2.1.5/data/graph.db");
 		store.setDefault(PrefKeys.P_WHITELIST, "com\\.dnw\\..*\n@java.lang.Object");
 		store.setDefault(PrefKeys.P_PREFERWHITE, false);
-		store.setDefault(PrefKeys.P_USEPREEXEC, true);
-		store.setDefault(PrefKeys.P_PREEXEC, "# match ()-[r]-() delete r\n" // delete all relations.
-				+ "# match (n) delete n\n" // delete all nodes.
-				+ "drop constraint on (t:Type) ASSERT t.name is unique\n" // delete unique constraint on type names.
-				+ "drop constraint on (m:Method) ASSERT m.name is unique\n" // delete unique constraint on method names.
-				+ "drop constraint on (a:Annotation) ASSERT a.name is unique\n" // delete unique constraint on annotation names.
-				+ "drop index on :Type(caption)\n" // delete index on type captions.
-				+ "drop index on :Method(caption)\n" // delete index on method captions.
-				+ "drop index on :Annotation(caption)\n" // delete index on annotation captions.
-				+ "create constraint on (t:Type) ASSERT t.name is unique\n" // create unique constraint on type names.
-				+ "create constraint on (m:Method) ASSERT m.name is unique\n" // create unique constraint on method names.
-				+ "create constraint on (a:Annotation) ASSERT a.name is unique\n" // create unique constraint on annotation names.
-				+ "create index on :Type(caption)\n" // create index on type captions.
-				+ "create index on :Method(caption)\n" // create index on method captions.
-				+ "create index on :Annotation(caption)" // create index on annotation captions.
+		store.setDefault(PrefKeys.P_USEPREEXEC, false);
+		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r\n" // delete all relations.
+				+ "match (n) delete n\n" // delete all nodes.
+				+ "create constraint on (t:Class) assert t.name is unique\n" // create unique constraint on type names.
+				+ "create constraint on (t:Interface) assert t.name is unique\n" // create unique constraint on type names.
+				+ "create constraint on (t:Type) assert t.name is unique\n" // create unique constraint on type names.
+				+ "create constraint on (m:Method) assert m.name is unique\n" // create unique constraint on method names.
+				+ "create constraint on (a:Annotation) assert a.name is unique\n" // create unique constraint on annotation names.
+				+ "create constraint on (e:XMLRoot) assert e.path is unique\n" //
+				+ "create constraint on (e:XMLTop) assert e.path is unique\n" //
+				+ "create constraint on (e:XMLElement) assert e.path is unique\n" //
+				+ "create constraint on (a:XMLAttribute) assert a.path is unique\n" //
+				+ "create index on :Type (caption)\n" // create index on type captions.
+				+ "create index on :Method (caption)\n" // create index on method captions.
+				+ "create index on :Annotation (caption)\n" // create index on annotation captions.
+				+ "create index on :XMLElement (qname)\n" //
+				+ "create index on :XMLElement (top)\n" //
+				+ "create index on :XMLElement (parent)\n" //
+				+ "create index on :XMLElement (level)\n" //
+				+ "create index on :XMLElement (text)\n" //
+				+ "create index on :XMLElement (id)\n" //
+				+ "create index on :XMLElement (name)\n" //
+				+ "create index on :XMLElement (value)\n" //
+				+ "create index on :XMLElement (class)\n" //
+				+ "create index on :XMLAttribute (qname)\n" //
+				+ "create index on :XMLAttribute (parent)\n" //
 		);
 		store.setDefault(PrefKeys.P_LOGVERBOSETOCON, false);
 		store.setDefault(PrefKeys.P_LOGVERBOSETOFILE, false);

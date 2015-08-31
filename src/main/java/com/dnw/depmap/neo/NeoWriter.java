@@ -14,6 +14,7 @@
 package com.dnw.depmap.neo;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
@@ -22,6 +23,7 @@ import com.dnw.json.J;
 import com.dnw.json.M;
 import com.dnw.neo.NeoAccessor;
 import com.dnw.plugin.ast.AstUtil;
+import com.dnw.xml.Element;
 
 /**
  * Class/Interface NeoWriter.
@@ -48,16 +50,16 @@ public class NeoWriter {
 			+ "on create set t.caption={caption}, t.implements={implements}, t.extends={extends} ";
 	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) "
 			+ "on create set t.caption={caption}, t.extends={extends} ";
-	public static final String ADDTYPEFILE = "merge (t:Type {name:{name}}) "
-			+ "on match set t.file={file}, t.linenumber={linenumber} ";
-	public static final String CREATEIMPLEMENTS = "match (f:Type {name:{fname}}) "
+	public static final String ADDTYPEFILE = "match (t:Type {name:{name}}) "
+			+ "set t.file={file}, t.lineNumber={lineNumber} ";
+	public static final String CREATEIMPLEMENT = "match (f:Type {name:{fname}}) "
 			+ "match (t:Type {name:{tname}}) " + "merge (f)-[:Implements]->(t) ";
 	public static final String CREATEEXTENDS = "match (f:Type {name:{fname}}) "
 			+ "match (t:Type {name:{tname}}) " + "merge (f)-[:Extends]->(t) ";
 	public static final String CREATEMETHOD = "merge (m:Method {name:{name}}) "
 			+ "on create set m.caption={caption} ";
-	public static final String ADDMETHODFILE = "merge (m:Method {name:{name}}) "
-			+ "on match set m.file={file}, m.linenumber={linenumber} ";
+	public static final String ADDMETHODFILE = "match (m:Method {name:{name}}) "
+			+ "set m.file={file}, m.lineNumber={lineNumber} ";
 	public static final String CREATEDECLARE = "match (t:Type {name:{tname}}) "
 			+ "match(m:Method {name:{mname}}) " + "merge (t)-[:Declares]->(m) ";
 	public static final String CREATEINVOKE = "match (f:Method {name:{fname}}) "
@@ -67,12 +69,36 @@ public class NeoWriter {
 			+ "match (t:Method {name:{tname}}) " + "merge (f)-[:Overrides]-(t) ";
 	public static final String CREATEANNOTATION = "merge (a:Annotation {name:{name}}) "
 			+ "on create set a.caption={caption} ";
-	public static final String ADDANNOTATIONFILE = "merge (a:Annotation {name:{name}}) "
-			+ "on match set a.file={file}, a.linenumber={linenumber} ";
+	public static final String ADDANNOTATIONFILE = "match (a:Annotation {name:{name}}) "
+			+ "set a.file={file}, a.lineNumber={lineNumber} ";
 	public static final String CREATETYPEHAS = "match (t:Type {name:{tname}}) "
 			+ "match (a:Annotation {name:{aname}}) " + "merge (t)-[:Has]->(a) ";
 	public static final String CREATEMETHODHAS = "match (m:Method {name:{mname}}) "
 			+ "match (a:Annotation {name:{aname}}) " + "merge (m)-[:Has]->(a) ";
+
+	public static final String CREATEXMLROOT = "merge (e:XMLRoot:XMLElement {path:{path}}) "
+			+ "on create set e.qname={qname}, e.index={index}, "
+			+ "e.top={top}, e.parent={parent}, e.level={level}, "
+			+ "e.caption={qname}, e.file={file}, e.lineNumber={lineNumber} ";
+	public static final String CREATEXMLTOP = "merge (e:XMLTop:XMLElement {path:{path}}) "
+			+ "on create set e.qname={qname}, e.index={index}, "
+			+ "e.top={top}, e.parent={parent}, e.level={level}, "
+			+ "e.caption={qname}, e.file={file}, e.lineNumber={lineNumber} ";
+	public static final String CREATEXMLELEMENT = "merge (e:XMLElement {path:{path}}) "
+			+ "on create set e.qname={qname}, e.index={index}, "
+			+ "e.top={top}, e.parent={parent}, e.level={level}, "
+			+ "e.caption={qname}, e.file={file}, e.lineNumber={lineNumber} ";
+	public static final String CREATEXMLCONTAIN = "match (e:XMLElement {path:{epath}}) "
+			+ "match (c:XMLElement {path:{cpath}}) " + "merge (e)-[:Contains]->(c) ";
+	public static final String UPDATEXMLELEMENT = "match (t:XMLElement {path:{path}}) "
+			+ "set t += {props} ";
+	public static final String CREATEXMLATTRIBUTE = "merge (a:XMLAttribute {path:{path}}) "
+			+ "on create set a.qname={qname}, a.value={value}, "
+			+ "a.parent={parent}, a.caption={caption} ";
+	public static final String CREATEXMLWITH = "match (e:XMLElement {path:{epath}}) "
+			+ "match (a:XMLAttribute {path:{apath}}) " + "merge (e)-[:With]->(a) ";
+	public static final String UPDATEXMLATTR = "match (a:XMLAttribute {path:{path}}) "
+			+ "set a += {props} ";
 
 	static {
 		J.register(ITypeBinding.class, new TypeBindingConverter());
@@ -86,7 +112,7 @@ public class NeoWriter {
 	 * @since Oct 10, 2014
 	 * @param type
 	 */
-	public void createType(ITypeBinding type, String filepath, int linenumber) {
+	public void createType(ITypeBinding type, String filepath, int lineNumber) {
 		M p = M.m().a("name", type).a("caption", AstUtil.captionOf(type));
 		if (type.isInterface()) {
 			p.a("extends", type.getInterfaces());
@@ -96,7 +122,7 @@ public class NeoWriter {
 			accessor.execute(CREATECLASS, p);
 		}
 		if (!filepath.isEmpty()) {
-			p.a("file", filepath).a("linenumber", linenumber);
+			p.a("file", filepath).a("lineNumber", lineNumber);
 			accessor.execute(ADDTYPEFILE, p);
 		}
 	}
@@ -108,10 +134,10 @@ public class NeoWriter {
 	 * @since Oct 27, 2014
 	 * @param type
 	 * @param filepath
-	 * @param linenumber
+	 * @param lineNumber
 	 */
-	public void addTypeFileInfo(ITypeBinding type, String filepath, int linenumber) {
-		M p = M.m().a("name", type).a("file", filepath).a("linenumber", linenumber);
+	public void addTypeFileInfo(ITypeBinding type, String filepath, int lineNumber) {
+		M p = M.m().a("name", type).a("file", filepath).a("lineNumber", lineNumber);
 		accessor.execute(ADDTYPEFILE, p);
 	}
 
@@ -123,9 +149,9 @@ public class NeoWriter {
 	 * @param type
 	 * @param base
 	 */
-	public void createImplements(ITypeBinding type, ITypeBinding base) {
+	public void createImplement(ITypeBinding type, ITypeBinding base) {
 		M p = M.m().a("fname", type).a("tname", base);
-		accessor.execute(CREATEIMPLEMENTS, p);
+		accessor.execute(CREATEIMPLEMENT, p);
 	}
 
 	/**
@@ -148,11 +174,11 @@ public class NeoWriter {
 	 * @since Oct 10, 2014
 	 * @param method
 	 */
-	public void createMethod(IMethodBinding method, String filepath, int linenumber) {
+	public void createMethod(IMethodBinding method, String filepath, int lineNumber) {
 		M p = M.m().a("name", method).a("caption", AstUtil.captionOf(method));
 		accessor.execute(CREATEMETHOD, p);
 		if (!filepath.isEmpty()) {
-			p.a("file", filepath).a("linenumber", linenumber);
+			p.a("file", filepath).a("lineNumber", lineNumber);
 			accessor.execute(ADDMETHODFILE, p);
 		}
 	}
@@ -164,10 +190,10 @@ public class NeoWriter {
 	 * @since Oct 27, 2014
 	 * @param method
 	 * @param filepath
-	 * @param linenumber
+	 * @param lineNumber
 	 */
-	public void addMethodFileInfo(IMethodBinding method, String filepath, int linenumber) {
-		M p = M.m().a("name", method).a("file", filepath).a("linenumber", linenumber);
+	public void addMethodFileInfo(IMethodBinding method, String filepath, int lineNumber) {
+		M p = M.m().a("name", method).a("file", filepath).a("lineNumber", lineNumber);
 		accessor.execute(ADDMETHODFILE, p);
 	}
 
@@ -221,13 +247,13 @@ public class NeoWriter {
 	 * @since Jan 22, 2015
 	 * @param type
 	 * @param filepath
-	 * @param linenumber
+	 * @param lineNumber
 	 */
-	public void createAnnotation(ITypeBinding annotation, String filepath, int linenumber) {
+	public void createAnnotation(ITypeBinding annotation, String filepath, int lineNumber) {
 		M p = M.m().a("name", annotation).a("caption", AstUtil.captionOf(annotation));
 		accessor.execute(CREATEANNOTATION, p);
 		if (filepath != null) {
-			p.a("file", filepath).a("linenumber", linenumber);
+			p.a("file", filepath).a("lineNumber", lineNumber);
 			accessor.execute(ADDANNOTATIONFILE, p);
 		}
 	}
@@ -239,10 +265,10 @@ public class NeoWriter {
 	 * @since Jan 22, 2015
 	 * @param annotation
 	 * @param filepath
-	 * @param linenumber
+	 * @param lineNumber
 	 */
-	public void addAnnotationFileInfo(ITypeBinding annotation, String filepath, int linenumber) {
-		M p = M.m().a("name", annotation).a("file", filepath).a("linenumber", linenumber);
+	public void addAnnotationFileInfo(ITypeBinding annotation, String filepath, int lineNumber) {
+		M p = M.m().a("name", annotation).a("file", filepath).a("lineNumber", lineNumber);
 		accessor.execute(ADDANNOTATIONFILE, p);
 	}
 
@@ -271,4 +297,70 @@ public class NeoWriter {
 		M p = M.m().a("mname", method).a("aname", annotation);
 		accessor.execute(CREATEMETHODHAS, p);
 	}
+
+	/**
+	 * Method createXmlElement.
+	 * 
+	 * @author manbaum
+	 * @since Aug 29, 2015
+	 * @param e
+	 */
+	public void createXmlElement(Element e) {
+		M p = M.m().a("path", e.uniquePath).a("qname", e.qName).a("index", e.index)
+				.a("top", e.top != null ? e.top.uniquePath : null)
+				.a("parent", e.parent != null ? e.parent.uniquePath : null).a("level", e.level)
+				.a("file", e.filepath()).a("lineNumber", e.lineNumber);
+		if (e.level == 1) {
+			accessor.execute(CREATEXMLTOP, p);
+		} else if (e.level == 0) {
+			accessor.execute(CREATEXMLROOT, p);
+		} else {
+			accessor.execute(CREATEXMLELEMENT, p);
+		}
+		for (Entry<String, String> t : e.attributeEntries()) {
+			String apath = e.uniquePath + '%' + t.getKey();
+			String caption = t.getValue().length() > 16 ? t.getKey() : t.getKey() + "= "
+					+ t.getValue();
+			M pa = M.m().a("path", apath).a("qname", t.getKey()).a("value", t.getValue())
+					.a("parent", e.uniquePath).a("caption", caption);
+			accessor.execute(CREATEXMLATTRIBUTE, pa);
+			M pw = M.m().a("epath", e.uniquePath).a("apath", apath);
+			accessor.execute(CREATEXMLWITH, pw);
+		}
+		if (e.parent != null) {
+			M pc = M.m().a("epath", e.parent.uniquePath).a("cpath", e.uniquePath);
+			accessor.execute(CREATEXMLCONTAIN, pc);
+		}
+	}
+
+	/**
+	 * Method updateXmlElement.
+	 * 
+	 * @author manbaum
+	 * @since Aug 29, 2015
+	 * @param e
+	 */
+	public void updateXmlElement(Element e, String caption) {
+		M props = M.m().a("id", e.id).a("name", e.name).a("value", e.value).a("caption", caption)
+				.a("childrenCount", e.countChildren()).a("attributeCount", e.countAttributes());
+		if (e.containsAttribute("class")) {
+			props.a("class", e.getAttribute("class"));
+		}
+		if (e.containsAttribute("parent")) {
+			props.a("parentId", e.getAttribute("parent"));
+		}
+		if (e.countChildren() == 0 && e.textLength() > 0) {
+			props.a("text", e.getText());
+		}
+		M p = M.m().a("path", e.uniquePath).a("props", props);
+		accessor.execute(UPDATEXMLELEMENT, p);
+	}
 }
+
+// bfw
+// match (t:XMLTop)-[:Contains*]->(x{qname:'ref'}) with t,x match (n:XMLTop) where n.id=x.text
+//       merge (t)-[r:Refers]->(n) on create set r.name=x.name, r.thru=x.path
+
+// spring
+// match (t:XMLTop)-[*]->(x:XMLAttribute{qname:'ref'}) with t,x match (n:XMLTop) where n.id=x.value
+//       merge (t)-[r:Refers]->(n) on create set r.name=x.name, r.thru=x.path

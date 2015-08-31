@@ -14,6 +14,7 @@
 package com.dnw.depmap.neo;
 
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.eclipse.jdt.core.dom.IBinding;
 import org.eclipse.jdt.core.dom.IMethodBinding;
@@ -21,6 +22,7 @@ import org.eclipse.jdt.core.dom.ITypeBinding;
 
 import com.dnw.matcher.IFilterService;
 import com.dnw.plugin.ast.AstUtil;
+import com.dnw.xml.Element;
 
 /**
  * Class/Interface NeoDao.
@@ -202,7 +204,7 @@ public class NeoDao {
 			for (ITypeBinding t : type.getInterfaces()) {
 				if (createType(t, UNKNOWN_FILE, UNKNOWN_LINE)) {
 					ITypeBinding d = t.getTypeDeclaration();
-					w.createImplements(declaration, d);
+					w.createImplement(declaration, d);
 				}
 			}
 			ITypeBinding t = type.getSuperclass();
@@ -358,5 +360,65 @@ public class NeoDao {
 		w.createAnnotation(declaration, filepath, linenumber);
 		w.createMethodHas(method, declaration);
 		return true;
+	}
+
+	/**
+	 * Method createElement.
+	 * 
+	 * @author manbaum
+	 * @since Aug 29, 2015
+	 * @param e
+	 */
+	public void createElement(Element e) {
+		w.createXmlElement(e);
+	}
+
+	/**
+	 * Method updateElement.
+	 * 
+	 * @author manbaum
+	 * @since Aug 29, 2015
+	 * @param e
+	 */
+	public void updateElement(Element e) {
+		String caption = captionOf(e);
+		w.updateXmlElement(e, caption);
+	}
+
+	/**
+	 * Method captionOf.
+	 * 
+	 * @author manbaum
+	 * @since Aug 31, 2015
+	 * @param e
+	 * @return
+	 */
+	private String captionOf(Element e) {
+		StringBuffer sb = new StringBuffer();
+		sb.append('{').append(e.qName).append('}');
+		if (e.level == 0) {
+			sb.append(' ').append(e.filename());
+		} else {
+			if (e.name != null) {
+				sb.append(' ').append(e.name);
+			} else if (e.id != null) {
+				sb.append(' ').append(e.id);
+			}
+
+			if (e.value != null) {
+				sb.append("= ").append(e.value);
+			} else if (e.countChildren() == 0) {
+				if (e.textLength() > 0 && e.textLength() < 16) {
+					sb.append("= ").append(e.getText());
+				}
+			} else if (e.countAttributes() == 1) {
+				Entry<String, String> a = e.attributeEntries().iterator().next();
+				if (!a.getKey().equals("name") && !a.getKey().equals("id")
+						&& !a.getKey().equals("class") && a.getValue().length() < 16) {
+					sb.append(' ').append(a.getKey()).append("= ").append(a.getValue());
+				}
+			}
+		}
+		return sb.toString();
 	}
 }
