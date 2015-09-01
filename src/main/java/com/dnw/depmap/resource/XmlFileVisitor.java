@@ -47,7 +47,7 @@ public class XmlFileVisitor implements IResourceVisitor {
 
 	public static final String MARKER_TYPE = "com.dnw.depmap.xmlProblem";
 
-	public final SAXParserFactory parserFactory = SAXParserFactory.newInstance();
+	public final SAXParserFactory parserFactory;
 
 	private final IProgressMonitor monitor;
 
@@ -60,6 +60,8 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 */
 	public XmlFileVisitor(IProgressMonitor monitor) {
 		this.monitor = monitor;
+		this.parserFactory = SAXParserFactory.newInstance();
+		this.parserFactory.setValidating(false);
 	}
 
 	/**
