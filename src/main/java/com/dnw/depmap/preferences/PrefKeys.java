@@ -29,6 +29,12 @@ public class PrefKeys {
 
 	public static final String P_DBURL = "com.dnw.depmap.databaseRootUrl";
 
+	public static final String P_WHITEFILES = "com.dnw.depmap.whiteFiles";
+
+	public static final String P_BLACKFILES = "com.dnw.depmap.blackFiles";
+
+	public static final String P_PREFERFILES = "com.dnw.depmap.preferFiles";
+
 	public static final String P_WHITELIST = "com.dnw.depmap.whiteList";
 
 	public static final String P_BLACKLIST = "com.dnw.depmap.blackList";
@@ -38,6 +44,10 @@ public class PrefKeys {
 	public static final String P_USEPREEXEC = "com.dnw.depmap.usePreExecution";
 
 	public static final String P_PREEXEC = "com.dnw.depmap.preExecution";
+
+	public static final String P_USEPOSTEXEC = "com.dnw.depmap.usePostExecution";
+
+	public static final String P_POSTEXEC = "com.dnw.depmap.postExecution";
 
 	public static final String P_LOGVERBOSETOCON = "com.dnw.depmap.logVerboseToConsole";
 

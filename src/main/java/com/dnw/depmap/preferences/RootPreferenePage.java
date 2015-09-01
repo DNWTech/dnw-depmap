@@ -63,13 +63,19 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	private StringFieldEditor dburl;
 	private BooleanFieldEditor flagdir;
 	private DirectoryFieldEditor dbdir;
+	private GroupFieldEditor gf5;
+	private BooleanFieldEditor flagpreferfiles;
+	private TextFieldEditor whitefiles;
+	private TextFieldEditor blackfiles;
 	private GroupFieldEditor gf2;
 	private BooleanFieldEditor flagprefer;
 	private TextFieldEditor whitelist;
 	private TextFieldEditor blacklist;
 	private GroupFieldEditor gf3;
-	private BooleanFieldEditor flagexec;
-	private TextFieldEditor statements;
+	private BooleanFieldEditor flagexec_pre;
+	private TextFieldEditor statements_pre;
+	private BooleanFieldEditor flagexec_post;
+	private TextFieldEditor statements_post;
 	private GroupFieldEditor gf4;
 	private BooleanFieldEditor flagverbosetocon;
 	private BooleanFieldEditor flagverbosetofile;
@@ -89,33 +95,46 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 
 		gf1 = new GroupFieldEditor("Neo4j graph database", p);
 		flagurl = new BooleanFieldEditor(PrefKeys.P_USESTANDALONE,
-				"&Standalone database server (access thru Rest API)", gf1.getGroupControl(p));
-		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "&Url:", gf1.getGroupControl(p));
+				"Standalone database server (access thru Rest API)", gf1.getGroupControl(p));
+		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "Url:", gf1.getGroupControl(p));
 		flagdir = new BooleanFieldEditor(PrefKeys.P_USEEMBEDDED,
-				"&Embedded database server (access thru Java API)", gf1.getGroupControl(p));
-		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "S&tore:", gf1.getGroupControl(p));
+				"Embedded database server (access thru Java API)", gf1.getGroupControl(p));
+		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "Store:", gf1.getGroupControl(p));
+
+		gf5 = new GroupFieldEditor(
+				"File pathname filter (a regexp or a string prefix with '@', one item each line)",
+				p);
+		flagpreferfiles = new BooleanFieldEditor(PrefKeys.P_PREFERFILES, "Prefer white list",
+				gf5.getGroupControl(p));
+		whitefiles = new TextFieldEditor(PrefKeys.P_WHITEFILES, "Allows:", 50, 2,
+				gf5.getGroupControl(p));
+		blackfiles = new TextFieldEditor(PrefKeys.P_BLACKFILES, "Blocks:", 50, 2,
+				gf5.getGroupControl(p));
 
 		gf2 = new GroupFieldEditor(
 				"Class/Method name filter (a regexp or a string prefix with '@', one item each line)",
 				p);
-		flagprefer = new BooleanFieldEditor(PrefKeys.P_PREFERWHITE, "P&refer white list",
+		flagprefer = new BooleanFieldEditor(PrefKeys.P_PREFERWHITE, "Prefer white list",
 				gf2.getGroupControl(p));
-		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "&Whitelist:", 50, 2,
+		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "Allows:", 50, 2,
 				gf2.getGroupControl(p));
-		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "&Blacklist:", 50, 2,
+		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "Blocks:", 50, 2,
 				gf2.getGroupControl(p));
 
-		gf3 = new GroupFieldEditor(
-				"Cypher statements executed before generating (one statement each line)", p);
-		flagexec = new BooleanFieldEditor(PrefKeys.P_USEPREEXEC, "Enable e&xecuting statements",
+		gf3 = new GroupFieldEditor("Additional cypher statements (one statement each line)", p);
+		flagexec_pre = new BooleanFieldEditor(PrefKeys.P_USEPREEXEC,
+				"Enable executing statements before generating", gf3.getGroupControl(p));
+		statements_pre = new TextFieldEditor(PrefKeys.P_PREEXEC, "", 56, 6, gf3.getGroupControl(p));
+		flagexec_post = new BooleanFieldEditor(PrefKeys.P_USEPOSTEXEC,
+				"Enable executing statements after generating", gf3.getGroupControl(p));
+		statements_post = new TextFieldEditor(PrefKeys.P_POSTEXEC, "", 56, 6,
 				gf3.getGroupControl(p));
-		statements = new TextFieldEditor(PrefKeys.P_PREEXEC, "", 56, 6, gf3.getGroupControl(p));
 
 		gf4 = new GroupFieldEditor("Logging settings", p);
 		flagverbosetocon = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSETOCON,
-				"Output &verbose logging in console", gf4.getGroupControl(p));
+				"Output verbose logging in console", gf4.getGroupControl(p));
 		flagverbosetofile = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSETOFILE,
-				"Output &verbose logging in file", gf4.getGroupControl(p));
+				"Output verbose logging in file", gf4.getGroupControl(p));
 		verbosefile = new FileFieldEditor(PrefKeys.P_LOGVERBOSEFILE, "&File:",
 				gf4.getGroupControl(p));
 
@@ -125,13 +144,20 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		gf1.addField(dbdir);
 		addField(gf1);
 
+		gf5.addField(flagpreferfiles);
+		gf5.addField(whitefiles);
+		gf5.addField(blackfiles);
+		addField(gf5);
+
 		gf2.addField(flagprefer);
 		gf2.addField(whitelist);
 		gf2.addField(blacklist);
 		addField(gf2);
 
-		gf3.addField(flagexec);
-		gf3.addField(statements);
+		gf3.addField(flagexec_pre);
+		gf3.addField(statements_pre);
+		gf3.addField(flagexec_post);
+		gf3.addField(statements_post);
 		addField(gf3);
 
 		gf4.addField(flagverbosetocon);
@@ -155,8 +181,10 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		dburl.setEnabled(value1, gf1.getGroupControl(p));
 		boolean value2 = flagurl.getBooleanValue();
 		dbdir.setEnabled(!value2, gf1.getGroupControl(p));
-		boolean value5 = flagexec.getBooleanValue();
-		statements.setEnabled(value5, gf3.getGroupControl(p));
+		boolean value5 = flagexec_pre.getBooleanValue();
+		statements_pre.setEnabled(value5, gf3.getGroupControl(p));
+		boolean value6 = flagexec_post.getBooleanValue();
+		statements_post.setEnabled(value6, gf3.getGroupControl(p));
 	}
 
 	/**
@@ -183,7 +211,10 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 				dbdir.setEnabled(value, gf1.getGroupControl(p));
 			} else if (f.getPreferenceName().equals(PrefKeys.P_USEPREEXEC)) {
 				boolean value = (Boolean)event.getNewValue();
-				statements.setEnabled(value, gf3.getGroupControl(p));
+				statements_pre.setEnabled(value, gf3.getGroupControl(p));
+			} else if (f.getPreferenceName().equals(PrefKeys.P_USEPOSTEXEC)) {
+				boolean value = (Boolean)event.getNewValue();
+				statements_post.setEnabled(value, gf3.getGroupControl(p));
 			}
 		}
 	}

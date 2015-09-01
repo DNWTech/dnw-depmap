@@ -32,6 +32,7 @@ import com.dnw.depmap.ast.TypeDeclarationVisitor;
 import com.dnw.depmap.neo.NeoDao;
 import com.dnw.depmap.neo.NeoWriter;
 import com.dnw.depmap.preferences.PrefKeys;
+import com.dnw.depmap.resource.FileFindFacatory;
 import com.dnw.depmap.resource.JavaFileVisitor;
 import com.dnw.depmap.resource.XmlFileVisitor;
 import com.dnw.depmap.xml.DefaultElementVisitor;
@@ -46,7 +47,6 @@ import com.dnw.plugin.ast.IVisitorDelegator;
 import com.dnw.plugin.ast.IVisitorRegistry;
 import com.dnw.plugin.ast.NodeTypeBitMapSet;
 import com.dnw.plugin.ast.RegistryBasedVisitorDelegator;
-import com.dnw.plugin.resource.FileExtResourceVisitorFactory;
 import com.dnw.plugin.util.ConsoleUtil;
 import com.dnw.plugin.xml.IElementVisitor;
 
@@ -65,9 +65,11 @@ public class Activator extends AbstractUIPlugin {
 
 	// The plug-in's console.
 	public final ConsoleUtil console = ConsoleUtil.getConsole(PLUGIN_ID);
+
+	// For filtering files, can be set in preference page.
+	public final CommonFilter<String> filenameFilter = new CommonFilter<String>();
 	// This factory defines what kinds of files will be inspected in a project.
-	// For now, we only support .java files.
-	public final FileExtResourceVisitorFactory factory = new FileExtResourceVisitorFactory();
+	public final FileFindFacatory factory = new FileFindFacatory(filenameFilter);
 	// The white list limits what packages or classes should be focused.
 	// The content of the filter list will be set in preference page.
 	public final CommonFilter<String> filter = new CommonFilter<String>();
@@ -80,6 +82,7 @@ public class Activator extends AbstractUIPlugin {
 	// Apply the stop set on the visitors.
 	public final IVisitorDelegator delegator = new RegistryBasedVisitorDelegator(registry, stopSet);
 
+	// For visiting XML elements.
 	public final IElementVisitor xmlvisitor = new DefaultElementVisitor();
 
 	// The Neo4j database settings.
@@ -91,10 +94,12 @@ public class Activator extends AbstractUIPlugin {
 	public NeoAccessor accessor;
 	// Neo4j accessor to generate all AST nodes and its relations.
 	public NeoDao neo;
-	// If true, a set of Cypher statements will be executed before AST traverse. 
-	// These 2 settings will be set in preference page.
+	// If true, a set of cypher statements will be executed before/after file process, 
+	// also these settings can be set in preference page.
 	public boolean preExec = false;
-	public List<String> statements = new ArrayList<String>();
+	public List<String> statements_pre = new ArrayList<String>();
+	public boolean postExec = false;
+	public List<String> statements_post = new ArrayList<String>();
 
 	// When the settings in preference page change, we should re-load them, this listener works for that.
 	private final IPropertyChangeListener listener;
@@ -106,7 +111,7 @@ public class Activator extends AbstractUIPlugin {
 	 * @since Sep 29, 2014
 	 */
 	public Activator() {
-		// For now, we only examine the .java files.
+		// Examines .java and .xml files.
 		factory.registerVisitor("java", JavaFileVisitor.class);
 		factory.registerVisitor("xml", XmlFileVisitor.class);
 
@@ -147,11 +152,44 @@ public class Activator extends AbstractUIPlugin {
 			store.setValue(PrefKeys.P_DBURL, DBURL);
 		}
 
+		// loads filename filter settings.
+		filenameFilter.clearAllows();
+		filenameFilter.clearBlocks();
+		filenameFilter.setPreferWhite(store.getBoolean(PrefKeys.P_PREFERFILES));
+		String white = store.getString(PrefKeys.P_WHITEFILES);
+		if (white != null) {
+			String[] list = white.split("\\s*\\n\\s*");
+			for (String s : list) {
+				s = s.trim();
+				if (!s.isEmpty() && !s.startsWith("#")) {
+					console.println("allow path: \"" + s + "\"");
+					if (s.startsWith("@"))
+						filenameFilter.addAllowMatcher(new StringMatcher(s.substring(1)));
+					else
+						filenameFilter.addAllowMatcher(new RegexMatcher(s));
+				}
+			}
+		}
+		String black = store.getString(PrefKeys.P_BLACKFILES);
+		if (black != null) {
+			String[] list = black.split("\\s*\\n\\s*");
+			for (String s : list) {
+				s = s.trim();
+				if (!s.isEmpty() && !s.startsWith("#")) {
+					console.println("block path: \"" + s + "\"");
+					if (s.startsWith("@"))
+						filenameFilter.addBlockMatcher(new StringMatcher(s.substring(1)));
+					else
+						filenameFilter.addBlockMatcher(new RegexMatcher(s));
+				}
+			}
+		}
+
 		// loads class/package filter settings.
 		filter.clearAllows();
 		filter.clearBlocks();
 		filter.setPreferWhite(store.getBoolean(PrefKeys.P_PREFERWHITE));
-		String white = store.getString(PrefKeys.P_WHITELIST);
+		white = store.getString(PrefKeys.P_WHITELIST);
 		if (white != null) {
 			String[] list = white.split("\\s*\\n\\s*");
 			for (String s : list) {
@@ -165,7 +203,7 @@ public class Activator extends AbstractUIPlugin {
 				}
 			}
 		}
-		String black = store.getString(PrefKeys.P_BLACKLIST);
+		black = store.getString(PrefKeys.P_BLACKLIST);
 		if (black != null) {
 			String[] list = black.split("\\s*\\n\\s*");
 			for (String s : list) {
@@ -180,9 +218,9 @@ public class Activator extends AbstractUIPlugin {
 			}
 		}
 
-		// loads pre-executing Cypher statements setting.
+		// loads pre/post executing Cypher statements setting.
 		preExec = store.getBoolean(PrefKeys.P_USEPREEXEC);
-		statements.clear();
+		statements_pre.clear();
 		if (preExec) {
 			String ss = store.getString(PrefKeys.P_PREEXEC);
 			if (ss != null) {
@@ -190,12 +228,29 @@ public class Activator extends AbstractUIPlugin {
 				for (String s : array) {
 					s = s.trim();
 					if (!s.isEmpty() && !s.startsWith("#")) {
-						console.println("statement: \"" + s + "\"");
-						statements.add(s);
+						console.println("pre-statement: \"" + s + "\"");
+						statements_pre.add(s);
 					}
 				}
 			} else {
 				preExec = false;
+			}
+		}
+		postExec = store.getBoolean(PrefKeys.P_USEPOSTEXEC);
+		statements_post.clear();
+		if (postExec) {
+			String ss = store.getString(PrefKeys.P_POSTEXEC);
+			if (ss != null) {
+				String[] array = ss.split("\\s*\\n\\s*");
+				for (String s : array) {
+					s = s.trim();
+					if (!s.isEmpty() && !s.startsWith("#")) {
+						console.println("post-statement: \"" + s + "\"");
+						statements_post.add(s);
+					}
+				}
+			} else {
+				postExec = false;
 			}
 		}
 

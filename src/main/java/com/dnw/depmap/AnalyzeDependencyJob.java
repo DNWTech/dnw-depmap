@@ -169,9 +169,9 @@ public final class AnalyzeDependencyJob extends Job {
 			sub.setWorkRemaining(finder.getSupportedList().size() * 100 + 1);
 			// starts up the Neo4j database.
 			Activator.getDefault().accessor.startup();
-			// cleans up the database if required.
+			// executes statements before visiting.
 			if (Activator.getDefault().preExec) {
-				for (String s : Activator.getDefault().statements) {
+				for (String s : Activator.getDefault().statements_pre) {
 					Activator.getDefault().accessor.execute(s);
 				}
 			}
@@ -179,6 +179,12 @@ public final class AnalyzeDependencyJob extends Job {
 			BindingCache.clear();
 			// visit all resources to generate dependency map.
 			visitAllResources(finder.getSupportedList(), sub);
+			// executes statements after visiting.
+			if (Activator.getDefault().postExec) {
+				for (String s : Activator.getDefault().statements_post) {
+					Activator.getDefault().accessor.execute(s);
+				}
+			}
 			// shuts down the database after generating.
 			Activator.getDefault().accessor.shutdown();
 		} finally {

@@ -40,9 +40,13 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PrefKeys.P_DBURL, "http://localhost:7474/db/data");
 		store.setDefault(PrefKeys.P_USEEMBEDDED, false);
 		store.setDefault(PrefKeys.P_DBDIR, "./neo4j-community-2.1.5/data/graph.db");
-		store.setDefault(PrefKeys.P_WHITELIST, "com\\.dnw\\..*\n@java.lang.Object");
-		store.setDefault(PrefKeys.P_PREFERWHITE, false);
-		store.setDefault(PrefKeys.P_USEPREEXEC, false);
+		store.setDefault(PrefKeys.P_WHITEFILES, ".*/src/main/.*");
+		store.setDefault(PrefKeys.P_BLACKFILES, ".*/\\..*");
+		store.setDefault(PrefKeys.P_PREFERFILES, true);
+		store.setDefault(PrefKeys.P_WHITELIST, "");
+		store.setDefault(PrefKeys.P_BLACKLIST, "");
+		store.setDefault(PrefKeys.P_PREFERWHITE, true);
+		store.setDefault(PrefKeys.P_USEPREEXEC, true);
 		store.setDefault(PrefKeys.P_PREEXEC, "match ()-[r]-() delete r\n" // delete all relations.
 				+ "match (n) delete n\n" // delete all nodes.
 				+ "create constraint on (t:Class) assert t.name is unique\n" // create unique constraint on type names.
@@ -68,6 +72,9 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 				+ "create index on :XMLElement (class)\n" //
 				+ "create index on :XMLAttribute (qname)\n" //
 				+ "create index on :XMLAttribute (parent)\n" //
+		);
+		store.setDefault(PrefKeys.P_USEPOSTEXEC, false);
+		store.setDefault(PrefKeys.P_POSTEXEC, "" // nothing now
 		);
 		store.setDefault(PrefKeys.P_LOGVERBOSETOCON, false);
 		store.setDefault(PrefKeys.P_LOGVERBOSETOFILE, false);
