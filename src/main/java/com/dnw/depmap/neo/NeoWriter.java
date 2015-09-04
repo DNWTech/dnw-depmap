@@ -16,6 +16,9 @@ package com.dnw.depmap.neo;
 import java.util.List;
 import java.util.Map.Entry;
 
+import org.eclipse.core.resources.ResourcesPlugin;
+import org.eclipse.core.runtime.IPath;
+import org.eclipse.jdt.core.IJavaElement;
 import org.eclipse.jdt.core.dom.IMethodBinding;
 import org.eclipse.jdt.core.dom.ITypeBinding;
 
@@ -47,9 +50,9 @@ public class NeoWriter {
 	}
 
 	public static final String CREATECLASS = "merge (t:Class:Type {name:{name}}) "
-			+ "on create set t.caption={caption}, t.implements={implements}, t.extends={extends} ";
+			+ "on create set t.caption={caption}, t.implements={implements}, t.extends={extends}, t.file={file} ";
 	public static final String CREATEINTERFACE = "merge (t:Interface:Type {name:{name}}) "
-			+ "on create set t.caption={caption}, t.extends={extends} ";
+			+ "on create set t.caption={caption}, t.extends={extends}, t.file={file} ";
 	public static final String ADDTYPEFILE = "match (t:Type {name:{name}}) "
 			+ "set t.file={file}, t.lineNumber={lineNumber} ";
 	public static final String CREATEIMPLEMENT = "match (f:Type {name:{fname}}) "
@@ -114,6 +117,13 @@ public class NeoWriter {
 	 */
 	public void createType(ITypeBinding type, String filepath, int lineNumber) {
 		M p = M.m().a("name", type).a("caption", AstUtil.captionOf(type));
+		IJavaElement e = type.getJavaElement();
+		IPath root = ResourcesPlugin.getWorkspace().getRoot().getLocation();
+		if (e != null && root != null) {
+			IPath path = e.getResource() != null ? e.getResource().getLocation()
+					.makeRelativeTo(root) : e.getPath();
+			p.a("file", path.toString());
+		}
 		if (type.isInterface()) {
 			p.a("extends", type.getInterfaces());
 			accessor.execute(CREATEINTERFACE, p);
