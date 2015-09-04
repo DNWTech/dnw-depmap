@@ -1,5 +1,5 @@
 /**
- * !(#) RootPreferenePage.java
+ * !(#) RootPreferencePage.java
  * Copyright (c) 2014 DNW Technologies and others.
  * All rights reserved. This program and the accompanying materials
  * are made available under the terms of the Eclipse Public License v1.0
@@ -14,17 +14,20 @@
 package com.dnw.depmap.preferences;
 
 import org.eclipse.jface.preference.BooleanFieldEditor;
-import org.eclipse.jface.preference.DirectoryFieldEditor;
 import org.eclipse.jface.preference.FieldEditor;
 import org.eclipse.jface.preference.FieldEditorPreferencePage;
-import org.eclipse.jface.preference.FileFieldEditor;
-import org.eclipse.jface.preference.StringFieldEditor;
 import org.eclipse.jface.util.PropertyChangeEvent;
+import org.eclipse.swt.SWT;
+import org.eclipse.swt.layout.FillLayout;
+import org.eclipse.swt.layout.GridData;
 import org.eclipse.swt.widgets.Composite;
+import org.eclipse.swt.widgets.Display;
+import org.eclipse.swt.widgets.Label;
 import org.eclipse.ui.IWorkbench;
 import org.eclipse.ui.IWorkbenchPreferencePage;
 
 import com.dnw.depmap.Activator;
+import com.dnw.plugin.preference.FileFieldEditor;
 import com.dnw.plugin.preference.GroupFieldEditor;
 import com.dnw.plugin.preference.TextFieldEditor;
 
@@ -43,7 +46,7 @@ import com.dnw.plugin.preference.TextFieldEditor;
  * @author manbaum
  * @since Oct 20, 2014
  */
-public class RootPreferenePage extends FieldEditorPreferencePage implements
+public class RootPreferencePage extends FieldEditorPreferencePage implements
 		IWorkbenchPreferencePage {
 
 	/**
@@ -52,30 +55,17 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	 * @author manbaum
 	 * @since Oct 20, 2014
 	 */
-	public RootPreferenePage() {
+	public RootPreferencePage() {
 		super(GRID);
 		setPreferenceStore(Activator.getDefault().getPreferenceStore());
-		setDescription("Settings used when generating depandency map.\n");
+		setDescription("Depandency map generating settings.\n");
 	}
 
-	private GroupFieldEditor gf1;
-	private BooleanFieldEditor flagurl;
-	private StringFieldEditor dburl;
-	private BooleanFieldEditor flagdir;
-	private DirectoryFieldEditor dbdir;
 	private GroupFieldEditor gf5;
 	private BooleanFieldEditor flagpreferfiles;
 	private TextFieldEditor whitefiles;
 	private TextFieldEditor blackfiles;
-	private GroupFieldEditor gf2;
-	private BooleanFieldEditor flagprefer;
-	private TextFieldEditor whitelist;
-	private TextFieldEditor blacklist;
-	private GroupFieldEditor gf3;
-	private BooleanFieldEditor flagexec_pre;
-	private TextFieldEditor statements_pre;
-	private BooleanFieldEditor flagexec_post;
-	private TextFieldEditor statements_post;
+
 	private GroupFieldEditor gf4;
 	private BooleanFieldEditor flagverbosetocon;
 	private BooleanFieldEditor flagverbosetofile;
@@ -93,72 +83,47 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	public void createFieldEditors() {
 		final Composite p = getFieldEditorParent();
 
-		gf1 = new GroupFieldEditor("Neo4j graph database", p);
-		flagurl = new BooleanFieldEditor(PrefKeys.P_USESTANDALONE,
-				"Standalone database server (access thru Rest API)", gf1.getGroupControl(p));
-		dburl = new StringFieldEditor(PrefKeys.P_DBURL, "Url:", gf1.getGroupControl(p));
-		flagdir = new BooleanFieldEditor(PrefKeys.P_USEEMBEDDED,
-				"Embedded database server (access thru Java API)", gf1.getGroupControl(p));
-		dbdir = new DirectoryFieldEditor(PrefKeys.P_DBDIR, "Store:", gf1.getGroupControl(p));
-
 		gf5 = new GroupFieldEditor(
-				"File pathname filter (a regexp or a string prefix with '@', one item each line)",
-				p);
-		flagpreferfiles = new BooleanFieldEditor(PrefKeys.P_PREFERFILES, "Prefer white list",
+				"File name filter (a regexp or a string prefix with '@', one item each line)", p);
+		whitefiles = new TextFieldEditor(PrefKeys.P_WHITEFILES, "Allows:", 50, 6,
 				gf5.getGroupControl(p));
-		whitefiles = new TextFieldEditor(PrefKeys.P_WHITEFILES, "Allows:", 50, 2,
+		blackfiles = new TextFieldEditor(PrefKeys.P_BLACKFILES, "Blocks:", 50, 6,
 				gf5.getGroupControl(p));
-		blackfiles = new TextFieldEditor(PrefKeys.P_BLACKFILES, "Blocks:", 50, 2,
-				gf5.getGroupControl(p));
+		flagpreferfiles = new BooleanFieldEditor(PrefKeys.P_PREFERFILES,
+				"Default to allow, blocking has priority", gf5.getGroupControl(p));
 
-		gf2 = new GroupFieldEditor(
-				"Class/Method name filter (a regexp or a string prefix with '@', one item each line)",
-				p);
-		flagprefer = new BooleanFieldEditor(PrefKeys.P_PREFERWHITE, "Prefer white list",
-				gf2.getGroupControl(p));
-		whitelist = new TextFieldEditor(PrefKeys.P_WHITELIST, "Allows:", 50, 2,
-				gf2.getGroupControl(p));
-		blacklist = new TextFieldEditor(PrefKeys.P_BLACKLIST, "Blocks:", 50, 2,
-				gf2.getGroupControl(p));
+		Composite c = new Composite(gf5.getGroupControl(p), SWT.BORDER);
+		GridData gd = new GridData(4, 2, true, false, 2, 1);
+		gd.horizontalIndent = 16;
+		c.setLayoutData(gd);
+		c.setBackground(Display.getCurrent().getSystemColor(SWT.COLOR_GRAY));
 
-		gf3 = new GroupFieldEditor("Additional cypher statements (one statement each line)", p);
-		flagexec_pre = new BooleanFieldEditor(PrefKeys.P_USEPREEXEC,
-				"Enable executing statements before generating", gf3.getGroupControl(p));
-		statements_pre = new TextFieldEditor(PrefKeys.P_PREEXEC, "", 56, 6, gf3.getGroupControl(p));
-		flagexec_post = new BooleanFieldEditor(PrefKeys.P_USEPOSTEXEC,
-				"Enable executing statements after generating", gf3.getGroupControl(p));
-		statements_post = new TextFieldEditor(PrefKeys.P_POSTEXEC, "", 56, 6,
-				gf3.getGroupControl(p));
+		FillLayout fl = new FillLayout();
+		fl.marginHeight = fl.marginWidth = 4;
+		c.setLayout(fl);
+
+		Label l = new Label(c, SWT.NONE);
+		l.setText("If checked,\n"
+				+ "  1) rejects file with name matches any item in block list,\n"
+				+ "  2) accepts file with name matches any item in allow list,\n"
+				+ "  3) accepts file with name not matches any item in both lists.\n"
+				+ "If unchecked,\n" //
+				+ "  1) accepts file with name matches any item in allow list,\n"
+				+ "  2) rejects file with name matches any item in block list,\n"
+				+ "  3) rejects file with name not matches any item in both lists.");
 
 		gf4 = new GroupFieldEditor("Logging settings", p);
 		flagverbosetocon = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSETOCON,
 				"Output verbose logging in console", gf4.getGroupControl(p));
 		flagverbosetofile = new BooleanFieldEditor(PrefKeys.P_LOGVERBOSETOFILE,
 				"Output verbose logging in file", gf4.getGroupControl(p));
-		verbosefile = new FileFieldEditor(PrefKeys.P_LOGVERBOSEFILE, "&File:",
+		verbosefile = new FileFieldEditor(PrefKeys.P_LOGVERBOSEFILE, "File:", true,
 				gf4.getGroupControl(p));
 
-		gf1.addField(flagurl);
-		gf1.addField(dburl);
-		gf1.addField(flagdir);
-		gf1.addField(dbdir);
-		addField(gf1);
-
-		gf5.addField(flagpreferfiles);
 		gf5.addField(whitefiles);
 		gf5.addField(blackfiles);
+		gf5.addField(flagpreferfiles);
 		addField(gf5);
-
-		gf2.addField(flagprefer);
-		gf2.addField(whitelist);
-		gf2.addField(blacklist);
-		addField(gf2);
-
-		gf3.addField(flagexec_pre);
-		gf3.addField(statements_pre);
-		gf3.addField(flagexec_post);
-		gf3.addField(statements_post);
-		addField(gf3);
 
 		gf4.addField(flagverbosetocon);
 		gf4.addField(flagverbosetofile);
@@ -177,14 +142,8 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 	protected void initialize() {
 		super.initialize();
 		Composite p = getFieldEditorParent();
-		boolean value1 = flagurl.getBooleanValue();
-		dburl.setEnabled(value1, gf1.getGroupControl(p));
-		boolean value2 = flagurl.getBooleanValue();
-		dbdir.setEnabled(!value2, gf1.getGroupControl(p));
-		boolean value5 = flagexec_pre.getBooleanValue();
-		statements_pre.setEnabled(value5, gf3.getGroupControl(p));
-		boolean value6 = flagexec_post.getBooleanValue();
-		statements_post.setEnabled(value6, gf3.getGroupControl(p));
+		boolean value1 = flagverbosetofile.getBooleanValue();
+		verbosefile.setEnabled(value1, gf4.getGroupControl(p));
 	}
 
 	/**
@@ -203,18 +162,9 @@ public class RootPreferenePage extends FieldEditorPreferencePage implements
 		FieldEditor f = (FieldEditor)event.getSource();
 		Composite p = getFieldEditorParent();
 		if (event.getProperty() == FieldEditor.VALUE) {
-			if (f.getPreferenceName().equals(PrefKeys.P_USESTANDALONE)) {
+			if (f.getPreferenceName().equals(PrefKeys.P_LOGVERBOSETOFILE)) {
 				boolean value = (Boolean)event.getNewValue();
-				dburl.setEnabled(value, gf1.getGroupControl(p));
-			} else if (f.getPreferenceName().equals(PrefKeys.P_USEEMBEDDED)) {
-				boolean value = (Boolean)event.getNewValue();
-				dbdir.setEnabled(value, gf1.getGroupControl(p));
-			} else if (f.getPreferenceName().equals(PrefKeys.P_USEPREEXEC)) {
-				boolean value = (Boolean)event.getNewValue();
-				statements_pre.setEnabled(value, gf3.getGroupControl(p));
-			} else if (f.getPreferenceName().equals(PrefKeys.P_USEPOSTEXEC)) {
-				boolean value = (Boolean)event.getNewValue();
-				statements_post.setEnabled(value, gf3.getGroupControl(p));
+				verbosefile.setEnabled(value, gf4.getGroupControl(p));
 			}
 		}
 	}

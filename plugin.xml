@@ -20,9 +20,27 @@
    <extension
          point="org.eclipse.ui.preferencePages">
       <page
-            class="com.dnw.depmap.preferences.RootPreferenePage"
-            id="com.dnw.depmap.preferences.DependencyMapPreferenePage"
+            class="com.dnw.depmap.preferences.RootPreferencePage"
+            id="com.dnw.depmap.preferences.RootPreferencePage"
             name="Dependency Map">
+      </page>
+      <page
+            category="com.dnw.depmap.preferences.RootPreferencePage"
+            class="com.dnw.depmap.preferences.Neo4jPreferencePage"
+            id="com.dnw.depmap.preferences.Neo4jPreferencePage"
+            name="Neo4j database">
+      </page>
+      <page
+            category="com.dnw.depmap.preferences.RootPreferencePage"
+            class="com.dnw.depmap.preferences.JavaPreferencePage"
+            id="com.dnw.depmap.preferences.JavaPreferencePage"
+            name="Java file">
+      </page>
+      <page
+            category="com.dnw.depmap.preferences.RootPreferencePage"
+            class="com.dnw.depmap.preferences.XmlPreferencePage"
+            id="com.dnw.depmap.preferences.XmlPreferencePage"
+            name="XML file">
       </page>
    </extension>
    <extension

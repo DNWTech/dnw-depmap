@@ -42,7 +42,7 @@ public class PreferenceInitializer extends AbstractPreferenceInitializer {
 		store.setDefault(PrefKeys.P_DBDIR, "./neo4j-community-2.1.5/data/graph.db");
 		store.setDefault(PrefKeys.P_WHITEFILES, ".*/src/main/.*");
 		store.setDefault(PrefKeys.P_BLACKFILES, ".*/\\..*");
-		store.setDefault(PrefKeys.P_PREFERFILES, true);
+		store.setDefault(PrefKeys.P_PREFERFILES, false);
 		store.setDefault(PrefKeys.P_WHITELIST, "");
 		store.setDefault(PrefKeys.P_BLACKLIST, "");
 		store.setDefault(PrefKeys.P_PREFERWHITE, true);
