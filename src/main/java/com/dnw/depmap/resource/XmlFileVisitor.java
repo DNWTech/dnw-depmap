@@ -102,10 +102,10 @@ public class XmlFileVisitor implements IResourceVisitor {
 		IFile file = (IFile)resource;
 		Activator.getDefault().console.forceprintln("*** File: " + file.getFullPath());
 		ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
-		manager.connect(file.getLocation(), LocationKind.LOCATION, null);
+		manager.connect(file.getFullPath(), LocationKind.IFILE, null);
 		try {
-			ITextFileBuffer buffer = manager.getTextFileBuffer(file.getLocation(),
-					LocationKind.LOCATION);
+			ITextFileBuffer buffer = manager.getTextFileBuffer(file.getFullPath(),
+					LocationKind.IFILE);
 			IDocument document = buffer.getDocument();
 			monitor.beginTask(file.getFullPath().toOSString(), 10);
 			ElementVisitContext context = new ElementVisitContext(file, document, monitor);
@@ -114,7 +114,7 @@ public class XmlFileVisitor implements IResourceVisitor {
 			doParse(file, handler);
 		} finally {
 			monitor.done();
-			manager.disconnect(file.getLocation(), LocationKind.LOCATION, null);
+			manager.disconnect(file.getFullPath(), LocationKind.IFILE, null);
 		}
 		return false;
 	}
