@@ -267,7 +267,15 @@ public final class J {
 	}
 
 	/**
+	 * <p>
 	 * Escapes each character to make the string can be denoted as a JSON string.
+	 * </p>
+	 * <p>
+	 * According to RFC4627, unescaped character range is %x20-21, %x23-5B and %x5D-10FFFF, U+0022,
+	 * U+005C,U+002F, U+0008, U+000C, U+000A, U+000D, U+0009 should be escaped as '\"', '\\',
+	 * '\/', '\b', '\f', '\n', '\r', '\t'. In consideration that characters with code point greater
+	 * than 0x7E can not be displayed correctly on all systems, we esacpe them as '&#92;uXXXX'.
+	 * </p>
 	 * 
 	 * @author manbaum
 	 * @since Oct 11, 2014
@@ -278,34 +286,38 @@ public final class J {
 		final StringBuffer sb = new StringBuffer();
 		for (int i = 0; i < text.length(); i++) {
 			char ch = text.charAt(i);
-			if (ch == 0) {
-				sb.append("\\0");
-			} else if (ch == '\n') {
-				sb.append("\\n");
-			} else if (ch == '\r') {
-				sb.append("\\r");
-			} else if (ch < 32) {
-				sb.append("\\x");
-				if (ch < 16) {
-					sb.append('0');
-				}
-				sb.append(Integer.toHexString(ch));
-			} else if (ch == '\\' || ch == '\'' || ch == '\"') {
-				sb.append("\\");
-				sb.append(ch);
-			} else if (ch <= 126) {
+			if ((ch >= ' ' && ch <= '!') || (ch >= '#' && ch <= '[') || (ch >= ']' && ch <= '~')) {
 				sb.append(ch);
 			} else {
-				int n = Character.codePointAt(text, i);
-				sb.append("\\u");
-				if (n < 16) {
-					sb.append("000");
-				} else if (n < 256) {
-					sb.append("00");
-				} else if (n < 4096) {
-					sb.append("0");
+				sb.append('\\');
+				if (ch == '\"') {
+					sb.append(ch);
+				} else if (ch == '\\') {
+					sb.append(ch);
+				} else if (ch == '/') {
+					sb.append(ch);
+				} else if (ch == '\b') {
+					sb.append('b');
+				} else if (ch == '\f') {
+					sb.append('f');
+				} else if (ch == '\n') {
+					sb.append('n');
+				} else if (ch == '\r') {
+					sb.append('r');
+				} else if (ch == '\t') {
+					sb.append('t');
+				} else {
+					sb.append("u");
+					int n = Character.codePointAt(text, i);
+					if (n < 16) {
+						sb.append("000");
+					} else if (n < 256) {
+						sb.append("00");
+					} else if (n < 4096) {
+						sb.append("0");
+					}
+					sb.append(Integer.toHexString(n));
 				}
-				sb.append(Integer.toHexString(n));
 			}
 		}
 		return sb.toString();
