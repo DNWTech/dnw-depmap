@@ -74,6 +74,7 @@ public class DefaultXmlHandler extends DefaultHandler {
 		stack.reset();
 		top = null;
 		lastLine = 0;
+		visitor.beginDocument(context);
 	}
 
 	/**
@@ -86,6 +87,7 @@ public class DefaultXmlHandler extends DefaultHandler {
 	 */
 	@Override
 	public void endDocument() throws SAXException {
+		visitor.endDocument(context);
 	}
 
 	/**

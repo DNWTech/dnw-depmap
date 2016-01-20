@@ -66,7 +66,6 @@ public class JavaFileVisitor implements IResourceVisitor {
 	 */
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile)resource;
-		Activator.getDefault().console.forceprintln("*** File: " + file.getFullPath());
 		try {
 			BindingCache.clear();
 			monitor.beginTask(file.getFullPath().toString(), 10);
@@ -77,9 +76,16 @@ public class JavaFileVisitor implements IResourceVisitor {
 			parser.setSource(unit);
 			CompilationUnit root = (CompilationUnit)parser.createAST(null);
 			VisitContext context = new VisitContext(file, parser, unit, root, monitor);
+			context.printHeader(Activator.getDefault().console);
 			ASTVisitor visitor = new ASTVisitorAdapter(context, Activator.getDefault().delegator);
-			root.accept(visitor);
+			try {
+				root.accept(visitor);
+			} catch (Exception e) {
+				context.forceprintHeader(Activator.getDefault().console);
+				Activator.getDefault().console.println(e);
+			}
 			if (monitor.isCanceled()) {
+				context.forceprintHeader(Activator.getDefault().console);
 				Activator.getDefault().console.forceprintln("*** Java file parsing canceled!");
 			}
 		} finally {

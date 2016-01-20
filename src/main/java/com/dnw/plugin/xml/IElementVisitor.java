@@ -22,6 +22,24 @@ package com.dnw.plugin.xml;
 public interface IElementVisitor {
 
 	/**
+	 * Method beginDocument.
+	 * 
+	 * @author manbaum
+	 * @since Jan 20, 2016
+	 * @param context
+	 */
+	void beginDocument(ElementVisitContext context);
+
+	/**
+	 * Method endDocument.
+	 * 
+	 * @author manbaum
+	 * @since Jan 20, 2016
+	 * @param context
+	 */
+	void endDocument(ElementVisitContext context);
+
+	/**
 	 * Method visitBegin.
 	 * 
 	 * @author manbaum

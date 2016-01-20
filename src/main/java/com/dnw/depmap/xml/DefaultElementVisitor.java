@@ -29,6 +29,29 @@ import com.dnw.plugin.xml.IElementVisitor;
 public class DefaultElementVisitor implements IElementVisitor {
 
 	/**
+	 * Overrider method beginDocument.
+	 * 
+	 * @author manbaum
+	 * @since Jan 20, 2016
+	 * @param context
+	 * @see com.dnw.plugin.xml.IElementVisitor#beginDocument(com.dnw.plugin.xml.ElementVisitContext)
+	 */
+	public void beginDocument(ElementVisitContext context) {
+		context.printHeader(Activator.getDefault().console);
+	}
+
+	/**
+	 * Overrider method endDocument.
+	 * 
+	 * @author manbaum
+	 * @since Jan 20, 2016
+	 * @param context
+	 * @see com.dnw.plugin.xml.IElementVisitor#endDocument(com.dnw.plugin.xml.ElementVisitContext)
+	 */
+	public void endDocument(ElementVisitContext context) {
+	}
+
+	/**
 	 * Overrider method visitBegin.
 	 * 
 	 * @author manbaum
@@ -56,11 +79,14 @@ public class DefaultElementVisitor implements IElementVisitor {
 	 */
 	@Override
 	public void endElement(ElementVisitContext context, Element e) {
-		for (String name : e.duplicatedNames()) {
-			List<Element> l = e.eLementsWithDuplicateName(name);
-			Activator.getDefault().console.forceprintln("!!! Dupliate name in " + e.brief());
-			for (Element n : l) {
-				Activator.getDefault().console.forceprintln(n.brief("    "));
+		if (e.duplicatedNames().size() > 0) {
+			context.forceprintHeader(Activator.getDefault().console);
+			for (String name : e.duplicatedNames()) {
+				List<Element> l = e.eLementsWithDuplicateName(name);
+				Activator.getDefault().console.forceprintln("!!! Dupliate name in " + e.brief());
+				for (Element n : l) {
+					Activator.getDefault().console.forceprintln(n.brief("    "));
+				}
 			}
 		}
 		Activator.getDefault().console.println("--- Update element: " + e.brief());

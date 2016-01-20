@@ -21,6 +21,8 @@ import org.eclipse.jdt.core.dom.ASTNode;
 import org.eclipse.jdt.core.dom.ASTParser;
 import org.eclipse.jdt.core.dom.CompilationUnit;
 
+import com.dnw.plugin.util.ConsoleUtil;
+
 /**
  * Class/Interface Visit
  * 
@@ -35,6 +37,22 @@ public class VisitContext {
 	public final CompilationUnit root;
 	public final SubMonitor monitor;
 	public int currentPosition;
+
+	private boolean hearderPrinted = false;
+
+	public final void printHeader(ConsoleUtil console) {
+		if (!hearderPrinted) {
+			console.println("*** File: " + file.getFullPath());
+			hearderPrinted = true;
+		}
+	}
+
+	public final void forceprintHeader(ConsoleUtil console) {
+		if (!hearderPrinted) {
+			console.forceprintln("*** File: " + file.getFullPath());
+			hearderPrinted = true;
+		}
+	}
 
 	/**
 	 * Constructor of VisitContext.

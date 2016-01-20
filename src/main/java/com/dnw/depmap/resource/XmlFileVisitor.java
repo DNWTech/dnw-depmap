@@ -29,8 +29,9 @@ import org.eclipse.core.resources.IResourceVisitor;
 import org.eclipse.core.runtime.CoreException;
 import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.jface.text.IDocument;
+import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.XMLReader;
 
 import com.dnw.depmap.Activator;
 import com.dnw.plugin.xml.AbortVisitException;
@@ -72,19 +73,30 @@ public class XmlFileVisitor implements IResourceVisitor {
 	 * @param file
 	 * @param handler
 	 */
-	private void doParse(IFile file, DefaultHandler handler) {
+	private void doParse(IFile file, ElementVisitContext context) {
 		try {
+			DefaultXmlHandler handler = new DefaultXmlHandler(context,
+					Activator.getDefault().xmlvisitor);
 			SAXParser p = parserFactory.newSAXParser();
-			p.parse(file.getContents(), handler);
+			XMLReader reader = p.getXMLReader();
+			reader.setFeature("http://apache.org/xml/features/nonvalidating/load-external-dtd",
+					false);
+			reader.setContentHandler(handler);
+			reader.parse(new InputSource(file.getContents()));
 		} catch (AbortVisitException e) {
+			context.forceprintHeader(Activator.getDefault().console);
 			Activator.getDefault().console.forceprintln("*** XML Parsing canceled!");
 		} catch (SAXException e) {
+			context.printHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		} catch (IOException e) {
+			context.printHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		} catch (ParserConfigurationException e) {
+			context.printHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		} catch (CoreException e) {
+			context.printHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		}
 	}
@@ -100,7 +112,6 @@ public class XmlFileVisitor implements IResourceVisitor {
 	@Override
 	public boolean visit(IResource resource) throws CoreException {
 		IFile file = (IFile)resource;
-		Activator.getDefault().console.forceprintln("*** File: " + file.getFullPath());
 		ITextFileBufferManager manager = FileBuffers.getTextFileBufferManager();
 		manager.connect(file.getFullPath(), LocationKind.IFILE, null);
 		try {
@@ -109,9 +120,7 @@ public class XmlFileVisitor implements IResourceVisitor {
 			IDocument document = buffer.getDocument();
 			monitor.beginTask(file.getFullPath().toOSString(), 10);
 			ElementVisitContext context = new ElementVisitContext(file, document, monitor);
-			DefaultXmlHandler handler = new DefaultXmlHandler(context,
-					Activator.getDefault().xmlvisitor);
-			doParse(file, handler);
+			doParse(file, context);
 		} finally {
 			monitor.done();
 			manager.disconnect(file.getFullPath(), LocationKind.IFILE, null);
