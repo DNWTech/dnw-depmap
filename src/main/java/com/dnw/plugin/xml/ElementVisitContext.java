@@ -18,6 +18,8 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.text.IDocument;
 
+import com.dnw.plugin.util.ConsoleUtil;
+
 /**
  * Class/Interface VisitContext.
  * 
@@ -29,6 +31,22 @@ public class ElementVisitContext {
 	public final IFile file;
 	public final IDocument document;
 	public final IProgressMonitor monitor;
+
+	private boolean hearderPrinted = false;
+
+	public final void printHeader(ConsoleUtil console) {
+		if (!hearderPrinted) {
+			console.println("*** File: " + file.getFullPath());
+			hearderPrinted = true;
+		}
+	}
+
+	public final void forceprintHeader(ConsoleUtil console) {
+		if (!hearderPrinted) {
+			console.forceprintln("*** File: " + file.getFullPath());
+			hearderPrinted = true;
+		}
+	}
 
 	/**
 	 * Constructor of VisitContext.
