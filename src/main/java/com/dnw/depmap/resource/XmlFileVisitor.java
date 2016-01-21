@@ -87,16 +87,16 @@ public class XmlFileVisitor implements IResourceVisitor {
 			context.forceprintHeader(Activator.getDefault().console);
 			Activator.getDefault().console.forceprintln("*** XML Parsing canceled!");
 		} catch (SAXException e) {
-			context.printHeader(Activator.getDefault().console);
+			context.forceprintHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		} catch (IOException e) {
-			context.printHeader(Activator.getDefault().console);
+			context.forceprintHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		} catch (ParserConfigurationException e) {
-			context.printHeader(Activator.getDefault().console);
+			context.forceprintHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		} catch (CoreException e) {
-			context.printHeader(Activator.getDefault().console);
+			context.forceprintHeader(Activator.getDefault().console);
 			Activator.getDefault().console.println(e);
 		}
 	}

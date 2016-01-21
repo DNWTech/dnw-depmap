@@ -18,6 +18,7 @@ import org.eclipse.core.runtime.IProgressMonitor;
 import org.eclipse.core.runtime.SubMonitor;
 import org.eclipse.jface.text.IDocument;
 
+import com.dnw.depmap.Activator;
 import com.dnw.plugin.util.ConsoleUtil;
 
 /**
@@ -35,7 +36,7 @@ public class ElementVisitContext {
 	private boolean hearderPrinted = false;
 
 	public final void printHeader(ConsoleUtil console) {
-		if (!hearderPrinted) {
+		if (console.isVerbose() && !hearderPrinted) {
 			console.println("*** File: " + file.getFullPath());
 			hearderPrinted = true;
 		}

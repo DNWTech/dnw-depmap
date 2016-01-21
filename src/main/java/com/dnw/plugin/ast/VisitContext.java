@@ -41,7 +41,7 @@ public class VisitContext {
 	private boolean hearderPrinted = false;
 
 	public final void printHeader(ConsoleUtil console) {
-		if (!hearderPrinted) {
+		if (console.isVerbose() && !hearderPrinted) {
 			console.println("*** File: " + file.getFullPath());
 			hearderPrinted = true;
 		}
